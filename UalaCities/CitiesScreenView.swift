@@ -16,12 +16,14 @@ struct CitiesScreenView: View {
     
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            if viewModel.isShowingList {
+                List(viewModel.citiesListItems, id: \.name) { city in
+                    Text(city.name)
+                }
+            }
         }
-        .padding()
+        .onAppear { viewModel.onAppear() }
+        
     }
 }
 
