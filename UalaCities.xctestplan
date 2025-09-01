@@ -1,0 +1,33 @@
+{
+  "configurations" : [
+    {
+      "id" : "3F493D11-194A-448D-A0AF-72E3FBC268B1",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:UalaCities.xcodeproj",
+        "identifier" : "0D0A97022E66627000B71355",
+        "name" : "IntegrationTests"
+      }
+    },
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:UalaCities.xcodeproj",
+        "identifier" : "0D0A96EA2E66620800B71355",
+        "name" : "UalaCitiesTests"
+      }
+    }
+  ],
+  "version" : 1
+}
