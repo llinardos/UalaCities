@@ -10,7 +10,8 @@ import UalaCities
 
 @main
 struct UalaCitiesApp: App {
+    let viewModel = iOSAppViewModel()
     var body: some Scene {
-        iOSAppScene()
+        iOSAppScene(viewModel: viewModel)
     }
 }

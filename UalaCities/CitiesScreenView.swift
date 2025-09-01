@@ -7,7 +7,13 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct CitiesScreenView: View {
+    @ObservedObject var viewModel: CitiesScreenViewModel
+    
+    init(viewModel: CitiesScreenViewModel) {
+        self.viewModel = viewModel
+    }
+    
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -20,5 +26,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    CitiesScreenView(viewModel: .init())
 }
