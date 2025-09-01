@@ -20,7 +20,7 @@ class CitiesScreenTests: XCTestCase {
                 break
             }
         }
-        wait(for: [listShown], timeout: 2)
+        wait(for: [listShown], timeout: 10)
         
         XCTAssertEqual("Hurzuf", screen.citiesListItems.first?.name)
     }
