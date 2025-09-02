@@ -80,7 +80,7 @@ struct CitiesScreenView: View {
 }
 
 #Preview("ok") {
-    CitiesScreenView(viewModel: .init(httpClient: StubbedHTTPClient([.init(statusCode: 200, data: try! JSONEncoder().encode([City(_id: 1, name: "City 1", country: "AA")]))]), runner: GlobalRunner(), userDefaults: InRamAppleUserDefaults()))
+    CitiesScreenView(viewModel: .init(httpClient: StubbedHTTPClient([.init(statusCode: 200, data: try! JSONEncoder().encode([CityDTO(_id: 1, name: "City 1", country: "AA")]))]), runner: GlobalRunner(), userDefaults: InRamAppleUserDefaults()))
 }
 
 #Preview("error") {

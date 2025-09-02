@@ -45,18 +45,18 @@ class CitiesRepository {
     
     private var favoriteCities: [City] = []
     func toogleFavorite(for city: City) {
-        if favoriteCities.contains(where: { $0._id == city._id }) {
-            favoriteCities.removeAll(where: { $0._id == city._id })
+        if favoriteCities.contains(where: { $0.id == city.id }) {
+            favoriteCities.removeAll(where: { $0.id == city.id })
         } else {
             favoriteCities.append(city)
         }
-        let favoriteIds: [Int] = favoriteCities.map { $0._id }
+        let favoriteIds: [Int] = favoriteCities.map { $0.id }
         userDefaults.set(favoriteIds, forKey: favoritesIdsInUserDefaultsKey)
         refreshList()
     }
     
     func isFavorite(_ city: City) -> Bool {
-        favoriteCities.contains(where: { $0._id == city._id })
+        favoriteCities.contains(where: { $0.id == city.id })
     }
     
     @Published var state: DataState = .idle
@@ -69,9 +69,11 @@ class CitiesRepository {
             
             switch result {
             case .success(let cities):
-                self.allCities = cities.sorted { $0.name < $1.name }
+                self.allCities = cities
+                    .map { City(id: $0._id, name: $0.name, country: $0.country) }
+                    .sorted { $0.name < $1.name }
                 if let favoritesIds = self.userDefaults.array(forKey: self.favoritesIdsInUserDefaultsKey) as? [Int] {
-                    self.favoriteCities = cities.filter { favoritesIds.contains($0._id) }
+                    self.favoriteCities = self.allCities.filter { favoritesIds.contains($0.id) }
                 }
                 self.refreshList()
             case .failure:

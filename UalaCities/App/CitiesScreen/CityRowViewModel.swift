@@ -12,7 +12,7 @@ class CityRowViewModel: ObservableObject, Identifiable {
     @Published var favoriteButtonIsSelected: Bool = false
     private var city: City
     
-    var id: Int { city._id }
+    var id: Int { city.id }
     
     var onFavoriteTap: (() -> Void)?
     

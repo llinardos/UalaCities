@@ -11,9 +11,6 @@ import Combine
 protocol iOSAppScreen {}
 extension CitiesScreenViewModel: iOSAppScreen {}
 
-class Lala {}
-extension Lala: iOSAppScreen {}
-
 public class iOSAppViewModel: ObservableObject {
     @Published var mainScreen: iOSAppScreen
     private let httpClient: HTTPClient
@@ -31,7 +28,7 @@ public class iOSAppViewModel: ObservableObject {
                 let stubbedHttpClient = StubbedHTTPClient([
                     HTTPResponse(statusCode: 500),
                     HTTPResponse(statusCode: 200, data: try! JSONEncoder().encode([
-                        City(_id: 1, name: "City", country: "AA")
+                        CityDTO(_id: 1, name: "City", country: "AA")
                     ])),
                 ])
                 httpClient = stubbedHttpClient
