@@ -18,6 +18,10 @@ class CitiesScreenViewModel: ObservableObject {
     @Published var errorHeading = "Something went wrong"
     @Published var errorSubhead = "Tap to try again"
     
+    @Published var isShowingEmptyView: Bool = false
+    @Published var emptyHeadingText = "No cities found"
+    @Published var emptySubheadText = "Try adjusting your search"
+    
     @Published var isShowingList: Bool = false
     let list = PaginatedListViewModel<CityRow>(items: [], pageSize: 100, prefetchOffset: 10)
     var citiesListItems: [CityRow] { list.visibleItems }
@@ -39,19 +43,19 @@ class CitiesScreenViewModel: ObservableObject {
                 self.isShowingSpinner = true
                 self.isShowingList = false
                 self.isShowingError = false
-            case .loaded:
+                self.isShowingEmptyView = false
+            case .ready(let cities):
                 self.isShowingSpinner = false
-                self.isShowingList = true
                 self.isShowingError = false
+                self.isShowingList = true
+                
+                self.list.items = cities.map { CityRow(city: $0) }
+                self.isShowingEmptyView = cities.isEmpty
             case .failed:
                 self.isShowingSpinner = false
                 self.isShowingList = false
                 self.isShowingError = true
             }
-        }.store(in: &subscriptions)
-        citiesRepo.$cities.sink { [weak self] cities in
-            guard let self, let cities else { return }
-            self.list.items = cities.map { CityRow(city: $0) }
         }.store(in: &subscriptions)
 
         $searchBarText.sink { [weak self] query in

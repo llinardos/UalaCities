@@ -180,6 +180,53 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertNil(screen.citiesListItems[safe: 1])
     }
     
+    func testFilterNoResults() throws {
+        let make = Make()
+        let (screen, httpClient) = (make.sut(), make.httpClient)
+        
+        XCTAssertFalse(screen.isShowingSpinner)
+        
+        screen.onAppear()
+        
+        let request = try XCTUnwrap(httpClient.pendingRequests.unique())
+        XCTAssertEqual(CitiesAPI.citiesGistUrl, request.urlString)
+        XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode([TestData.Cities.arizona])))))
+        
+        XCTAssertTrue(screen.isShowingList)
+        XCTAssertEqual("Arizona, US", screen.citiesListItems.first?.headingText)
+        
+        screen.searchBarType("X")
+        
+        XCTAssertTrue(screen.isShowingList)
+        XCTAssertTrue(screen.isShowingEmptyView)
+        XCTAssertEqual("No cities found", screen.emptyHeadingText)
+        XCTAssertEqual("Try adjusting your search", screen.emptySubheadText)
+        
+        screen.searchBarTypeDelete()
+        
+        XCTAssertTrue(screen.isShowingList)
+        XCTAssertFalse(screen.isShowingEmptyView)
+        XCTAssertEqual("Arizona, US", screen.citiesListItems.first?.headingText)
+        
+        screen.searchBarType("A")
+        
+        XCTAssertTrue(screen.isShowingList)
+        XCTAssertFalse(screen.isShowingEmptyView)
+        XCTAssertEqual("Arizona, US", screen.citiesListItems.first?.headingText)
+        
+        screen.searchBarType("X")
+        
+        XCTAssertTrue(screen.isShowingEmptyView)
+        XCTAssertEqual("No cities found", screen.emptyHeadingText)
+        XCTAssertEqual("Try adjusting your search", screen.emptySubheadText)
+        
+        screen.searchBarTypeDelete()
+        
+        XCTAssertTrue(screen.isShowingList)
+        XCTAssertFalse(screen.isShowingEmptyView)
+        XCTAssertEqual("Arizona, US", screen.citiesListItems.first?.headingText)
+    }
+    
     func testPaginatedList() {
         let list = PaginatedListViewModel(items: Array(1...25), pageSize: 10, prefetchOffset: 3)
         XCTAssertEqual(Array(1...10), list.visibleItems)

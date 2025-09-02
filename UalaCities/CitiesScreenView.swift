@@ -29,6 +29,19 @@ struct CitiesScreenView: View {
                     PaginatedListView(viewModel.list) { row in
                         Text(row.headingText)
                     }
+                    .safeAreaInset(edge: .bottom) {
+                        if viewModel.isShowingEmptyView {
+                            VStack(spacing: 16) {
+                                Image(systemName: "magnifyingglass")
+                                    .font(.title)
+                                VStack {
+                                    Text(viewModel.emptyHeadingText).font(.headline)
+                                    Text(viewModel.emptySubheadText).font(.subheadline)
+                                }
+                            }
+                            .frame(maxHeight: .infinity)
+                        }
+                    }
                     .searchable(
                         text: $viewModel.searchBarText,
                         placement: .navigationBarDrawer(displayMode: .always),

@@ -15,7 +15,7 @@ class CitiesRepository {
     enum DataState {
         case idle
         case loading
-        case loaded
+        case ready([City])
         case failed
     }
     
@@ -28,12 +28,11 @@ class CitiesRepository {
     func filter(by query: String) {
         self.query = query
         
-        guard case .loaded = state else { return }
-        refreshList()
+        guard case .ready = state else { return }
+        refreshList { self.state = .ready($0) }
     }
     
     @Published var state: DataState = .idle
-    @Published var cities: [City]? = nil
 
     func load() {
         self.state = .loading
@@ -44,8 +43,7 @@ class CitiesRepository {
             switch result {
             case .success(let cities):
                 self.allCities = cities.sorted { $0.name < $1.name }
-                self.state = .loaded
-                self.refreshList()
+                self.refreshList { self.state = .ready($0) }
             case .failure:
                 // TODO: log
                 self.state = .failed
@@ -53,7 +51,7 @@ class CitiesRepository {
         }
     }
     
-    private func refreshList() {
+    private func refreshList(_ completion: @escaping ([City]) -> Void) {
         runner.run(bgWork: {
             if self.query.count == 0 {
                 return self.allCities
@@ -61,8 +59,6 @@ class CitiesRepository {
                 return self.allCities
                     .filter { $0.name.lowercased().hasPrefix(self.query.lowercased()) }
             }
-        }) {
-            self.cities = $0
-        }
+        }, mainWork: completion)
     }
 }
