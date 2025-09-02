@@ -28,3 +28,22 @@ class URLSessionHTTPClient: HTTPClient {
         }.resume()
     }
 }
+
+class ControlledHTTPClient: HTTPClient {
+    private(set) var pendingRequests: [HTTPRequest] = []
+    private var completionById: [UUID: (HTTPResponse) -> Void] = [:]
+    func send(_ request: UalaCities.HTTPRequest, _ completion: @escaping (UalaCities.HTTPResponse) -> Void) {
+        pendingRequests.append(request)
+        completionById[request.id] = completion
+    }
+    
+    @discardableResult
+    func respond(to request: HTTPRequest, with response: HTTPResponse) -> Bool {
+        guard let completion = completionById[request.id] else {
+            return false
+        }
+        completion(response)
+        pendingRequests = pendingRequests.filter { $0.id != request.id }
+        return true
+    }
+}
