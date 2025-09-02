@@ -28,11 +28,17 @@ class CitiesAPITests: XCTestCase {
         }
         
         try send(
-            httpResult: .success(.init(statusCode: 200, data: try JSONEncoder().encode([City(name: "City 1"), City(name: "City 2")]))),
-            expectedResult: .success([.init(name: "City 1"), .init(name: "City 2")])
+            httpResult: .success(.init(statusCode: 200, data: try JSONEncoder().encode([
+                TestData.Cities.city1,
+                TestData.Cities.city2,
+            ]))),
+            expectedResult: .success([
+                TestData.Cities.city1,
+                TestData.Cities.city2
+            ])
         )
         
-        let cities = (1...400_000).map { City(name: "City \($0)") }
+        let cities = (1...400_000).map { City(name: "City \($0)", country: "AA") }
         try send(
             httpResult: .success(.init(statusCode: 200, data: try JSONEncoder().encode(cities))),
             expectedResult: .success(cities)

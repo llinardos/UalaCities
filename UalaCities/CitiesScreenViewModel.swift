@@ -16,7 +16,7 @@ class CitiesScreenViewModel: ObservableObject {
     @Published var errorSubhead = "Tap to try again"
     
     @Published var isShowingList: Bool = false
-    @Published var citiesListItems: [City] = []
+    @Published var citiesListItems: [CityRow] = []
     
     private let citiesAPI: CitiesAPI
     
@@ -45,9 +45,21 @@ class CitiesScreenViewModel: ObservableObject {
             case .success(let cities):
                 self.isShowingList = true
                 self.citiesListItems = cities
+                    .sorted { $0.name < $1.name }
+                    .map { CityRow(city: $0) }
             case .failure:
                 self.isShowingError = true
             }
         }
+    }
+}
+
+class CityRow: ObservableObject, Identifiable {
+    @Published var headingText: String = ""
+    private var city: City
+    
+    init(city: City) {
+        self.city = city
+        self.headingText = "\(city.name)"
     }
 }

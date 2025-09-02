@@ -25,8 +25,8 @@ struct CitiesScreenView: View {
                 }
                 .onTapGesture { viewModel.onErrorTap() }
             } else if viewModel.isShowingList {
-                List(viewModel.citiesListItems, id: \.name) { city in
-                    Text(city.name)
+                List(viewModel.citiesListItems, id: \.headingText) { row in
+                    Text(row.headingText)
                 }
             }
         }
@@ -36,7 +36,7 @@ struct CitiesScreenView: View {
 }
 
 #Preview("ok") {
-    CitiesScreenView(viewModel: .init(httpClient: StubbedHTTPClient([.init(statusCode: 200, data: try! JSONEncoder().encode([City(name: "City 1")]))])))
+    CitiesScreenView(viewModel: .init(httpClient: StubbedHTTPClient([.init(statusCode: 200, data: try! JSONEncoder().encode([City(name: "City 1", country: "AA")]))])))
 }
 
 #Preview("error") {

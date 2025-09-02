@@ -8,6 +8,16 @@
 import XCTest
 @testable import UalaCities
 
+class TestData {
+    class Cities {
+        static var city1 = City(name: "City 1", country: "AA")
+        static var city2 = City(name: "City 2", country: "BB")
+        static var hurzuf = City(name: "Hurzuf", country: "UA")
+        static var denver = City(name: "Denver", country: "US")
+        static var sidney = City(name: "Sidney", country: "AU")
+    }
+}
+
 class CitiesScreenTests: XCTestCase {
     func testLoadCitiesOk() throws {
         let httpClient = ControlledHTTPClient()
@@ -22,11 +32,11 @@ class CitiesScreenTests: XCTestCase {
         
         let request = try XCTUnwrap(httpClient.pendingRequests.unique())
         XCTAssertEqual(CitiesAPI.citiesGistUrl, request.urlString)
-        XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode([City(name: "Hurzuf")])))))
+        XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode([TestData.Cities.hurzuf])))))
         
         XCTAssertFalse(screen.isShowingSpinner)
         XCTAssertTrue(screen.isShowingList)
-        XCTAssertEqual("Hurzuf", screen.citiesListItems.first?.name)
+        XCTAssertEqual("Hurzuf", screen.citiesListItems.first?.headingText)
     }
     
     func testLoadCitiesFailsAndRetry() throws {
@@ -53,10 +63,26 @@ class CitiesScreenTests: XCTestCase {
         
         let newRequest = try XCTUnwrap(httpClient.pendingRequests.unique())
         XCTAssertEqual(CitiesAPI.citiesGistUrl, newRequest.urlString)
-        XCTAssertTrue(try httpClient.respond(to: newRequest, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode([City(name: "City")])))))
+        XCTAssertTrue(try httpClient.respond(to: newRequest, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode([TestData.Cities.city1])))))
         
         XCTAssertFalse(screen.isShowingSpinner)
         XCTAssertTrue(screen.isShowingList)
-        XCTAssertEqual("City", screen.citiesListItems.first?.name)
+        XCTAssertEqual("City 1", screen.citiesListItems.first?.headingText)
+    }
+    
+    func testSorted() throws {
+        let httpClient = ControlledHTTPClient()
+        let screen = CitiesScreenViewModel(httpClient: httpClient)
+        
+        screen.onAppear()
+        
+        let request = try XCTUnwrap(httpClient.pendingRequests.unique())
+        XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode([TestData.Cities.sidney, TestData.Cities.denver])
+        ))))
+        
+        XCTAssertFalse(screen.isShowingSpinner)
+        XCTAssertTrue(screen.isShowingList)
+        XCTAssertEqual("Denver", screen.citiesListItems[safe: 0]?.headingText)
+        XCTAssertEqual("Sidney", screen.citiesListItems[safe: 1]?.headingText)
     }
 }
