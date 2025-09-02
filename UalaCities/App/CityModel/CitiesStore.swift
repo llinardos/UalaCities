@@ -1,5 +1,5 @@
 //
-//  CitiesRepository.swift
+//  CitiesStore.swift
 //  UalaCities
 //
 //  Created by Leandro Linardos on 02/09/2025.
@@ -7,20 +7,22 @@
 
 import Foundation
 
-class CitiesRepository {
+class CitiesStore {
     private let citiesAPI: CitiesAPI
     private var allCities: [City] = []
     private let runner: AsyncRunner
     private let userDefaults: AppleUserDefaults
     private let favoritesIdsInUserDefaultsKey = "favoritesCityIds"
     
-    enum DataState {
+    enum CitiesState {
         case idle
         case loading
         case ready([City])
         case failed
     }
     
+    @Published var state: CitiesState = .idle
+
     init(citiesAPI: CitiesAPI, runner: AsyncRunner, userDefaults: AppleUserDefaults) {
         self.citiesAPI = citiesAPI
         self.runner = runner
@@ -36,8 +38,8 @@ class CitiesRepository {
     }
     
     private var isFilteringFavorites: Bool = false
-    func filterFavorites(_ filterFavorites: Bool) {
-        self.isFilteringFavorites = filterFavorites
+    func enableFavoritesFilter(_ isEnabled: Bool) {
+        self.isFilteringFavorites = isEnabled
         
         guard case .ready = state else { return }
         refreshList()
@@ -58,10 +60,8 @@ class CitiesRepository {
     func isFavorite(_ city: City) -> Bool {
         favoriteCities.contains(where: { $0.id == city.id })
     }
-    
-    @Published var state: DataState = .idle
 
-    func load() {
+    func setup() {
         self.state = .loading
         
         citiesAPI.fetchCities { [weak self] result in
@@ -95,5 +95,13 @@ class CitiesRepository {
         }, mainWork: {
             self.state = .ready($0)
         })
+    }
+}
+
+extension CitiesStore {
+    static func stubbed(state: CitiesStore.CitiesState) -> CitiesStore {
+        let store = CitiesStore(citiesAPI: CitiesAPI(httpClient: DummyHTTPClient()), runner: GlobalRunner(), userDefaults: InRamAppleUserDefaults())
+//        store.state = state
+        return store
     }
 }

@@ -76,3 +76,7 @@ class StubbedHTTPClient: HTTPClient {
         completion(.success(response))
     }
 }
+
+class DummyHTTPClient: HTTPClient {
+    func send(_ request: HTTPRequest, _ completion: @escaping (Result<HTTPResponse, HTTPError>) -> Void) {}
+}

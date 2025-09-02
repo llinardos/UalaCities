@@ -35,12 +35,12 @@ class CitiesScreenViewModel: ObservableObject {
         favoriteFilterButtonIsSelected.toggle()
     }
     
-    private let citiesRepo: CitiesRepository
+    private let citiesStore: CitiesStore
     
-    init(httpClient: HTTPClient, runner: AsyncRunner, userDefaults: AppleUserDefaults) {
-        self.citiesRepo = CitiesRepository(citiesAPI: CitiesAPI(httpClient: httpClient), runner: runner, userDefaults: userDefaults)
+    init(citiesStore: CitiesStore) {
+        self.citiesStore = citiesStore
         
-        citiesRepo.$state.sink { [weak self] state in
+        citiesStore.$state.sink { [weak self] state in
             guard let self else { return}
             
             switch state {
@@ -58,9 +58,9 @@ class CitiesScreenViewModel: ObservableObject {
                 self.list.items = cities.map { city in
                     CityRowViewModel(
                         city: city,
-                        isFavorite: self.citiesRepo.isFavorite(city),
+                        isFavorite: self.citiesStore.isFavorite(city),
                         onFavoriteTap: { [weak self] in
-                            self?.citiesRepo.toogleFavorite(for: city)
+                            self?.citiesStore.toogleFavorite(for: city)
                     }
                 ) }
                 self.isShowingEmptyView = cities.isEmpty
@@ -72,20 +72,20 @@ class CitiesScreenViewModel: ObservableObject {
         }.store(in: &subscriptions)
 
         searchBar.$text.sink { [weak self] query in
-            self?.citiesRepo.filter(by: query)
+            self?.citiesStore.filter(by: query)
         }.store(in: &subscriptions)
         
         $favoriteFilterButtonIsSelected.sink { [weak self] isOn in
-            self?.citiesRepo.filterFavorites(isOn)
+            self?.citiesStore.enableFavoritesFilter(isOn)
         }.store(in: &subscriptions)
     }
     
     func onAppear() {
-        citiesRepo.load()
+        citiesStore.setup()
     }
     
     func onErrorTap() {
-        citiesRepo.load()
+        citiesStore.setup()
     }
     
     func searchBarType(_ text: String) {

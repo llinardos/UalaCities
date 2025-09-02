@@ -41,6 +41,7 @@ struct SearchBarView: View {
                 Button(viewModel.cancelButtonText) {
                     self.isFocused = false
                 }
+                .font(.body)
                 .tint(.primary)
             }
         }

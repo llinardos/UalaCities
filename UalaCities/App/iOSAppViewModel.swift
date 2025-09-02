@@ -37,6 +37,8 @@ public class iOSAppViewModel: ObservableObject {
             httpClient = URLSessionHTTPClient()
         }
         
-        mainScreen = CitiesScreenViewModel(httpClient: httpClient, runner: GlobalRunner(), userDefaults: RealAppleUserDefaults())
+        let citiesAPI = CitiesAPI(httpClient: httpClient)
+        let citiesStore = CitiesStore(citiesAPI: citiesAPI, runner: GlobalRunner(), userDefaults: RealAppleUserDefaults())
+        mainScreen = CitiesScreenViewModel(citiesStore: citiesStore)
     }
 }
