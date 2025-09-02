@@ -52,6 +52,22 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertEqual("34.283333, 44.549999", screen.citiesListItems.first?.subheadText)
     }
     
+    func test_onlyLoadsContentOnce() throws {
+        let make = Make()
+        let (screen, httpClient) = (make.sut(), make.httpClient)
+        
+        XCTAssertFalse(screen.isShowingSpinner)
+        
+        screen.onAppear()
+        
+        let request = try XCTUnwrap(httpClient.pendingRequests.unique())
+        XCTAssertEqual(CitiesAPI.citiesGistUrl, request.urlString)
+        XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode([TestData.Cities.hurzuf])))))
+        
+        screen.onAppear()
+        XCTAssertTrue(httpClient.pendingRequests.isEmpty)
+    }
+    
     func testLoadCitiesFailsAndRetry() throws {
         let make = Make()
         let (screen, httpClient) = (make.sut(), make.httpClient)

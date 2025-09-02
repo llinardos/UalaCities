@@ -62,6 +62,8 @@ class CitiesStore {
     }
 
     func setup() {
+        guard case .idle = state else { return }
+        
         self.state = .loading
         
         citiesAPI.fetchCities { [weak self] result in
