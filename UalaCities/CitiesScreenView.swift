@@ -29,7 +29,11 @@ struct CitiesScreenView: View {
                     PaginatedList(viewModel.list) { row in
                         Text(row.headingText)
                     }
-                    .searchable(text: $viewModel.searchBarText, placement: .automatic, prompt: viewModel.searchBarPlaceholder)
+                    .searchable(
+                        text: $viewModel.searchBarText,
+                        placement: .navigationBarDrawer(displayMode: .always),
+                        prompt: viewModel.searchBarPlaceholder
+                    )
                 }
             }
             .onAppear { viewModel.onAppear() }

@@ -18,7 +18,22 @@ final class UITests: XCTestCase {
         let firstRowTitle = app.staticTexts["'t Hoeksken, BE"]
         XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
         
-//        app.searchFields["Filter"].typeText("T")
+        let searchBar = app.navigationBars.element(boundBy: 0).searchFields["Filter"]
+        XCTAssertTrue(searchBar.waitForExistence(timeout: 10.0))
+        searchBar.tap()
+        searchBar.typeText("Tandil")
+        
+        let filteredRowTitle = app.staticTexts["Tandil, AR"]
+        XCTAssertTrue(filteredRowTitle.waitForExistence(timeout: 10.0))
+        
+        searchBar.typeKey(.delete, modifierFlags: [])
+        searchBar.typeKey(.delete, modifierFlags: [])
+        searchBar.typeKey(.delete, modifierFlags: [])
+        searchBar.typeKey(.delete, modifierFlags: [])
+        searchBar.typeKey(.delete, modifierFlags: [])
+        searchBar.typeKey(.delete, modifierFlags: [])
+        
+        XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
     }
     
     func test_error_and_retry() throws {
