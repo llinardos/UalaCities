@@ -23,6 +23,7 @@ struct CitiesScreenView: View {
                     Text(viewModel.errorHeading).font(.headline)
                     Text(viewModel.errorSubhead).font(.subheadline)
                 }
+                .onTapGesture { viewModel.onErrorTap() }
             } else if viewModel.isShowingList {
                 List(viewModel.citiesListItems, id: \.name) { city in
                     Text(city.name)

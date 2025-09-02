@@ -16,9 +16,22 @@ extension Lala: iOSAppScreen {}
 
 public class iOSAppViewModel: ObservableObject {
     @Published var mainScreen: iOSAppScreen
-    private let httpClient = URLSessionHTTPClient()
+    private let httpClient: HTTPClient
     
     public init() {
+        if let string = ProcessInfo.processInfo.environment["UITestScenario"], let scenario = UITestScenarios(rawValue: string) {
+            switch scenario {
+            case .loadCitiesErrorAndRetry:
+                let stubbedHttpClient = StubbedHTTPClient([
+                    HTTPResponse(data: nil),
+                    HTTPResponse(data: try! JSONEncoder().encode([City(name: "City")])),
+                ])
+                httpClient = stubbedHttpClient
+            }
+        } else {
+            httpClient = URLSessionHTTPClient()
+        }
+        
         mainScreen = CitiesScreenViewModel(httpClient: httpClient)
     }
 }
