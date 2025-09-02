@@ -11,7 +11,7 @@ import XCTest
 final class UITests: XCTestCase {
     @MainActor
     
-    func test_smoke_citiesLoadedAndShown() throws {
+    func test_smoke_citiesLoadedAndShown_filter() throws {
         let app = XCUIApplication()
         app.launch()
         
@@ -26,13 +26,12 @@ final class UITests: XCTestCase {
         let filteredRowTitle = app.staticTexts["Tandil, AR"]
         XCTAssertTrue(filteredRowTitle.waitForExistence(timeout: 10.0))
         
-        searchBar.typeKey(.delete, modifierFlags: [])
-        searchBar.typeKey(.delete, modifierFlags: [])
-        searchBar.typeKey(.delete, modifierFlags: [])
-        searchBar.typeKey(.delete, modifierFlags: [])
-        searchBar.typeKey(.delete, modifierFlags: [])
-        searchBar.typeKey(.delete, modifierFlags: [])
-        
+        searchBar.typeText("\u{8}")
+        searchBar.typeText("\u{8}")
+        searchBar.typeText("\u{8}")
+        searchBar.typeText("\u{8}")
+        searchBar.typeText("\u{8}")
+        searchBar.typeText("\u{8}")
         XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
     }
     

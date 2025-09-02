@@ -154,6 +154,11 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertEqual("A", screen.searchBarText)
         screen.searchBarTypeDelete()
         XCTAssertEqual("", screen.searchBarText)
+        XCTAssertEqual("Alabama, US", screen.citiesListItems[safe: 0]?.headingText)
+        XCTAssertEqual("Albuquerque, US", screen.citiesListItems[safe: 1]?.headingText)
+        XCTAssertEqual("Anaheim, US", screen.citiesListItems[safe: 2]?.headingText)
+        XCTAssertEqual("Arizona, US", screen.citiesListItems[safe: 3]?.headingText)
+        XCTAssertEqual("Sidney, AU", screen.citiesListItems[safe: 4]?.headingText)
         
         screen.searchBarType("s")
         XCTAssertEqual("s", screen.searchBarText)
