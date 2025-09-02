@@ -25,25 +25,44 @@ class CitiesScreenViewModel: ObservableObject {
     @Published var searchBarText: String = ""
     @Published var searchBarPlaceholder = "Filter"
     
-    private let citiesAPI: CitiesAPI
-    private var cities: [City] = []
-    private let runner: AsyncRunner
+    private let citiesRepo: CitiesRepository
     
     init(httpClient: HTTPClient, runner: AsyncRunner) {
-        self.citiesAPI = CitiesAPI(httpClient: httpClient)
-        self.runner = runner
+        self.citiesRepo = CitiesRepository(citiesAPI: CitiesAPI(httpClient: httpClient), runner: runner)
+                
+        citiesRepo.onError = { [weak self] _ in
+            guard let self else { return }
+            self.isShowingSpinner = false
+            self.isShowingList = false
+            self.isShowingError = true
+        }
         
-        $searchBarText.removeDuplicates().sink { [weak self] query in
-            self?.refreshList(query)
+        citiesRepo.onLoading = { [weak self] in
+            guard let self else { return }
+            self.isShowingSpinner = true
+            self.isShowingList = false
+            self.isShowingError = false
+        }
+        
+        citiesRepo.onCitiesUpdate = { [weak self] cities in
+            guard let self else { return }
+            self.isShowingSpinner = false
+            self.list.items = cities.map { CityRow(city: $0) }
+            self.isShowingList = true
+            self.isShowingError = false
+        }
+
+        $searchBarText.dropFirst().removeDuplicates().sink { [weak self] query in
+            self?.citiesRepo.filter(by: query)
         }.store(in: &subscriptions)
     }
     
     func onAppear() {
-        fetchCities()
+        citiesRepo.load()
     }
     
     func onErrorTap() {
-        fetchCities()
+        citiesRepo.load()
     }
     
     func searchBarType(_ text: String) {
@@ -53,40 +72,54 @@ class CitiesScreenViewModel: ObservableObject {
     func searchBarTypeDelete() {
         self.searchBarText.removeLast()
     }
+}
+
+class CitiesRepository {
+    private let citiesAPI: CitiesAPI
+    private var allCities: [City] = []
+    private let runner: AsyncRunner
     
-    private func refreshList(_ query: String? = nil) {
-        runner.run(bgWork: {
-            let query = query ?? self.searchBarText
-            if query.count == 0 {
-                return self.cities
-                    .map { CityRow(city: $0) }
-            } else {
-                return self.cities
-                    .filter { $0.name.lowercased().hasPrefix(query.lowercased()) }
-                    .map { CityRow(city: $0) }
+    init(citiesAPI: CitiesAPI, runner: AsyncRunner) {
+        self.citiesAPI = citiesAPI
+        self.runner = runner
+    }
+    
+    private var query: String = ""
+    func filter(by query: String) {
+        self.query = query
+        refreshList()
+    }
+    
+    var onError: ((CitiesAPI.Error) -> Void)?
+    var onLoading: (() -> Void)?
+    var onCitiesUpdate: (([City]) -> Void)?
+    
+    func load() {
+        self.onLoading?()
+        
+        citiesAPI.fetchCities { [weak self] result in
+            guard let self else { return }    
+            
+            switch result {
+            case .success(let cities):
+                self.allCities = cities.sorted { $0.name < $1.name }
+                self.refreshList()
+            case .failure(let error):
+                self.onError?(error)
             }
-        }) {
-            self.list.items = $0
         }
     }
     
-    private func fetchCities() {
-        self.isShowingList = false
-        self.isShowingError = false
-        self.isShowingSpinner = true
-        
-        citiesAPI.fetchCities { [weak self] result in
-            guard let self else { return }
-            
-            self.isShowingSpinner = false
-            switch result {
-            case .success(let cities):
-                self.isShowingList = true
-                self.cities = cities.sorted { $0.name < $1.name }
-                self.refreshList()
-            case .failure:
-                self.isShowingError = true
+    private func refreshList() {
+        runner.run(bgWork: {
+            if self.query.count == 0 {
+                return self.allCities
+            } else {
+                return self.allCities
+                    .filter { $0.name.lowercased().hasPrefix(self.query.lowercased()) }
             }
+        }) {
+            self.onCitiesUpdate?($0)
         }
     }
 }

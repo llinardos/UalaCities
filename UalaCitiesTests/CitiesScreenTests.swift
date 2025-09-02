@@ -107,6 +107,19 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertEqual("Sidney, AU", screen.citiesListItems[safe: 1]?.headingText)
     }
     
+    func testSortOnlyWhenCitiesAreLoaded() throws {
+        let make = Make()
+        let (screen, httpClient) = (make.sut(), make.httpClient)
+        
+        screen.onAppear()
+        
+        _ = try XCTUnwrap(httpClient.pendingRequests.unique())
+
+        screen.searchBarType("")
+        
+        XCTAssertTrue(screen.isShowingSpinner)
+    }
+    
     func testFilter() throws {
         let make = Make()
         let (screen, httpClient) = (make.sut(), make.httpClient)
