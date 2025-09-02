@@ -29,30 +29,29 @@ class CitiesScreenViewModel: ObservableObject {
     
     init(httpClient: HTTPClient, runner: AsyncRunner) {
         self.citiesRepo = CitiesRepository(citiesAPI: CitiesAPI(httpClient: httpClient), runner: runner)
-                
-        citiesRepo.onError = { [weak self] _ in
-            guard let self else { return }
-            self.isShowingSpinner = false
-            self.isShowingList = false
-            self.isShowingError = true
-        }
         
-        citiesRepo.onLoading = { [weak self] in
-            guard let self else { return }
-            self.isShowingSpinner = true
-            self.isShowingList = false
-            self.isShowingError = false
-        }
-        
-        citiesRepo.onCitiesUpdate = { [weak self] cities in
-            guard let self else { return }
-            self.isShowingSpinner = false
-            self.list.items = cities.map { CityRow(city: $0) }
-            self.isShowingList = true
-            self.isShowingError = false
-        }
+        citiesRepo.$state.sink { [weak self] state in
+            guard let self else { return}
+            
+            switch state {
+            case .idle: break
+            case .loading:
+                self.isShowingSpinner = true
+                self.isShowingList = false
+                self.isShowingError = false
+            case .loaded(let cities):
+                self.isShowingSpinner = false
+                self.list.items = cities.map { CityRow(city: $0) }
+                self.isShowingList = true
+                self.isShowingError = false
+            case .failed:
+                self.isShowingSpinner = false
+                self.isShowingList = false
+                self.isShowingError = true
+            }
+        }.store(in: &subscriptions)
 
-        $searchBarText.dropFirst().removeDuplicates().sink { [weak self] query in
+        $searchBarText.sink { [weak self] query in
             self?.citiesRepo.filter(by: query)
         }.store(in: &subscriptions)
     }
@@ -79,6 +78,13 @@ class CitiesRepository {
     private var allCities: [City] = []
     private let runner: AsyncRunner
     
+    enum State {
+        case idle
+        case loading
+        case loaded([City])
+        case failed
+    }
+    
     init(citiesAPI: CitiesAPI, runner: AsyncRunner) {
         self.citiesAPI = citiesAPI
         self.runner = runner
@@ -87,15 +93,15 @@ class CitiesRepository {
     private var query: String = ""
     func filter(by query: String) {
         self.query = query
+        
+        guard case .loaded = state else { return }
         refreshList()
     }
     
-    var onError: ((CitiesAPI.Error) -> Void)?
-    var onLoading: (() -> Void)?
-    var onCitiesUpdate: (([City]) -> Void)?
-    
+    @Published var state: State = .idle
+
     func load() {
-        self.onLoading?()
+        self.state = .loading
         
         citiesAPI.fetchCities { [weak self] result in
             guard let self else { return }    
@@ -104,8 +110,9 @@ class CitiesRepository {
             case .success(let cities):
                 self.allCities = cities.sorted { $0.name < $1.name }
                 self.refreshList()
-            case .failure(let error):
-                self.onError?(error)
+            case .failure:
+                // TODO: log
+                self.state = .failed
             }
         }
     }
@@ -119,7 +126,7 @@ class CitiesRepository {
                     .filter { $0.name.lowercased().hasPrefix(self.query.lowercased()) }
             }
         }) {
-            self.onCitiesUpdate?($0)
+            self.state = .loaded($0)
         }
     }
 }
