@@ -19,15 +19,7 @@ class CitiesScreenTests: XCTestCase {
         
         try httpClient.respond(to: request, with: HTTPResponse(data: JSONEncoder().encode([City(name: "Hurzuf")])))
         
-        let listShown = expectation(description: "list of cities shown")
-        Task {
-            for await value in screen.$isShowingList.values where value == true {
-                listShown.fulfill()
-                break
-            }
-        }
-        wait(for: [listShown], timeout: 10)
-        
+        XCTAssertTrue(screen.isShowingList)
         XCTAssertEqual("Hurzuf", screen.citiesListItems.first?.name)
     }
 }
