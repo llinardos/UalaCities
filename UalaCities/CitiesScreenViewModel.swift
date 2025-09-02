@@ -24,10 +24,11 @@ class CitiesScreenViewModel: ObservableObject {
     
     @Published var isShowingList: Bool = false
     let list = PaginatedListViewModel<CityRow>(items: [], pageSize: 100, prefetchOffset: 10)
-    var citiesListItems: [CityRow] { list.visibleItems }
+    var citiesListItems: [CityRow] { list.visibleItems } // TODO: clean, adapted for tests after viewmodel API change
     
-    @Published var searchBarText: String = ""
-    @Published var searchBarPlaceholder = "Filter"
+    let searchBar = SearchBarViewModel(placeholderText: "Filter")
+    var searchBarText: String { searchBar.text }
+    var searchBarPlaceholder: String { searchBar.placeholderText } // TODO: clean, adapted for tests after viewmodel API change
     
     private let citiesRepo: CitiesRepository
     
@@ -58,7 +59,7 @@ class CitiesScreenViewModel: ObservableObject {
             }
         }.store(in: &subscriptions)
 
-        $searchBarText.sink { [weak self] query in
+        searchBar.$text.sink { [weak self] query in
             self?.citiesRepo.filter(by: query)
         }.store(in: &subscriptions)
     }
@@ -72,11 +73,11 @@ class CitiesScreenViewModel: ObservableObject {
     }
     
     func searchBarType(_ text: String) {
-        self.searchBarText += text
+        self.searchBar.text += text
     }
     
     func searchBarTypeDelete() {
-        self.searchBarText.removeLast()
+        self.searchBar.text.removeLast()
     }
 }
 

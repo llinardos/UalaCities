@@ -18,7 +18,7 @@ final class UITests: XCTestCase {
         let firstRowTitle = app.staticTexts["'t Hoeksken, BE"]
         XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
         
-        let searchBar = app.navigationBars.element(boundBy: 0).searchFields["Filter"]
+        let searchBar = app.searchFields["Filter"]
         XCTAssertTrue(searchBar.waitForExistence(timeout: 10.0))
         searchBar.tap()
         searchBar.typeText("Tandil")

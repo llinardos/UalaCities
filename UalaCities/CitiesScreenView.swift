@@ -26,31 +26,103 @@ struct CitiesScreenView: View {
                     }
                     .onTapGesture { viewModel.onErrorTap() }
                 } else if viewModel.isShowingList {
-                    PaginatedListView(viewModel.list) { row in
-                        Text(row.headingText)
-                    }
-                    .safeAreaInset(edge: .bottom) {
-                        if viewModel.isShowingEmptyView {
-                            VStack(spacing: 16) {
-                                Image(systemName: "magnifyingglass")
-                                    .font(.title)
-                                VStack {
-                                    Text(viewModel.emptyHeadingText).font(.headline)
-                                    Text(viewModel.emptySubheadText).font(.subheadline)
+                    VStack {
+                        SearchBarView(viewModel: viewModel.searchBar)
+                        PaginatedListView(viewModel.list) { row in
+                            Text(row.headingText)
+                        }
+                        .safeAreaInset(edge: .bottom) {
+                            if viewModel.isShowingEmptyView {
+                                VStack(spacing: 16) {
+                                    Image(systemName: "magnifyingglass")
+                                        .font(.title)
+                                    VStack {
+                                        Text(viewModel.emptyHeadingText).font(.headline)
+                                        Text(viewModel.emptySubheadText).font(.subheadline)
+                                    }
                                 }
+                                .frame(maxHeight: .infinity)
                             }
-                            .frame(maxHeight: .infinity)
                         }
                     }
-                    .searchable(
-                        text: $viewModel.searchBarText,
-                        placement: .navigationBarDrawer(displayMode: .always),
-                        prompt: viewModel.searchBarPlaceholder
-                    )
                 }
             }
             .onAppear { viewModel.onAppear() }
         }
+    }
+}
+
+import Combine
+
+class SearchBarViewModel: ObservableObject {
+    private var subscriptions = Set<AnyCancellable>()
+    
+    @Published var text: String = ""
+    @Published var placeholderText: String = "Filter"
+    @Published var cancelButtonText: String = "Cancel"
+    @Published var isFocused: Bool = false
+    @Published var showCancelButton: Bool = false
+    @Published var showClearButton: Bool = false
+    
+    init(placeholderText: String, cancelButtonText: String = "Cancel") {
+        self.placeholderText = placeholderText
+        self.cancelButtonText = cancelButtonText
+        
+        $isFocused.sink { [weak self] isEditing in
+            self?.showCancelButton = isEditing
+        }.store(in: &subscriptions)
+        
+        $text.sink { [weak self] text in
+            self?.showClearButton = !text.isEmpty
+        }.store(in: &subscriptions)
+    }
+    
+    func onTextFieldTap() {
+        self.isFocused = true
+    }
+    
+    func onClearTap() {
+        self.text = ""
+    }
+}
+
+struct SearchBarView: View {
+    @ObservedObject var viewModel: SearchBarViewModel
+    @FocusState var isFocused: Bool
+    
+    var body: some View {
+        HStack {
+            HStack {
+                Image(systemName: "magnifyingglass")
+                    .tint(.secondary)
+                TextField("", text: $viewModel.text, prompt: Text(viewModel.placeholderText))
+                    .textFieldStyle(.plain)
+                    .focused($isFocused)
+                    .onTapGesture {
+                        viewModel.onTextFieldTap()
+                    }
+                    .onChange(of: isFocused) { _, isFocused in
+                        self.viewModel.isFocused = isFocused
+                    }
+                    .accessibilityAddTraits(.isSearchField)
+                if viewModel.showClearButton {
+                    Button(action: {
+                        self.viewModel.onClearTap()
+                    }, label: { Image(systemName: "xmark.circle.fill")})
+                        .tint(.secondary)
+                }
+            }
+            .padding(8)
+            .background(.thinMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            if viewModel.showCancelButton {
+                Button(viewModel.cancelButtonText) {
+                    self.isFocused = false
+                }
+                .tint(.primary)
+            }
+        }
+        .padding(.horizontal)
     }
 }
 
