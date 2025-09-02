@@ -19,16 +19,24 @@ class CitiesScreenViewModel: ObservableObject {
             self.citiesListItems = cities
         }
     }
+}
 
+struct HTTPRequest {
+    var urlString: String
+}
+struct HTTPResponse {
+    var data: Data?
 }
 
 class HTTPClient {
     func fetchCities(_ completion: @escaping ([City]) -> Void) {
-        let urlRequest = URLRequest(url: URL(string: "https://gist.githubusercontent.com/hernan-uala/dce8843a8edbe0b0018b32e137bc2b3a/raw/0996accf70cb0ca0e16f9a99e0ee185fafca7af1/cities.json")!)
+        let request = HTTPRequest(urlString: "https://gist.githubusercontent.com/hernan-uala/dce8843a8edbe0b0018b32e137bc2b3a/raw/0996accf70cb0ca0e16f9a99e0ee185fafca7af1/cities.json")
+        let urlRequest = URLRequest(url: URL(string: request.urlString)!)
         URLSession.shared.dataTask(with: urlRequest) { (data, _, _) in
+            let response = HTTPResponse(data: data)
             DispatchQueue.main.async {
                 do {
-                    let cities = try JSONDecoder().decode([City].self, from: data ?? .init())
+                    let cities = try JSONDecoder().decode([City].self, from: response.data ?? .init())
                     completion(cities)
                 } catch {
                     
