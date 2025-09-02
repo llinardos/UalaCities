@@ -12,7 +12,8 @@ final class UITests: XCTestCase {
     @MainActor
     
     func test_smoke_citiesLoadedAndShown_filter() throws {
-        let app = XCUIApplication()
+        var app = XCUIApplication()
+        app.launchEnvironment["UITests"] = "true"
         app.launch()
         
         let loadingView = app.staticTexts["Loading Cities..."]
@@ -64,10 +65,23 @@ final class UITests: XCTestCase {
         favoriteFilterButton.tap()
         XCTAssertTrue(favoriteFilterButton.isSelected)
         XCTAssertTrue(filteredRowTitle.waitForExistence(timeout: 10.0))
+        
+        // favorites persistence
+        app.terminate()
+        
+        app = XCUIApplication()
+        app.launch()
+
+        XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(favoriteFilterButton.waitForExistence(timeout: 10.0))
+        favoriteFilterButton.tap()
+        
+        XCTAssertTrue(filteredRowTitle.waitForExistence(timeout: 10.0))
     }
     
     func test_error_and_retry() throws {
         let app = XCUIApplication()
+        app.launchEnvironment["UITests"] = "true"
         app.launchEnvironment["UITestScenario"] = UITestScenarios.loadCitiesErrorAndRetry.rawValue
         app.launch()
         

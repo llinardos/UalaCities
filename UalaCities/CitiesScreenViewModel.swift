@@ -37,8 +37,8 @@ class CitiesScreenViewModel: ObservableObject {
     
     private let citiesRepo: CitiesRepository
     
-    init(httpClient: HTTPClient, runner: AsyncRunner) {
-        self.citiesRepo = CitiesRepository(citiesAPI: CitiesAPI(httpClient: httpClient), runner: runner)
+    init(httpClient: HTTPClient, runner: AsyncRunner, userDefaults: AppleUserDefaults) {
+        self.citiesRepo = CitiesRepository(citiesAPI: CitiesAPI(httpClient: httpClient), runner: runner, userDefaults: userDefaults)
         
         citiesRepo.$state.sink { [weak self] state in
             guard let self else { return}
@@ -94,6 +94,44 @@ class CitiesScreenViewModel: ObservableObject {
     
     func searchBarTypeDelete() {
         self.searchBar.text.removeLast()
+    }
+}
+
+protocol AppleUserDefaults {
+    func set(_ value: [Any]?, forKey key: String)
+    func array(forKey key: String) -> [Any]?
+    func removeObject(forKey key: String)
+}
+
+class RealAppleUserDefaults: AppleUserDefaults {
+    private let inner = UserDefaults.standard
+    
+    func set(_ value: [Any]?, forKey key: String) {
+        inner.setValue(value, forKey: key)
+    }
+    
+    func array(forKey key: String) -> [Any]? {
+        inner.array(forKey: key)
+    }
+    
+    open func removeObject(forKey key: String) {
+        inner.removeObject(forKey: key)
+    }
+}
+
+class InRamAppleUserDefaults: AppleUserDefaults {
+    private var valueByKey: [String: Any] = [:]
+    
+    func set(_ value: [Any]?, forKey key: String) {
+        valueByKey[key] = value
+    }
+    
+    func array(forKey key: String) -> [Any]? {
+        valueByKey[key] as? [Any]
+    }
+    
+    open func removeObject(forKey key: String) {
+        valueByKey.removeValue(forKey: key)
     }
 }
 

@@ -11,6 +11,8 @@ class CitiesRepository {
     private let citiesAPI: CitiesAPI
     private var allCities: [City] = []
     private let runner: AsyncRunner
+    private let userDefaults: AppleUserDefaults
+    private let favoritesIdsInUserDefaultsKey = "favoritesCityIds"
     
     enum DataState {
         case idle
@@ -19,9 +21,10 @@ class CitiesRepository {
         case failed
     }
     
-    init(citiesAPI: CitiesAPI, runner: AsyncRunner) {
+    init(citiesAPI: CitiesAPI, runner: AsyncRunner, userDefaults: AppleUserDefaults) {
         self.citiesAPI = citiesAPI
         self.runner = runner
+        self.userDefaults = userDefaults
     }
     
     private var query: String = ""
@@ -47,6 +50,8 @@ class CitiesRepository {
         } else {
             favoriteCities.append(city)
         }
+        let favoriteIds: [Int] = favoriteCities.map { $0._id }
+        userDefaults.set(favoriteIds, forKey: favoritesIdsInUserDefaultsKey)
         refreshList()
     }
     
@@ -65,6 +70,9 @@ class CitiesRepository {
             switch result {
             case .success(let cities):
                 self.allCities = cities.sorted { $0.name < $1.name }
+                if let favoritesIds = self.userDefaults.array(forKey: self.favoritesIdsInUserDefaultsKey) as? [Int] {
+                    self.favoriteCities = cities.filter { favoritesIds.contains($0._id) }
+                }
                 self.refreshList()
             case .failure:
                 // TODO: log

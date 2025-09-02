@@ -152,9 +152,9 @@ struct SearchBarView: View {
 }
 
 #Preview("ok") {
-    CitiesScreenView(viewModel: .init(httpClient: StubbedHTTPClient([.init(statusCode: 200, data: try! JSONEncoder().encode([City(_id: 1, name: "City 1", country: "AA")]))]), runner: GlobalRunner()))
+    CitiesScreenView(viewModel: .init(httpClient: StubbedHTTPClient([.init(statusCode: 200, data: try! JSONEncoder().encode([City(_id: 1, name: "City 1", country: "AA")]))]), runner: GlobalRunner(), userDefaults: InRamAppleUserDefaults()))
 }
 
 #Preview("error") {
-    CitiesScreenView(viewModel: .init(httpClient: StubbedHTTPClient([.init(statusCode: 500)]), runner: GlobalRunner()))
+    CitiesScreenView(viewModel: .init(httpClient: StubbedHTTPClient([.init(statusCode: 500)]), runner: GlobalRunner(), userDefaults: InRamAppleUserDefaults()))
 }

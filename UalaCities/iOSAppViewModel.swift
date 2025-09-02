@@ -19,6 +19,12 @@ public class iOSAppViewModel: ObservableObject {
     private let httpClient: HTTPClient
     
     public init() {
+        if let string = ProcessInfo.processInfo.environment["UITests"], string == "true" {
+            if let bundleID = Bundle.main.bundleIdentifier {
+                UserDefaults.standard.removePersistentDomain(forName: bundleID)
+                UserDefaults.standard.synchronize()
+            }
+        }
         if let string = ProcessInfo.processInfo.environment["UITestScenario"], let scenario = UITestScenarios(rawValue: string) {
             switch scenario {
             case .loadCitiesErrorAndRetry:
@@ -34,6 +40,6 @@ public class iOSAppViewModel: ObservableObject {
             httpClient = URLSessionHTTPClient()
         }
         
-        mainScreen = CitiesScreenViewModel(httpClient: httpClient, runner: GlobalRunner())
+        mainScreen = CitiesScreenViewModel(httpClient: httpClient, runner: GlobalRunner(), userDefaults: RealAppleUserDefaults())
     }
 }
