@@ -72,6 +72,7 @@
 		0D0A97032E66627000B71355 /* IntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D0A97202E66634600B71355 /* UalaCities.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UalaCities.xctestplan; sourceTree = "<group>"; };
 		0D0A973E2E666D1D00B71355 /* UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D0A974B2E6673F800B71355 /* UITests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UITests.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -147,6 +148,7 @@
 		0D0A96C72E6661E000B71355 = {
 			isa = PBXGroup;
 			children = (
+				0D0A974B2E6673F800B71355 /* UITests.xctestplan */,
 				0D0A97202E66634600B71355 /* UalaCities.xctestplan */,
 				0D0A96D22E6661E000B71355 /* UalaCitiesiOSApp */,
 				0D0A96E42E66620800B71355 /* UalaCities */,

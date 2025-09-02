@@ -51,7 +51,7 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0D0A97242E66636400B71355"
+               BlueprintIdentifier = "0D0A973D2E666D1D00B71355"
                BuildableName = "UITests.xctest"
                BlueprintName = "UITests"
                ReferencedContainer = "container:UalaCities.xcodeproj">

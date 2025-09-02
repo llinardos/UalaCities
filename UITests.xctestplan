@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "565D22C6-4964-425F-8DB9-3A8BE3003EFA",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:UalaCities.xcodeproj",
+        "identifier" : "0D0A973D2E666D1D00B71355",
+        "name" : "UITests"
+      }
+    }
+  ],
+  "version" : 1
+}
