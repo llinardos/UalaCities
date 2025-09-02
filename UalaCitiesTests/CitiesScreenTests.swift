@@ -108,7 +108,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertEqual("Sidney, AU", screen.citiesListItems[safe: 1]?.headingText)
     }
     
-    func testSortOnlyWhenCitiesAreLoaded() throws {
+    func testFilterOnlyWhenCitiesAreLoaded() throws {
         let make = Make()
         let (screen, httpClient) = (make.sut(), make.httpClient)
         
@@ -117,7 +117,9 @@ class CitiesScreenTests: XCTestCase {
         _ = try XCTUnwrap(httpClient.pendingRequests.unique())
 
         screen.searchBarType("")
+        XCTAssertTrue(screen.isShowingSpinner)
         
+        screen.onTapFavoriteFilterButton()
         XCTAssertTrue(screen.isShowingSpinner)
     }
     
@@ -225,6 +227,27 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertTrue(screen.isShowingList)
         XCTAssertFalse(screen.isShowingEmptyView)
         XCTAssertEqual("Arizona, US", screen.citiesListItems.first?.headingText)
+    }
+    
+    func test_filterByFavorites() throws {
+        let make = Make()
+        let (screen, httpClient) = (make.sut(), make.httpClient)
+        
+        XCTAssertFalse(screen.isShowingSpinner)
+        
+        screen.onAppear()
+        
+        let request = try XCTUnwrap(httpClient.pendingRequests.unique())
+        XCTAssertEqual(CitiesAPI.citiesGistUrl, request.urlString)
+        XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode([TestData.Cities.arizona])))))
+        XCTAssertEqual("Arizona, US", screen.citiesListItems.unique()?.headingText)
+        
+        XCTAssertFalse(screen.favoriteFilterButtonIsSelected, "begins off")
+        
+        screen.onTapFavoriteFilterButton()
+        XCTAssertTrue(screen.favoriteFilterButtonIsSelected)
+        
+        XCTAssertNil(screen.citiesListItems.first)
     }
     
     func testPaginatedList() {

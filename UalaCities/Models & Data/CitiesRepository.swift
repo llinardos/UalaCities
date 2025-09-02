@@ -32,6 +32,14 @@ class CitiesRepository {
         refreshList { self.state = .ready($0) }
     }
     
+    private var isFilteringFavoriter: Bool = false
+    func filterFavorites(_ filterFavorites: Bool) {
+        self.isFilteringFavoriter = filterFavorites
+        
+        guard case .ready = state else { return }
+        refreshList { self.state = .ready($0) }
+    }
+    
     @Published var state: DataState = .idle
 
     func load() {
@@ -53,10 +61,11 @@ class CitiesRepository {
     
     private func refreshList(_ completion: @escaping ([City]) -> Void) {
         runner.run(bgWork: {
+            let cities = self.isFilteringFavoriter ? [] : self.allCities
             if self.query.count == 0 {
-                return self.allCities
+                return cities
             } else {
-                return self.allCities
+                return cities
                     .filter { $0.name.lowercased().hasPrefix(self.query.lowercased()) }
             }
         }, mainWork: completion)

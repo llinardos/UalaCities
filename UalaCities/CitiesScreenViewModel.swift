@@ -30,6 +30,11 @@ class CitiesScreenViewModel: ObservableObject {
     var searchBarText: String { searchBar.text }
     var searchBarPlaceholder: String { searchBar.placeholderText } // TODO: clean, adapted for tests after viewmodel API change
     
+    @Published var favoriteFilterButtonIsSelected = false
+    func onTapFavoriteFilterButton() {
+        favoriteFilterButtonIsSelected.toggle()
+    }
+    
     private let citiesRepo: CitiesRepository
     
     init(httpClient: HTTPClient, runner: AsyncRunner) {
@@ -61,6 +66,10 @@ class CitiesScreenViewModel: ObservableObject {
 
         searchBar.$text.sink { [weak self] query in
             self?.citiesRepo.filter(by: query)
+        }.store(in: &subscriptions)
+        
+        $favoriteFilterButtonIsSelected.sink { [weak self] isOn in
+            self?.citiesRepo.filterFavorites(isOn)
         }.store(in: &subscriptions)
     }
     

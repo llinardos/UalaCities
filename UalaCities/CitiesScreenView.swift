@@ -27,7 +27,19 @@ struct CitiesScreenView: View {
                     .onTapGesture { viewModel.onErrorTap() }
                 } else if viewModel.isShowingList {
                     VStack {
-                        SearchBarView(viewModel: viewModel.searchBar)
+                        HStack(spacing: 8) {
+                            SearchBarView(viewModel: viewModel.searchBar)
+                            Button {
+                                viewModel.onTapFavoriteFilterButton()
+                            } label: {
+                                Image(systemName: viewModel.favoriteFilterButtonIsSelected ? "star.fill" : "star")
+                                    .foregroundColor(viewModel.favoriteFilterButtonIsSelected ? .yellow : .primary)
+                                    .font(.body)
+                            }
+                            .accessibilityIdentifier("FavoriteFilterButton")
+                            .buttonStyle(.plain)
+                        }
+                        .padding(.horizontal)
                         PaginatedListView(viewModel.list) { row in
                             Text(row.headingText)
                         }
@@ -122,7 +134,6 @@ struct SearchBarView: View {
                 .tint(.primary)
             }
         }
-        .padding(.horizontal)
     }
 }
 

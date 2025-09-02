@@ -15,9 +15,13 @@ final class UITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
         
+        let loadingView = app.staticTexts["Loading Cities..."]
+        XCTAssertTrue(loadingView.waitForExistence(timeout: 10.0))
+        
         let firstRowTitle = app.staticTexts["'t Hoeksken, BE"]
         XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
         
+        // query filter
         let searchBar = app.searchFields["Filter"]
         XCTAssertTrue(searchBar.waitForExistence(timeout: 10.0))
         searchBar.tap()
@@ -32,6 +36,18 @@ final class UITests: XCTestCase {
         searchBar.typeText("\u{8}")
         searchBar.typeText("\u{8}")
         searchBar.typeText("\u{8}")
+        XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
+        
+        // favorite filter
+        let favoriteFilterButton = app.buttons["FavoriteFilterButton"]
+        XCTAssertTrue(favoriteFilterButton.waitForExistence(timeout: 10.0))
+        favoriteFilterButton.tap()
+        
+        let noResultsTitle = app.staticTexts["No cities found"]
+        XCTAssertTrue(noResultsTitle.waitForExistence(timeout: 10.0))
+        
+        favoriteFilterButton.tap()
+        
         XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
     }
     
