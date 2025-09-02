@@ -17,6 +17,8 @@ final class UITests: XCTestCase {
         
         let firstRowTitle = app.staticTexts["'t Hoeksken, BE"]
         XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
+        
+//        app.searchFields["Filter"].typeText("T")
     }
     
     func test_error_and_retry() throws {

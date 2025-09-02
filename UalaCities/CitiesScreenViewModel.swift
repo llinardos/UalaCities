@@ -19,7 +19,8 @@ class CitiesScreenViewModel: ObservableObject {
     @Published var errorSubhead = "Tap to try again"
     
     @Published var isShowingList: Bool = false
-    @Published var citiesListItems: [CityRow] = []
+    let list = PaginatedListViewModel<CityRow>(items: [], pageSize: 100, prefetchOffset: 10)
+    var citiesListItems: [CityRow] { list.visibleItems }
     
     @Published var searchBarText: String = ""
     @Published var searchBarPlaceholder = "Filter"
@@ -33,7 +34,7 @@ class CitiesScreenViewModel: ObservableObject {
         $searchBarText.sink { [weak self] query in
             guard let self else { return }
             
-            self.citiesListItems = self.cities
+            self.list.items = self.cities
                 .sorted { $0.name < $1.name }
                 .filter { $0.name.lowercased().hasPrefix(query.lowercased()) }
                 .map { CityRow(city: $0) }
@@ -69,7 +70,7 @@ class CitiesScreenViewModel: ObservableObject {
             case .success(let cities):
                 self.isShowingList = true
                 self.cities = cities
-                self.citiesListItems = cities
+                self.list.items = cities
                     .sorted { $0.name < $1.name }
                     .map { CityRow(city: $0) }
             case .failure:
@@ -86,5 +87,30 @@ class CityRow: ObservableObject, Identifiable {
     init(city: City) {
         self.city = city
         self.headingText = "\(city.name), \(city.country)"
+    }
+}
+
+class PaginatedListViewModel<T>: ObservableObject {
+    @Published var visibleItems: [T]
+    
+    var items: [T] {
+        didSet {
+            visibleItems = Array(items[0..<min(pageSize, items.count)])
+        }
+    }
+    private let pageSize: Int
+    private let prefetchOffset: Int
+    
+    init(items: [T], pageSize: Int, prefetchOffset: Int) {
+        self.items = items
+        self.pageSize = pageSize
+        self.prefetchOffset = prefetchOffset
+        visibleItems = Array(items[0..<min(pageSize, items.count)])
+    }
+    
+    func onDidDisplayItemAtIndex(_ index: Int) {
+        if visibleItems.count - index <= prefetchOffset {
+            visibleItems += items[visibleItems.count..<min(visibleItems.count + pageSize, items.count)]
+        }
     }
 }
