@@ -42,6 +42,13 @@
 			remoteGlobalIDString = 0D0A96E22E66620800B71355;
 			remoteInfo = UalaCities;
 		};
+		0D0A97442E666D1D00B71355 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0D0A96C82E6661E000B71355 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D0A96CF2E6661E000B71355;
+			remoteInfo = UalaCitiesiOSApp;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -64,6 +71,7 @@
 		0D0A96EB2E66620800B71355 /* UalaCitiesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UalaCitiesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D0A97032E66627000B71355 /* IntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D0A97202E66634600B71355 /* UalaCities.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UalaCities.xctestplan; sourceTree = "<group>"; };
+		0D0A973E2E666D1D00B71355 /* UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -85,6 +93,11 @@
 		0D0A97042E66627000B71355 /* IntegrationTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = IntegrationTests;
+			sourceTree = "<group>";
+		};
+		0D0A973F2E666D1D00B71355 /* UITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = UITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -121,6 +134,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0D0A973B2E666D1D00B71355 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -132,6 +152,7 @@
 				0D0A96E42E66620800B71355 /* UalaCities */,
 				0D0A96F12E66620800B71355 /* UalaCitiesTests */,
 				0D0A97042E66627000B71355 /* IntegrationTests */,
+				0D0A973F2E666D1D00B71355 /* UITests */,
 				0D0A96D12E6661E000B71355 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -143,6 +164,7 @@
 				0D0A96E32E66620800B71355 /* UalaCities.framework */,
 				0D0A96EB2E66620800B71355 /* UalaCitiesTests.xctest */,
 				0D0A97032E66627000B71355 /* IntegrationTests.xctest */,
+				0D0A973E2E666D1D00B71355 /* UITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -254,6 +276,29 @@
 			productReference = 0D0A97032E66627000B71355 /* IntegrationTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		0D0A973D2E666D1D00B71355 /* UITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0D0A97462E666D1D00B71355 /* Build configuration list for PBXNativeTarget "UITests" */;
+			buildPhases = (
+				0D0A973A2E666D1D00B71355 /* Sources */,
+				0D0A973B2E666D1D00B71355 /* Frameworks */,
+				0D0A973C2E666D1D00B71355 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0D0A97452E666D1D00B71355 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				0D0A973F2E666D1D00B71355 /* UITests */,
+			);
+			name = UITests;
+			packageProductDependencies = (
+			);
+			productName = UITests;
+			productReference = 0D0A973E2E666D1D00B71355 /* UITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -276,6 +321,10 @@
 					0D0A97022E66627000B71355 = {
 						CreatedOnToolsVersion = 16.4;
 					};
+					0D0A973D2E666D1D00B71355 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 0D0A96CF2E6661E000B71355;
+					};
 				};
 			};
 			buildConfigurationList = 0D0A96CB2E6661E000B71355 /* Build configuration list for PBXProject "UalaCities" */;
@@ -296,6 +345,7 @@
 				0D0A96E22E66620800B71355 /* UalaCities */,
 				0D0A96EA2E66620800B71355 /* UalaCitiesTests */,
 				0D0A97022E66627000B71355 /* IntegrationTests */,
+				0D0A973D2E666D1D00B71355 /* UITests */,
 			);
 		};
 /* End PBXProject section */
@@ -323,6 +373,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		0D0A97012E66627000B71355 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0D0A973C2E666D1D00B71355 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -360,6 +417,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0D0A973A2E666D1D00B71355 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -382,6 +446,11 @@
 			isa = PBXTargetDependency;
 			target = 0D0A96E22E66620800B71355 /* UalaCities */;
 			targetProxy = 0D0A97082E66627000B71355 /* PBXContainerItemProxy */;
+		};
+		0D0A97452E666D1D00B71355 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D0A96CF2E6661E000B71355 /* UalaCitiesiOSApp */;
+			targetProxy = 0D0A97442E666D1D00B71355 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -737,6 +806,50 @@
 			};
 			name = Release;
 		};
+		0D0A97472E666D1D00B71355 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RWNZ67U9C8;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = leanlinardos.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = UalaCitiesiOSApp;
+			};
+			name = Debug;
+		};
+		0D0A97482E666D1D00B71355 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RWNZ67U9C8;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = leanlinardos.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = UalaCitiesiOSApp;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -781,6 +894,15 @@
 			buildConfigurations = (
 				0D0A970B2E66627000B71355 /* Debug */,
 				0D0A970C2E66627000B71355 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0D0A97462E666D1D00B71355 /* Build configuration list for PBXNativeTarget "UITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D0A97472E666D1D00B71355 /* Debug */,
+				0D0A97482E666D1D00B71355 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
