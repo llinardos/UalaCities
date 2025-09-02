@@ -23,8 +23,8 @@ class CitiesScreenViewModel: ObservableObject {
     @Published var emptySubheadText = "Try adjusting your search"
     
     @Published var isShowingList: Bool = false
-    let list = PaginatedListViewModel<CityRow>(items: [], pageSize: 100, prefetchOffset: 10)
-    var citiesListItems: [CityRow] { list.visibleItems } // TODO: clean, adapted for tests after viewmodel API change
+    let list = PaginatedListViewModel<CityRowViewModel>(items: [], pageSize: 100, prefetchOffset: 10)
+    var citiesListItems: [CityRowViewModel] { list.visibleItems } // TODO: clean, adapted for tests after viewmodel API change
     
     let searchBar = SearchBarViewModel(placeholderText: "Filter")
     var searchBarText: String { searchBar.text }
@@ -56,7 +56,7 @@ class CitiesScreenViewModel: ObservableObject {
                 self.isShowingList = true
                 
                 self.list.items = cities.map { city in
-                    CityRow(
+                    CityRowViewModel(
                         city: city,
                         isFavorite: self.citiesRepo.isFavorite(city),
                         onFavoriteTap: { [weak self] in
@@ -135,7 +135,7 @@ class InRamAppleUserDefaults: AppleUserDefaults {
     }
 }
 
-class CityRow: ObservableObject, Identifiable {
+class CityRowViewModel: ObservableObject, Identifiable {
     @Published var headingText: String = ""
     @Published var favoriteButtonIsSelected: Bool = false
     private var city: City
