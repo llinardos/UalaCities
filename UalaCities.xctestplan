@@ -16,16 +16,23 @@
       "parallelizable" : false,
       "target" : {
         "containerPath" : "container:UalaCities.xcodeproj",
-        "identifier" : "0D0A96EA2E66620800B71355",
-        "name" : "UalaCitiesTests"
+        "identifier" : "0D0A97022E66627000B71355",
+        "name" : "IntegrationTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:UalaCities.xcodeproj",
+        "identifier" : "0D0A973D2E666D1D00B71355",
+        "name" : "UITests"
       }
     },
     {
       "parallelizable" : false,
       "target" : {
         "containerPath" : "container:UalaCities.xcodeproj",
-        "identifier" : "0D0A97022E66627000B71355",
-        "name" : "IntegrationTests"
+        "identifier" : "0D0A96EA2E66620800B71355",
+        "name" : "UalaCitiesTests"
       }
     }
   ],
