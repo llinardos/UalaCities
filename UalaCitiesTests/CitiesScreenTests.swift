@@ -21,7 +21,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertEqual("Loading Cities...", screen.spinnerText)
         
         let request = try XCTUnwrap(httpClient.pendingRequests.unique())
-        XCTAssertEqual("https://gist.githubusercontent.com/hernan-uala/dce8843a8edbe0b0018b32e137bc2b3a/raw/0996accf70cb0ca0e16f9a99e0ee185fafca7af1/cities.json", request.urlString)
+        XCTAssertEqual(CitiesAPI.citiesGistUrl, request.urlString)
         XCTAssertTrue(try httpClient.respond(to: request, with: HTTPResponse(data: JSONEncoder().encode([City(name: "Hurzuf")]))))
         
         XCTAssertFalse(screen.isShowingSpinner)
@@ -52,7 +52,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertTrue(screen.isShowingSpinner)
         
         let newRequest = try XCTUnwrap(httpClient.pendingRequests.unique())
-        XCTAssertEqual("https://gist.githubusercontent.com/hernan-uala/dce8843a8edbe0b0018b32e137bc2b3a/raw/0996accf70cb0ca0e16f9a99e0ee185fafca7af1/cities.json", newRequest.urlString)
+        XCTAssertEqual(CitiesAPI.citiesGistUrl, newRequest.urlString)
         XCTAssertTrue(try httpClient.respond(to: newRequest, with: HTTPResponse(data: JSONEncoder().encode([City(name: "City")]))))
         
         XCTAssertFalse(screen.isShowingSpinner)

@@ -19,10 +19,10 @@ class CitiesScreenViewModel: ObservableObject {
     @Published var isShowingList: Bool = false
     @Published var citiesListItems: [City] = []
     
-    let httpClient: HTTPClient
+    private let citiesAPI: CitiesAPI
     
     init(httpClient: HTTPClient) {
-        self.httpClient = httpClient
+        self.citiesAPI = CitiesAPI(httpClient: httpClient)
     }
     
     func onAppear() {
@@ -37,21 +37,18 @@ class CitiesScreenViewModel: ObservableObject {
         self.isShowingList = false
         self.isShowingError = false
         self.isShowingSpinner = true
-        let request = HTTPRequest(urlString: "https://gist.githubusercontent.com/hernan-uala/dce8843a8edbe0b0018b32e137bc2b3a/raw/0996accf70cb0ca0e16f9a99e0ee185fafca7af1/cities.json")
-        httpClient.send(request) { [weak self] response in
+        
+        citiesAPI.fetchCities { [weak self] result in
             guard let self else { return }
+            
             self.isShowingSpinner = false
-            do {
-                let cities = try JSONDecoder().decode([City].self, from: response.data ?? .init())
+            switch result {
+            case .success(let cities):
                 self.isShowingList = true
                 self.citiesListItems = cities
-            } catch {
+            case .failure:
                 self.isShowingError = true
             }
         }
     }
-}
-
-struct City: Codable {
-    var name: String
 }
