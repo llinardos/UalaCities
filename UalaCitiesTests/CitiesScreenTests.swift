@@ -10,23 +10,39 @@ import XCTest
 
 class TestData {
     class Cities {
-        static var city1 = City(name: "City 1", country: "AA")
-        static var city2 = City(name: "City 2", country: "BB")
-        static var hurzuf = City(name: "Hurzuf", country: "UA")
-        static var denver = City(name: "Denver", country: "US")
-        static var sidney = City(name: "Sidney", country: "AU")
-        static var alabama = City(name: "Alabama", country: "US")
-        static var albuquerque = City(name: "Albuquerque", country: "US")
-        static var anaheim = City(name: "Anaheim", country: "US")
-        static var arizona = City(name: "Arizona", country: "US")
+        static var city1 = City(_id: 1, name: "City 1", country: "AA")
+        static var city2 = City(_id: 2, name: "City 2", country: "BB")
+        static var hurzuf = City(_id: 10, name: "Hurzuf", country: "UA")
+        static var denver = City(_id: 11, name: "Denver", country: "US")
+        static var sidney = City(_id: 12, name: "Sidney", country: "AU")
+        static var alabama = City(_id: 13, name: "Alabama", country: "US")
+        static var albuquerque = City(_id: 14, name: "Albuquerque", country: "US")
+        static var anaheim = City(_id: 15, name: "Anaheim", country: "US")
+        static var arizona = City(_id: 16, name: "Arizona", country: "US")
         static var filterExample = [alabama, albuquerque, anaheim, arizona, sidney]
     }
 }
 
 class CitiesScreenTests: XCTestCase {
+    class Make {
+        let httpClient: ControlledHTTPClient
+        let runner: AsyncRunner
+        
+        init(
+            httpClient: ControlledHTTPClient = ControlledHTTPClient(),
+            runner: AsyncRunner = ImmediateRunner()
+        ) {
+            self.httpClient = httpClient
+            self.runner = runner
+        }
+        func sut() -> CitiesScreenViewModel{
+            return .init(httpClient: httpClient, runner: runner)
+        }
+    }
+    
     func testLoadCitiesOk() throws {
-        let httpClient = ControlledHTTPClient()
-        let screen = CitiesScreenViewModel(httpClient: httpClient)
+        let make = Make()
+        let (screen, httpClient) = (make.sut(), make.httpClient)
         
         XCTAssertFalse(screen.isShowingSpinner)
         
@@ -45,8 +61,8 @@ class CitiesScreenTests: XCTestCase {
     }
     
     func testLoadCitiesFailsAndRetry() throws {
-        let httpClient = ControlledHTTPClient()
-        let screen = CitiesScreenViewModel(httpClient: httpClient)
+        let make = Make()
+        let (screen, httpClient) = (make.sut(), make.httpClient)
 
         screen.onAppear()
         
@@ -76,8 +92,8 @@ class CitiesScreenTests: XCTestCase {
     }
     
     func testSorted() throws {
-        let httpClient = ControlledHTTPClient()
-        let screen = CitiesScreenViewModel(httpClient: httpClient)
+        let make = Make()
+        let (screen, httpClient) = (make.sut(), make.httpClient)
         
         screen.onAppear()
         
@@ -92,8 +108,8 @@ class CitiesScreenTests: XCTestCase {
     }
     
     func testFilter() throws {
-        let httpClient = ControlledHTTPClient()
-        let screen = CitiesScreenViewModel(httpClient: httpClient)
+        let make = Make()
+        let (screen, httpClient) = (make.sut(), make.httpClient)
         
         screen.onAppear()
         

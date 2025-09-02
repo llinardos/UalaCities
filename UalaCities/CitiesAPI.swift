@@ -41,6 +41,7 @@ class CitiesAPI {
 
 
 struct City: Codable, Equatable {
+    var _id: Int
     var name: String
     var country: String
 }

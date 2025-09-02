@@ -38,7 +38,7 @@ class CitiesAPITests: XCTestCase {
             ])
         )
         
-        let cities = (1...400_000).map { City(name: "City \($0)", country: "AA") }
+        let cities = (1...400_000).map { City(_id: $0, name: "City \($0)", country: "AA") }
         try send(
             httpResult: .success(.init(statusCode: 200, data: try JSONEncoder().encode(cities))),
             expectedResult: .success(cities)

@@ -25,7 +25,7 @@ public class iOSAppViewModel: ObservableObject {
                 let stubbedHttpClient = StubbedHTTPClient([
                     HTTPResponse(statusCode: 500),
                     HTTPResponse(statusCode: 200, data: try! JSONEncoder().encode([
-                        City(name: "City", country: "AA")
+                        City(_id: 1, name: "City", country: "AA")
                     ])),
                 ])
                 httpClient = stubbedHttpClient
@@ -34,6 +34,6 @@ public class iOSAppViewModel: ObservableObject {
             httpClient = URLSessionHTTPClient()
         }
         
-        mainScreen = CitiesScreenViewModel(httpClient: httpClient)
+        mainScreen = CitiesScreenViewModel(httpClient: httpClient, runner: GlobalRunner())
     }
 }

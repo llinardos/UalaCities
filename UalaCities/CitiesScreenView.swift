@@ -58,9 +58,9 @@ struct PaginatedList<T: Identifiable, RowContent: View>: View {
 
 
 #Preview("ok") {
-    CitiesScreenView(viewModel: .init(httpClient: StubbedHTTPClient([.init(statusCode: 200, data: try! JSONEncoder().encode([City(name: "City 1", country: "AA")]))])))
+    CitiesScreenView(viewModel: .init(httpClient: StubbedHTTPClient([.init(statusCode: 200, data: try! JSONEncoder().encode([City(_id: 1, name: "City 1", country: "AA")]))]), runner: GlobalRunner()))
 }
 
 #Preview("error") {
-    CitiesScreenView(viewModel: .init(httpClient: StubbedHTTPClient([.init(statusCode: 500)])))
+    CitiesScreenView(viewModel: .init(httpClient: StubbedHTTPClient([.init(statusCode: 500)]), runner: GlobalRunner()))
 }
