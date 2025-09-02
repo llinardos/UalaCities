@@ -48,7 +48,8 @@ class CitiesScreenViewModel: ObservableObject {
             } catch {
                 self.isShowingError = true
             }
-        }    }
+        }
+    }
 }
 
 struct City: Codable {
