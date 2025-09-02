@@ -13,20 +13,24 @@ class CitiesScreenTests: XCTestCase {
         let httpClient: ControlledHTTPClient
         let runner: AsyncRunner
         let userDefaults: AppleUserDefaults
+        let deviceOrientation: DeviceOrientation
         
         init(
             httpClient: ControlledHTTPClient = ControlledHTTPClient(),
             runner: AsyncRunner = ImmediateRunner(),
-            userDefaults: AppleUserDefaults = InRamAppleUserDefaults()
+            userDefaults: AppleUserDefaults = InRamAppleUserDefaults(),
+            deviceOrientation: DeviceOrientation = DeviceOrientation(.portrait)
         ) {
             self.httpClient = httpClient
             self.runner = runner
             self.userDefaults = userDefaults
+            self.deviceOrientation = deviceOrientation
         }
-        func sut() -> CitiesScreenViewModel{
+        
+        func sut() -> CitiesScreenViewModel {
             let citiesAPI = CitiesAPI(httpClient: httpClient)
             let citiesStore = CitiesStore(citiesAPI: citiesAPI, runner: runner, userDefaults: userDefaults)
-            return .init(citiesStore: citiesStore)
+            return .init(citiesStore: citiesStore, deviceOrientation: deviceOrientation)
         }
     }
     
@@ -318,43 +322,26 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertEqual("Sidney, AU", favoriteRow.headingText)
     }
     
-    func testPaginatedList() {
-        let list = PaginatedListViewModel(items: Array(1...25), pageSize: 10, prefetchOffset: 3)
-        XCTAssertEqual(Array(1...10), list.visibleItems)
-        list.onDidDisplayItemAtIndex(1)
-        list.onDidDisplayItemAtIndex(2)
-        list.onDidDisplayItemAtIndex(3)
-        list.onDidDisplayItemAtIndex(4)
-        list.onDidDisplayItemAtIndex(5)
-        list.onDidDisplayItemAtIndex(6)
-        XCTAssertEqual(Array(1...10), list.visibleItems)
-        list.onDidDisplayItemAtIndex(7)
-        XCTAssertEqual(Array(1...20), list.visibleItems)
-        list.onDidDisplayItemAtIndex(12)
-        XCTAssertEqual(Array(1...20), list.visibleItems)
-        list.onDidDisplayItemAtIndex(18)
-        XCTAssertEqual(Array(1...25), list.visibleItems)
+    func test_landscapeLayout() throws {
+        let make = Make()
+        let (screen, httpClient, deviceOrientation) = (make.sut(), make.httpClient, make.deviceOrientation)
         
-        // change items
-        list.items = Array(1...12)
-        XCTAssertEqual(Array(1...10), list.visibleItems)
-        list.onDidDisplayItemAtIndex(6)
-        XCTAssertEqual(Array(1...10), list.visibleItems)
-        list.onDidDisplayItemAtIndex(7)
-        XCTAssertEqual(Array(1...12), list.visibleItems)
-    }
-    
-    func testPaginatedListEmpty() {
-        let list = PaginatedListViewModel(items: [Int](), pageSize: 10, prefetchOffset: 3)
-        XCTAssertEqual([], list.visibleItems)
-    }
-    
-    func testPaginatedPageSizeBiggerThanItemsCount() {
-        let list = PaginatedListViewModel(items: [1,2,3], pageSize: 10, prefetchOffset: 3)
-        XCTAssertEqual([1,2,3], list.visibleItems)
-        list.onDidDisplayItemAtIndex(1)
-        list.onDidDisplayItemAtIndex(2)
-        list.onDidDisplayItemAtIndex(3)
-        XCTAssertEqual([1,2,3], list.visibleItems)
+        screen.onAppear()
+        
+        XCTAssertFalse(screen.isShowingMap)
+        
+        let request = try XCTUnwrap(httpClient.pendingRequests.unique())
+        XCTAssertEqual(CitiesAPI.citiesGistUrl, request.urlString)
+        XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode(TestData.Cities.filterExample)))))
+        
+        let sidneyRow = try XCTUnwrap(screen.citiesListItems.last)
+        XCTAssertEqual("Sidney, AU", sidneyRow.headingText)
+        
+        deviceOrientation.value = .landscape
+        
+        XCTAssertTrue(screen.isShowingMap)
+        XCTAssertTrue(screen.isShowingMapEmptyView)
+        XCTAssertEqual("No City Selected", screen.mapEmptyHeadingText)
+        XCTAssertEqual("Select a City on the List", screen.mapEmptySubheadText)
     }
 }

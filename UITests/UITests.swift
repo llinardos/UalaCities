@@ -12,6 +12,8 @@ final class UITests: XCTestCase {
     @MainActor
     
     func test_smoke_citiesLoadedAndShown_filter() throws {
+        XCUIDevice.shared.orientation = .portrait
+        
         var app = XCUIApplication()
         app.launchEnvironment["UITests"] = "true"
         app.launch()
@@ -88,6 +90,14 @@ final class UITests: XCTestCase {
         
         // back to list
         XCTAssertTrue(filteredRowTitle.waitForExistence(timeout: 10.0))
+        
+        // orientation
+        XCUIDevice.shared.orientation = .landscapeRight
+        let emptyMapTitle = app.staticTexts["No City Selected"]
+        XCTAssertTrue(emptyMapTitle.waitForExistence(timeout: 10.0))
+        
+        
+        XCUIDevice.shared.orientation = .portrait
     }
     
     func test_error_and_retry() throws {

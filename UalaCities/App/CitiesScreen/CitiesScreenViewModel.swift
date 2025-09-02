@@ -38,9 +38,16 @@ class CitiesScreenViewModel: ObservableObject {
     private let citiesStore: CitiesStore
     
     var onCitySelected: ((City) -> Void)?
+    private let deviceOrientation: DeviceOrientation
+    @Published var isShowingMap: Bool = false
+    var mapViewModel: CityMapScreenViewModel?
+    var isShowingMapEmptyView = false
+    var mapEmptyHeadingText = "No City Selected"
+    var mapEmptySubheadText = "Select a City on the List"
     
-    init(citiesStore: CitiesStore) {
+    init(citiesStore: CitiesStore, deviceOrientation: DeviceOrientation) {
         self.citiesStore = citiesStore
+        self.deviceOrientation = deviceOrientation
         
         citiesStore.$state.sink { [weak self] state in
             guard let self else { return}
@@ -79,6 +86,12 @@ class CitiesScreenViewModel: ObservableObject {
         $favoriteFilterButtonIsSelected.sink { [weak self] isOn in
             self?.citiesStore.enableFavoritesFilter(isOn)
         }.store(in: &subscriptions)
+        
+        deviceOrientation.$value.sink { [weak self] value in
+            guard let self else { return }
+            self.isShowingMap = value == .landscape
+            self.isShowingMapEmptyView = true
+        }.store(in: &subscriptions)
     }
     
     func onAppear() {
@@ -99,5 +112,35 @@ class CitiesScreenViewModel: ObservableObject {
     
     private func onCitySelected(_ city: City) {
         onCitySelected?(city)
+    }
+}
+
+
+import UIKit
+
+class DeviceOrientation {
+    enum Value { case landscape, portrait }
+    @Published var value: Value
+    
+    init(_ value: Value) {
+        self.value = value
+    }
+}
+
+class UIKitDeviceOrientation: DeviceOrientation {
+    private var cancellable: AnyCancellable?
+    init() {
+        super.init(.from(UIDevice.current))
+        cancellable = NotificationCenter.default
+            .publisher(for: UIDevice.orientationDidChangeNotification)
+            .sink { _ in
+                self.value = .from(UIDevice.current)
+            }
+    }
+}
+
+extension DeviceOrientation.Value {
+    static func from(_ device: UIDevice) -> DeviceOrientation.Value {
+        UIDevice.current.orientation.isLandscape ? .landscape : .portrait
     }
 }

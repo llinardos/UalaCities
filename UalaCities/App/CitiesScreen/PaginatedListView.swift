@@ -23,5 +23,6 @@ struct PaginatedListView<T: Identifiable, RowContent: View>: View {
                     viewModel.onDidDisplayItemAtIndex(index)
                 }
         }
+        .listStyle(.plain)
     }
 }

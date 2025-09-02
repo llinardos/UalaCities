@@ -63,7 +63,7 @@ public class iOSAppViewModel: ObservableObject {
     ) {
         let citiesAPI = CitiesAPI(httpClient: httpClient)
         let citiesStore = CitiesStore(citiesAPI: citiesAPI, runner: runner, userDefaults: userDefaults)
-        let citiesScreen = CitiesScreenViewModel(citiesStore: citiesStore)
+        let citiesScreen = CitiesScreenViewModel(citiesStore: citiesStore, deviceOrientation: UIKitDeviceOrientation())
         self.rootScreen = citiesScreen
         
         citiesScreen.onCitySelected = { [weak self] city in
