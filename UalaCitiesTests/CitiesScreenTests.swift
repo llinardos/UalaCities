@@ -22,7 +22,7 @@ class CitiesScreenTests: XCTestCase {
         
         let request = try XCTUnwrap(httpClient.pendingRequests.unique())
         XCTAssertEqual(CitiesAPI.citiesGistUrl, request.urlString)
-        XCTAssertTrue(try httpClient.respond(to: request, with: HTTPResponse(statusCode: 200, data: JSONEncoder().encode([City(name: "Hurzuf")]))))
+        XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode([City(name: "Hurzuf")])))))
         
         XCTAssertFalse(screen.isShowingSpinner)
         XCTAssertTrue(screen.isShowingList)
@@ -38,7 +38,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertFalse(screen.isShowingError)
         
         let request = try XCTUnwrap(httpClient.pendingRequests.unique())
-        XCTAssertTrue(httpClient.respond(to: request, with: HTTPResponse(statusCode: 500)))
+        XCTAssertTrue(httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 500))))
         
         XCTAssertFalse(screen.isShowingSpinner)
         XCTAssertTrue(screen.isShowingError)
@@ -53,7 +53,7 @@ class CitiesScreenTests: XCTestCase {
         
         let newRequest = try XCTUnwrap(httpClient.pendingRequests.unique())
         XCTAssertEqual(CitiesAPI.citiesGistUrl, newRequest.urlString)
-        XCTAssertTrue(try httpClient.respond(to: newRequest, with: HTTPResponse(statusCode: 200, data: JSONEncoder().encode([City(name: "City")]))))
+        XCTAssertTrue(try httpClient.respond(to: newRequest, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode([City(name: "City")])))))
         
         XCTAssertFalse(screen.isShowingSpinner)
         XCTAssertTrue(screen.isShowingList)

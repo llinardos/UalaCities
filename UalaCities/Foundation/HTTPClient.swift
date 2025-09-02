@@ -15,34 +15,45 @@ struct HTTPResponse {
     var statusCode: Int
     var data: Data? = nil
 }
+enum HTTPError: Swift.Error {
+    case wrongUrl(String?)
+    case noHttpResponse
+    case transportError(Swift.Error?)
+}
 
 protocol HTTPClient {
-    func send(_ request: HTTPRequest, _ completion: @escaping (HTTPResponse) -> Void)
+    func send(_ request: HTTPRequest, _ completion: @escaping (Result<HTTPResponse, HTTPError>) -> Void)
 }
 
 class URLSessionHTTPClient: HTTPClient {
-    func send(_ request: HTTPRequest, _ completion: @escaping (HTTPResponse) -> Void) {
-        let urlRequest = URLRequest(url: URL(string: request.urlString)!)
-        URLSession.shared.dataTask(with: urlRequest) { (data, urlSessionResponse, _) in
+    func send(_ request: HTTPRequest, _ completion: @escaping (Result<HTTPResponse, HTTPError>) -> Void) {
+        guard let url = URL(string: request.urlString) else {
+            return completion(.failure(.wrongUrl(request.urlString)))
+        }
+        let urlRequest = URLRequest(url: url)
+        URLSession.shared.dataTask(with: urlRequest) { (data, urlSessionResponse, error) in
+            if let error {
+                return completion(.failure(.transportError(error)))
+            }
             guard let statusCode = (urlSessionResponse as? HTTPURLResponse)?.statusCode else {
-                fatalError()
+                return completion(.failure(.noHttpResponse))
             }
             let response = HTTPResponse(statusCode: statusCode, data: data)
-            DispatchQueue.main.async { completion(response) }
+            DispatchQueue.main.async { completion(.success(response)) }
         }.resume()
     }
 }
 
 class ControlledHTTPClient: HTTPClient {
     private(set) var pendingRequests: [HTTPRequest] = []
-    private var completionById: [UUID: (HTTPResponse) -> Void] = [:]
-    func send(_ request: UalaCities.HTTPRequest, _ completion: @escaping (UalaCities.HTTPResponse) -> Void) {
+    private var completionById: [UUID: (Result<HTTPResponse, HTTPError>) -> Void] = [:]
+    func send(_ request: HTTPRequest, _ completion: @escaping (Result<HTTPResponse, HTTPError>) -> Void) {
         pendingRequests.append(request)
         completionById[request.id] = completion
     }
     
     @discardableResult
-    func respond(to request: HTTPRequest, with response: HTTPResponse) -> Bool {
+    func respond(to request: HTTPRequest, with response: Result<HTTPResponse, HTTPError>) -> Bool {
         guard let completion = completionById[request.id] else {
             return false
         }
@@ -59,9 +70,9 @@ class StubbedHTTPClient: HTTPClient {
         self.responses = responses
     }
     
-    func send(_ request: UalaCities.HTTPRequest, _ completion: @escaping (UalaCities.HTTPResponse) -> Void) {
+    func send(_ request: HTTPRequest, _ completion: @escaping (Result<HTTPResponse, HTTPError>) -> Void) {
         guard let response = responses.first else { fatalError() }
         responses = Array(responses.dropFirst())
-        completion(response)
+        completion(.success(response))
     }
 }

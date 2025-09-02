@@ -20,14 +20,21 @@ class CitiesAPI {
     
     func fetchCities(_ completion: @escaping (Result<[City], Error>) -> Void) {
         let request = HTTPRequest(urlString: Self.citiesGistUrl)
-        httpClient.send(request) { response in
-            do {
-                let cities = try JSONDecoder().decode([City].self, from: response.data ?? .init())
-                completion(.success(cities))
-            } catch {
-                // TODO: log
+        httpClient.send(request) { result in
+            switch result {
+            case .success(let response):
+                do {
+                    let cities = try JSONDecoder().decode([City].self, from: response.data ?? .init())
+                    completion(.success(cities))
+                } catch {
+                    // TODO: log decoding error
+                    completion(.failure(.networkingError))
+                }
+            case .failure:
+                // TODO: log http error
                 completion(.failure(.networkingError))
             }
+
         }
     }
 }
