@@ -13,10 +13,16 @@ class CitiesScreenViewModel: ObservableObject {
     let httpClient = HTTPClient()
     
     func onAppear() {
-        httpClient.fetchCities() { [weak self] cities in
+        let request = HTTPRequest(urlString: "https://gist.githubusercontent.com/hernan-uala/dce8843a8edbe0b0018b32e137bc2b3a/raw/0996accf70cb0ca0e16f9a99e0ee185fafca7af1/cities.json")
+        httpClient.send(request) { [weak self] response in
             guard let self else { return }
-            self.isShowingList = true
-            self.citiesListItems = cities
+            do {
+                let cities = try JSONDecoder().decode([City].self, from: response.data ?? .init())
+                self.isShowingList = true
+                self.citiesListItems = cities
+            } catch {
+                
+            }
         }
     }
 }
@@ -29,19 +35,11 @@ struct HTTPResponse {
 }
 
 class HTTPClient {
-    func fetchCities(_ completion: @escaping ([City]) -> Void) {
-        let request = HTTPRequest(urlString: "https://gist.githubusercontent.com/hernan-uala/dce8843a8edbe0b0018b32e137bc2b3a/raw/0996accf70cb0ca0e16f9a99e0ee185fafca7af1/cities.json")
+    func send(_ request: HTTPRequest, _ completion: @escaping (HTTPResponse) -> Void) {
         let urlRequest = URLRequest(url: URL(string: request.urlString)!)
         URLSession.shared.dataTask(with: urlRequest) { (data, _, _) in
             let response = HTTPResponse(data: data)
-            DispatchQueue.main.async {
-                do {
-                    let cities = try JSONDecoder().decode([City].self, from: response.data ?? .init())
-                    completion(cities)
-                } catch {
-                    
-                }
-            }
+            DispatchQueue.main.async { completion(response) }
         }.resume()
     }
 }
