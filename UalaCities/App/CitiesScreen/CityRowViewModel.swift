@@ -9,6 +9,7 @@ import Foundation
 
 class CityRowViewModel: ObservableObject, Identifiable {
     @Published var headingText: String = ""
+    @Published var subheadText: String = ""
     @Published var favoriteButtonIsSelected: Bool = false
     private var city: City
     
@@ -19,6 +20,7 @@ class CityRowViewModel: ObservableObject, Identifiable {
     init(city: City, isFavorite: Bool, onFavoriteTap: @escaping () -> Void) {
         self.city = city
         self.headingText = "\(city.name), \(city.country)"
+        self.subheadText = "\(city.coordinates.latitude), \(city.coordinates.longitude)"
         self.favoriteButtonIsSelected = isFavorite
         self.onFavoriteTap = onFavoriteTap
     }

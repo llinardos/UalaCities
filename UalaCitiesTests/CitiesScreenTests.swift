@@ -49,6 +49,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertFalse(screen.isShowingSpinner)
         XCTAssertTrue(screen.isShowingList)
         XCTAssertEqual("Hurzuf, UA", screen.citiesListItems.first?.headingText)
+        XCTAssertEqual("34.283333, 44.549999", screen.citiesListItems.first?.subheadText)
     }
     
     func testLoadCitiesFailsAndRetry() throws {

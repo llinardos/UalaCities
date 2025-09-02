@@ -17,7 +17,13 @@ struct CityRowView: View {
     
     var body: some View {
         HStack {
-            Text(viewModel.headingText)
+            VStack(alignment: .leading) {
+                Text(viewModel.headingText).font(.headline)
+                HStack(spacing: 2) {
+                    Image(systemName: "mappin").font(.caption)
+                    Text(viewModel.subheadText).font(.caption)
+                }
+            }
             Spacer()
             Button {
                 viewModel.onFavoriteButtonTap()

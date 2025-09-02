@@ -38,7 +38,7 @@ class CitiesAPITests: XCTestCase {
             ])
         )
         
-        let cities = (1...400_000).map { CityDTO(_id: $0, name: "City \($0)", country: "AA") }
+        let cities = (1...400_000).map { CityDTO(_id: $0, name: "City \($0)", country: "AA", coord: .init(lat: 1.0, lon: 1.0)) }
         try send(
             httpResult: .success(.init(statusCode: 200, data: try JSONEncoder().encode(cities))),
             expectedResult: .success(cities)

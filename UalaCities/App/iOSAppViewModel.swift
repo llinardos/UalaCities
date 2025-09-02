@@ -28,7 +28,7 @@ public class iOSAppViewModel: ObservableObject {
                 let stubbedHttpClient = StubbedHTTPClient([
                     HTTPResponse(statusCode: 500),
                     HTTPResponse(statusCode: 200, data: try! JSONEncoder().encode([
-                        CityDTO(_id: 1, name: "City", country: "AA")
+                        CityDTO(_id: 1, name: "City", country: "AA", coord: .init(lat: 1, lon: 1))
                     ])),
                 ])
                 httpClient = stubbedHttpClient

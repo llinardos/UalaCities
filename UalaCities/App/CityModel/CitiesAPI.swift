@@ -41,7 +41,12 @@ class CitiesAPI {
 }
 
 struct CityDTO: Codable, Equatable {
+    struct Coord: Codable, Equatable {
+        var lat: Double
+        var lon: Double
+    }
     var _id: Int
     var name: String
     var country: String
+    var coord: Coord
 }

@@ -70,7 +70,14 @@ class CitiesStore {
             switch result {
             case .success(let cities):
                 self.allCities = cities
-                    .map { City(id: $0._id, name: $0.name, country: $0.country) }
+                    .map {
+                        City(
+                            id: $0._id,
+                            name: $0.name,
+                            country: $0.country,
+                            coordinates: .init(latitude: $0.coord.lat, longitude: $0.coord.lon)
+                        )
+                    }
                     .sorted { $0.name < $1.name }
                 if let favoritesIds = self.userDefaults.array(forKey: self.favoritesIdsInUserDefaultsKey) as? [Int] {
                     self.favoriteCities = self.allCities.filter { favoritesIds.contains($0.id) }
