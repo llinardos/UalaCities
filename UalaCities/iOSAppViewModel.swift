@@ -23,8 +23,8 @@ public class iOSAppViewModel: ObservableObject {
             switch scenario {
             case .loadCitiesErrorAndRetry:
                 let stubbedHttpClient = StubbedHTTPClient([
-                    HTTPResponse(data: nil),
-                    HTTPResponse(data: try! JSONEncoder().encode([City(name: "City")])),
+                    HTTPResponse(statusCode: 500),
+                    HTTPResponse(statusCode: 200, data: try! JSONEncoder().encode([City(name: "City")])),
                 ])
                 httpClient = stubbedHttpClient
             }

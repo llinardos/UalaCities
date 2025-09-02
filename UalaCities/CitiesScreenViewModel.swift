@@ -8,7 +8,6 @@
 import Foundation
 
 class CitiesScreenViewModel: ObservableObject {
-    
     @Published var isShowingSpinner: Bool = false
     @Published var spinnerText = "Loading Cities..."
     

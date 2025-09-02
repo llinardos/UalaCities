@@ -33,6 +33,6 @@ class CitiesAPI {
 }
 
 
-struct City: Codable {
+struct City: Codable, Equatable {
     var name: String
 }

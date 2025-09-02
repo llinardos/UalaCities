@@ -36,9 +36,9 @@ struct CitiesScreenView: View {
 }
 
 #Preview("ok") {
-    CitiesScreenView(viewModel: .init(httpClient: StubbedHTTPClient([.init(data: try! JSONEncoder().encode([City(name: "City 1")]))])))
+    CitiesScreenView(viewModel: .init(httpClient: StubbedHTTPClient([.init(statusCode: 200, data: try! JSONEncoder().encode([City(name: "City 1")]))])))
 }
 
 #Preview("error") {
-    CitiesScreenView(viewModel: .init(httpClient: StubbedHTTPClient([.init(data: Data())])))
+    CitiesScreenView(viewModel: .init(httpClient: StubbedHTTPClient([.init(statusCode: 500)])))
 }

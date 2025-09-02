@@ -6,3 +6,9 @@ extension Array {
         return first
     }
 }
+
+extension Array {
+    subscript(safe index: Int) -> Element? {
+        self.indices.contains(index) ? self[index] : nil
+    }
+}

@@ -12,7 +12,8 @@ struct HTTPRequest {
     var urlString: String
 }
 struct HTTPResponse {
-    var data: Data?
+    var statusCode: Int
+    var data: Data? = nil
 }
 
 protocol HTTPClient {
@@ -22,8 +23,11 @@ protocol HTTPClient {
 class URLSessionHTTPClient: HTTPClient {
     func send(_ request: HTTPRequest, _ completion: @escaping (HTTPResponse) -> Void) {
         let urlRequest = URLRequest(url: URL(string: request.urlString)!)
-        URLSession.shared.dataTask(with: urlRequest) { (data, _, _) in
-            let response = HTTPResponse(data: data)
+        URLSession.shared.dataTask(with: urlRequest) { (data, urlSessionResponse, _) in
+            guard let statusCode = (urlSessionResponse as? HTTPURLResponse)?.statusCode else {
+                fatalError()
+            }
+            let response = HTTPResponse(statusCode: statusCode, data: data)
             DispatchQueue.main.async { completion(response) }
         }.resume()
     }
