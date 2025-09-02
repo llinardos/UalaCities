@@ -8,20 +8,36 @@
 import Foundation
 import Combine
 
-protocol iOSAppScreen {}
-extension CitiesScreenViewModel: iOSAppScreen {}
-
 public class iOSAppViewModel: ObservableObject {
-    @Published var mainScreen: iOSAppScreen
-    private let httpClient: HTTPClient
-    
-    public init() {
-        if let string = ProcessInfo.processInfo.environment["UITests"], string == "true" {
-            if let bundleID = Bundle.main.bundleIdentifier {
-                UserDefaults.standard.removePersistentDomain(forName: bundleID)
-                UserDefaults.standard.synchronize()
+    enum Route: Hashable {
+        case cityMap(City, CityMapScreenViewModel)
+        
+        static func == (lhs: iOSAppViewModel.Route, rhs: iOSAppViewModel.Route) -> Bool {
+            switch (lhs, rhs) {
+            case let (.cityMap(lCity, lScreen), .cityMap(rCity, rScreen)):
+                return lCity.id == rCity.id
             }
         }
+        
+        func hash(into hasher: inout Hasher) {
+            switch self {
+            case .cityMap(let city, _):
+                hasher.combine(city.id)
+            }
+        }
+    }
+    var rootScreen: CitiesScreenViewModel
+    @Published var path: [Route] = []
+    
+    public static func prod() -> iOSAppViewModel {
+        return .init(httpClient: URLSessionHTTPClient(), runner: GlobalRunner(), userDefaults: RealAppleUserDefaults())
+    }
+    
+    public static func uiTests() -> iOSAppViewModel {
+        let userDefaults = RealAppleUserDefaults()
+        userDefaults.wipe()
+        
+        let httpClient: HTTPClient
         if let string = ProcessInfo.processInfo.environment["UITestScenario"], let scenario = UITestScenarios(rawValue: string) {
             switch scenario {
             case .loadCitiesErrorAndRetry:
@@ -37,8 +53,24 @@ public class iOSAppViewModel: ObservableObject {
             httpClient = URLSessionHTTPClient()
         }
         
+        return .init(httpClient: httpClient, runner: GlobalRunner(), userDefaults: userDefaults)
+    }
+    
+    init(
+        httpClient: HTTPClient,
+        runner: AsyncRunner,
+        userDefaults: AppleUserDefaults
+    ) {
         let citiesAPI = CitiesAPI(httpClient: httpClient)
-        let citiesStore = CitiesStore(citiesAPI: citiesAPI, runner: GlobalRunner(), userDefaults: RealAppleUserDefaults())
-        mainScreen = CitiesScreenViewModel(citiesStore: citiesStore)
+        let citiesStore = CitiesStore(citiesAPI: citiesAPI, runner: runner, userDefaults: userDefaults)
+        let citiesScreen = CitiesScreenViewModel(citiesStore: citiesStore)
+        self.rootScreen = citiesScreen
+        
+        citiesScreen.onCitySelected = { [weak self] city in
+            guard let self else { return }
+            
+            let mapScreen = CityMapScreenViewModel(city: city)
+            self.path.append(.cityMap(city, mapScreen))
+        }
     }
 }

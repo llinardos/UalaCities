@@ -77,6 +77,17 @@ final class UITests: XCTestCase {
         favoriteFilterButton.tap()
         
         XCTAssertTrue(filteredRowTitle.waitForExistence(timeout: 10.0))
+        
+        // map
+        filteredRowTitle.tap()
+        
+        let mapScreenTitle = app.navigationBars["Tandil, AR"]
+        XCTAssertTrue(mapScreenTitle.waitForExistence(timeout: 10.0))
+        
+        app.navigationBars.buttons["Back"].tap()
+        
+        // back to list
+        XCTAssertTrue(filteredRowTitle.waitForExistence(timeout: 10.0))
     }
     
     func test_error_and_retry() throws {

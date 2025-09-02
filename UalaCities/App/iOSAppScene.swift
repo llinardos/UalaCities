@@ -16,10 +16,14 @@ public struct iOSAppScene: Scene {
     
     public var body: some Scene {
         WindowGroup {
-            if let screen = viewModel.mainScreen as? CitiesScreenViewModel {
-                CitiesScreenView(viewModel: screen)
-            } else {
-                fatalError("No View for screen: \(viewModel.mainScreen)")
+            NavigationStack(path: $viewModel.path) {
+                CitiesScreenView(viewModel: viewModel.rootScreen)
+                    .navigationDestination(for: iOSAppViewModel.Route.self) { item in
+                        switch item {
+                        case .cityMap(_, let screenViewModel):
+                            CityMapScreenView(viewModel: screenViewModel)
+                        }
+                    }
             }
         }
     }

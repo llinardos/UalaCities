@@ -27,6 +27,13 @@ class RealAppleUserDefaults: AppleUserDefaults {
     open func removeObject(forKey key: String) {
         inner.removeObject(forKey: key)
     }
+    
+    func wipe() {
+        if let bundleID = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: bundleID)
+            UserDefaults.standard.synchronize()
+        }
+    }
 }
 
 class InRamAppleUserDefaults: AppleUserDefaults {

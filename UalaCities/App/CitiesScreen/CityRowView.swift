@@ -29,5 +29,9 @@ struct CityRowView: View {
                 viewModel.onFavoriteButtonTap()
             }.accessibilityIdentifier("FavoriteButton")
         }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            viewModel.onRowTap()
+        }
     }
 }

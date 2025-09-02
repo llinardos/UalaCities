@@ -10,7 +10,15 @@ import UalaCities
 
 @main
 struct UalaCitiesApp: App {
-    let viewModel = iOSAppViewModel()
+    let viewModel: iOSAppViewModel
+    init() {
+        if ProcessInfo.processInfo.environment["UITests"] == "true" {
+            viewModel = .uiTests()
+        } else {
+            viewModel = .prod()
+        }
+    }
+    
     var body: some Scene {
         iOSAppScene(viewModel: viewModel)
     }

@@ -15,18 +15,24 @@ class CityRowViewModel: ObservableObject, Identifiable {
     
     var id: Int { city.id }
     
-    var onFavoriteTap: (() -> Void)?
-    
-    init(city: City, isFavorite: Bool, onFavoriteTap: @escaping () -> Void) {
+    var onFavoriteTap: (() -> Void)
+    var onTap: (() -> Void)
+        
+    init(city: City, isFavorite: Bool, onFavoriteTap: @escaping () -> Void, onRowTap: @escaping () -> Void) {
         self.city = city
         self.headingText = "\(city.name), \(city.country)"
         self.subheadText = "\(city.coordinates.latitude), \(city.coordinates.longitude)"
         self.favoriteButtonIsSelected = isFavorite
         self.onFavoriteTap = onFavoriteTap
+        self.onTap = onRowTap
     }
     
     func onFavoriteButtonTap() {
-        onFavoriteTap?()
+        onFavoriteTap()
         self.favoriteButtonIsSelected.toggle()
+    }
+    
+    func onRowTap() {
+        self.onTap()
     }
 }

@@ -21,3 +21,14 @@ class City: Identifiable {
         self.coordinates = coordinates
     }
 }
+
+extension City {
+    static func from(_ dto: CityDTO) -> City {
+        City(
+            id: dto._id,
+            name: dto.name,
+            country: dto.country,
+            coordinates: .init(latitude: dto.coord.lat, longitude: dto.coord.lon)
+        )
+    }
+}

@@ -37,6 +37,8 @@ class CitiesScreenViewModel: ObservableObject {
     
     private let citiesStore: CitiesStore
     
+    var onCitySelected: ((City) -> Void)?
+    
     init(citiesStore: CitiesStore) {
         self.citiesStore = citiesStore
         
@@ -59,9 +61,8 @@ class CitiesScreenViewModel: ObservableObject {
                     CityRowViewModel(
                         city: city,
                         isFavorite: self.citiesStore.isFavorite(city),
-                        onFavoriteTap: { [weak self] in
-                            self?.citiesStore.toogleFavorite(for: city)
-                    }
+                        onFavoriteTap: { [weak self] in self?.citiesStore.toogleFavorite(for: city) },
+                        onRowTap: { [weak self] in self?.onCitySelected(city) }
                 ) }
                 self.isShowingEmptyView = cities.isEmpty
             case .failed:
@@ -94,5 +95,9 @@ class CitiesScreenViewModel: ObservableObject {
     
     func searchBarTypeDelete() {
         self.searchBar.text.removeLast()
+    }
+    
+    private func onCitySelected(_ city: City) {
+        onCitySelected?(city)
     }
 }
