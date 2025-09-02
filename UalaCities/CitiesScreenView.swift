@@ -28,6 +28,7 @@ struct CitiesScreenView: View {
                 List(viewModel.citiesListItems, id: \.headingText) { row in
                     Text(row.headingText)
                 }
+                .searchable(text: $viewModel.searchBarText, placement: .automatic, prompt: viewModel.searchBarPlaceholder)
             }
         }
         .onAppear { viewModel.onAppear() }

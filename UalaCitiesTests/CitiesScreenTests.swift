@@ -15,6 +15,11 @@ class TestData {
         static var hurzuf = City(name: "Hurzuf", country: "UA")
         static var denver = City(name: "Denver", country: "US")
         static var sidney = City(name: "Sidney", country: "AU")
+        static var alabama = City(name: "Alabama", country: "US")
+        static var albuquerque = City(name: "Albuquerque", country: "US")
+        static var anaheim = City(name: "Anaheim", country: "US")
+        static var arizona = City(name: "Arizona", country: "US")
+        static var filterExample = [alabama, albuquerque, anaheim, arizona, sidney]
     }
 }
 
@@ -84,5 +89,59 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertTrue(screen.isShowingList)
         XCTAssertEqual("Denver, US", screen.citiesListItems[safe: 0]?.headingText)
         XCTAssertEqual("Sidney, AU", screen.citiesListItems[safe: 1]?.headingText)
+    }
+    
+    func testFilter() throws {
+        let httpClient = ControlledHTTPClient()
+        let screen = CitiesScreenViewModel(httpClient: httpClient)
+        
+        screen.onAppear()
+        
+        let request = try XCTUnwrap(httpClient.pendingRequests.unique())
+        XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode(TestData.Cities.filterExample)
+        ))))
+        
+        XCTAssertFalse(screen.isShowingSpinner)
+        XCTAssertTrue(screen.isShowingList)
+        XCTAssertEqual("Alabama, US", screen.citiesListItems[safe: 0]?.headingText)
+        XCTAssertEqual("Albuquerque, US", screen.citiesListItems[safe: 1]?.headingText)
+        XCTAssertEqual("Anaheim, US", screen.citiesListItems[safe: 2]?.headingText)
+        XCTAssertEqual("Arizona, US", screen.citiesListItems[safe: 3]?.headingText)
+        XCTAssertEqual("Sidney, AU", screen.citiesListItems[safe: 4]?.headingText)
+        
+        XCTAssertEqual("Filter", screen.searchBarPlaceholder)
+        screen.searchBarType("A")
+        XCTAssertEqual("A", screen.searchBarText)
+        
+        XCTAssertEqual("Alabama, US", screen.citiesListItems[safe: 0]?.headingText)
+        XCTAssertEqual("Albuquerque, US", screen.citiesListItems[safe: 1]?.headingText)
+        XCTAssertEqual("Anaheim, US", screen.citiesListItems[safe: 2]?.headingText)
+        XCTAssertEqual("Arizona, US", screen.citiesListItems[safe: 3]?.headingText)
+        XCTAssertNil(screen.citiesListItems[safe: 4])
+        
+        screen.searchBarType("l")
+        XCTAssertEqual("Al", screen.searchBarText)
+        
+        XCTAssertEqual("Alabama, US", screen.citiesListItems[safe: 0]?.headingText)
+        XCTAssertEqual("Albuquerque, US", screen.citiesListItems[safe: 1]?.headingText)
+        XCTAssertNil(screen.citiesListItems[safe: 2])
+        
+        screen.searchBarType("b")
+        XCTAssertEqual("Alb", screen.searchBarText)
+        
+        XCTAssertEqual("Albuquerque, US", screen.citiesListItems[safe: 0]?.headingText)
+        XCTAssertNil(screen.citiesListItems[safe: 1])
+        
+        screen.searchBarTypeDelete()
+        XCTAssertEqual("Al", screen.searchBarText)
+        screen.searchBarTypeDelete()
+        XCTAssertEqual("A", screen.searchBarText)
+        screen.searchBarTypeDelete()
+        XCTAssertEqual("", screen.searchBarText)
+        
+        screen.searchBarType("s")
+        XCTAssertEqual("s", screen.searchBarText)
+        XCTAssertEqual("Sidney, AU", screen.citiesListItems[safe: 0]?.headingText)
+        XCTAssertNil(screen.citiesListItems[safe: 1])
     }
 }
