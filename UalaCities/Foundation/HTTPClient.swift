@@ -47,3 +47,17 @@ class ControlledHTTPClient: HTTPClient {
         return true
     }
 }
+
+class StubbedHTTPClient: HTTPClient {
+    private(set) var responses: [HTTPResponse] = []
+    
+    init(_ responses: [HTTPResponse]) {
+        self.responses = responses
+    }
+    
+    func send(_ request: UalaCities.HTTPRequest, _ completion: @escaping (UalaCities.HTTPResponse) -> Void) {
+        guard let response = responses.first else { fatalError() }
+        responses = Array(responses.dropFirst())
+        completion(response)
+    }
+}
