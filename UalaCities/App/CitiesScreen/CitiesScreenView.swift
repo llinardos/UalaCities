@@ -30,16 +30,9 @@ struct CitiesScreenView: View {
                         HStack(spacing: 8) {
                             SearchBarView(viewModel: viewModel.searchBar)
                                 .padding(.vertical)
-                            Button {
+                            FavoriteButton(isSelected: $viewModel.favoriteFilterButtonIsSelected) {
                                 viewModel.onTapFavoriteFilterButton()
-                            } label: {
-                                Image(systemName: viewModel.favoriteFilterButtonIsSelected ? "star.fill" : "star")
-                                    .foregroundColor(viewModel.favoriteFilterButtonIsSelected ? .yellow : .primary)
-                                    .font(.body)
-                            }
-                            .accessibilityIdentifier("FavoriteFilterButton")
-                            .accessibilityAddTraits(viewModel.favoriteFilterButtonIsSelected ? .isSelected : [])
-                            .buttonStyle(.plain)
+                            }.accessibilityIdentifier("FavoriteFilterButton")
                         }
                         .padding(.horizontal)
                         PaginatedListView(viewModel.list) { rowViewModel in

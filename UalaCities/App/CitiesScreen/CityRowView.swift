@@ -25,16 +25,9 @@ struct CityRowView: View {
                 }
             }
             Spacer()
-            Button {
+            FavoriteButton(isSelected: $viewModel.favoriteButtonIsSelected) {
                 viewModel.onFavoriteButtonTap()
-            } label: {
-                Image(systemName: viewModel.favoriteButtonIsSelected ? "star.fill" : "star")
-                    .foregroundColor(viewModel.favoriteButtonIsSelected ? .yellow : .primary)
-                    .font(.body)
-            }
-            .accessibilityAddTraits(viewModel.favoriteButtonIsSelected ? .isSelected : [])
-            .accessibilityIdentifier("FavoriteButton")
-            .buttonStyle(.plain)
+            }.accessibilityIdentifier("FavoriteButton")
         }
     }
 }
