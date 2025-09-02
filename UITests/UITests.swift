@@ -25,7 +25,7 @@ final class UITests: XCTestCase {
         let favoriteFilterButton = app.buttons["FavoriteFilterButton"]
         XCTAssertTrue(favoriteFilterButton.waitForExistence(timeout: 10.0))
         favoriteFilterButton.tap()
-        XCTAssertFalse(favoriteFilterButton.isSelected)
+        XCTAssertTrue(favoriteFilterButton.isSelected)
         
         let noResultsTitle = app.staticTexts["No cities found"]
         XCTAssertTrue(noResultsTitle.waitForExistence(timeout: 10.0))
@@ -44,12 +44,12 @@ final class UITests: XCTestCase {
         let filteredRowTitle = app.staticTexts["Tandil, AR"]
         XCTAssertTrue(filteredRowTitle.waitForExistence(timeout: 10.0))
         
-//        // Add to favorites
-//        let filteredRowFavoriteButton = app.buttons["FavoriteButton"]
-//        XCTAssertTrue(filteredRowFavoriteButton.waitForExistence(timeout: 10.0))
-//        XCTAssertFalse(filteredRowFavoriteButton.isSelected)
-//        filteredRowFavoriteButton.tap()
-//        XCTAssertTrue(filteredRowFavoriteButton.isSelected)
+        // Add to favorites
+        let filteredRowFavoriteButton = app.buttons["FavoriteButton"]
+        XCTAssertTrue(filteredRowFavoriteButton.waitForExistence(timeout: 10.0))
+        XCTAssertFalse(filteredRowFavoriteButton.isSelected)
+        filteredRowFavoriteButton.tap()
+        XCTAssertTrue(filteredRowFavoriteButton.isSelected)
         
         // clean query filter
         searchBar.typeText("\u{8}")
@@ -60,10 +60,10 @@ final class UITests: XCTestCase {
         searchBar.typeText("\u{8}")
         XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
         
-//        // filter again with favorites
-//        favoriteFilterButton.tap()
-//        XCTAssertTrue(favoriteFilterButton.isSelected)
-//        XCTAssertTrue(filteredRowTitle.waitForExistence(timeout: 10.0))
+        // filter again with favorites
+        favoriteFilterButton.tap()
+        XCTAssertTrue(favoriteFilterButton.isSelected)
+        XCTAssertTrue(filteredRowTitle.waitForExistence(timeout: 10.0))
     }
     
     func test_error_and_retry() throws {

@@ -239,15 +239,37 @@ class CitiesScreenTests: XCTestCase {
         
         let request = try XCTUnwrap(httpClient.pendingRequests.unique())
         XCTAssertEqual(CitiesAPI.citiesGistUrl, request.urlString)
-        XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode([TestData.Cities.arizona])))))
-        XCTAssertEqual("Arizona, US", screen.citiesListItems.unique()?.headingText)
+        XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode(TestData.Cities.filterExample)))))
+        XCTAssertEqual("Alabama, US", screen.citiesListItems.first?.headingText)
         
-        XCTAssertFalse(screen.favoriteFilterButtonIsSelected, "begins off")
+        XCTAssertFalse(screen.favoriteFilterButtonIsSelected)
         
         screen.onTapFavoriteFilterButton()
         XCTAssertTrue(screen.favoriteFilterButtonIsSelected)
         
         XCTAssertNil(screen.citiesListItems.first)
+        
+        screen.onTapFavoriteFilterButton()
+        XCTAssertFalse(screen.favoriteFilterButtonIsSelected)
+        
+        // add favorite
+        let sidneyRow = try XCTUnwrap(screen.citiesListItems.last)
+        XCTAssertEqual("Sidney, AU", sidneyRow.headingText)
+        XCTAssertFalse(sidneyRow.favoriteButtonIsSelected)
+        sidneyRow.onFavoriteButtonTap()
+        XCTAssertTrue(sidneyRow.favoriteButtonIsSelected)
+        
+        // filter favorites
+        screen.onTapFavoriteFilterButton()
+        XCTAssertTrue(screen.favoriteFilterButtonIsSelected)
+        let favoriteRow = try XCTUnwrap(screen.citiesListItems.unique())
+        XCTAssertEqual("Sidney, AU", favoriteRow.headingText)
+        XCTAssertTrue(favoriteRow.favoriteButtonIsSelected)
+        
+        // unfavorite
+        favoriteRow.onFavoriteButtonTap()
+        XCTAssertNil(screen.citiesListItems.first)
+        XCTAssertTrue(screen.isShowingEmptyView)
     }
     
     func testPaginatedList() {

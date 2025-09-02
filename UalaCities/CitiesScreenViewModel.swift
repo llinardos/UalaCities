@@ -55,7 +55,14 @@ class CitiesScreenViewModel: ObservableObject {
                 self.isShowingError = false
                 self.isShowingList = true
                 
-                self.list.items = cities.map { CityRow(city: $0) }
+                self.list.items = cities.map { city in
+                    CityRow(
+                        city: city,
+                        isFavorite: self.citiesRepo.isFavorite(city),
+                        onFavoriteTap: { [weak self] in
+                            self?.citiesRepo.toogleFavorite(for: city)
+                    }
+                ) }
                 self.isShowingEmptyView = cities.isEmpty
             case .failed:
                 self.isShowingSpinner = false
@@ -92,12 +99,22 @@ class CitiesScreenViewModel: ObservableObject {
 
 class CityRow: ObservableObject, Identifiable {
     @Published var headingText: String = ""
+    @Published var favoriteButtonIsSelected: Bool = false
     private var city: City
     
     var id: Int { city._id }
     
-    init(city: City) {
+    var onFavoriteTap: (() -> Void)?
+    
+    init(city: City, isFavorite: Bool, onFavoriteTap: @escaping () -> Void) {
         self.city = city
         self.headingText = "\(city.name), \(city.country)"
+        self.favoriteButtonIsSelected = isFavorite
+        self.onFavoriteTap = onFavoriteTap
+    }
+    
+    func onFavoriteButtonTap() {
+        onFavoriteTap?()
+        self.favoriteButtonIsSelected.toggle()
     }
 }

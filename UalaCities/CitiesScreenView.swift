@@ -37,11 +37,25 @@ struct CitiesScreenView: View {
                                     .font(.body)
                             }
                             .accessibilityIdentifier("FavoriteFilterButton")
+                            .accessibilityAddTraits(viewModel.favoriteFilterButtonIsSelected ? .isSelected : [])
                             .buttonStyle(.plain)
                         }
                         .padding(.horizontal)
                         PaginatedListView(viewModel.list) { row in
-                            Text(row.headingText)
+                            HStack {
+                                Text(row.headingText)
+                                Spacer()
+                                Button {
+                                    row.onFavoriteButtonTap()
+                                } label: {
+                                    Image(systemName: row.favoriteButtonIsSelected ? "star.fill" : "star")
+                                        .foregroundColor(row.favoriteButtonIsSelected ? .yellow : .primary)
+                                        .font(.body)
+                                }
+                                .accessibilityAddTraits(row.favoriteButtonIsSelected ? .isSelected : [])
+                                .accessibilityIdentifier("FavoriteButton")
+                                .buttonStyle(.plain)
+                            }
                         }
                         .safeAreaInset(edge: .bottom) {
                             if viewModel.isShowingEmptyView {

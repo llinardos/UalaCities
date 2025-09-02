@@ -29,15 +29,29 @@ class CitiesRepository {
         self.query = query
         
         guard case .ready = state else { return }
-        refreshList { self.state = .ready($0) }
+        refreshList()
     }
     
-    private var isFilteringFavoriter: Bool = false
+    private var isFilteringFavorites: Bool = false
     func filterFavorites(_ filterFavorites: Bool) {
-        self.isFilteringFavoriter = filterFavorites
+        self.isFilteringFavorites = filterFavorites
         
         guard case .ready = state else { return }
-        refreshList { self.state = .ready($0) }
+        refreshList()
+    }
+    
+    private var favoriteCities: [City] = []
+    func toogleFavorite(for city: City) {
+        if favoriteCities.contains(where: { $0._id == city._id }) {
+            favoriteCities.removeAll(where: { $0._id == city._id })
+        } else {
+            favoriteCities.append(city)
+        }
+        refreshList()
+    }
+    
+    func isFavorite(_ city: City) -> Bool {
+        favoriteCities.contains(where: { $0._id == city._id })
     }
     
     @Published var state: DataState = .idle
@@ -51,7 +65,7 @@ class CitiesRepository {
             switch result {
             case .success(let cities):
                 self.allCities = cities.sorted { $0.name < $1.name }
-                self.refreshList { self.state = .ready($0) }
+                self.refreshList()
             case .failure:
                 // TODO: log
                 self.state = .failed
@@ -59,15 +73,17 @@ class CitiesRepository {
         }
     }
     
-    private func refreshList(_ completion: @escaping ([City]) -> Void) {
+    private func refreshList() {
         runner.run(bgWork: {
-            let cities = self.isFilteringFavoriter ? [] : self.allCities
+            let cities = self.isFilteringFavorites ? self.favoriteCities : self.allCities
             if self.query.count == 0 {
                 return cities
             } else {
                 return cities
                     .filter { $0.name.lowercased().hasPrefix(self.query.lowercased()) }
             }
-        }, mainWork: completion)
+        }, mainWork: {
+            self.state = .ready($0)
+        })
     }
 }
