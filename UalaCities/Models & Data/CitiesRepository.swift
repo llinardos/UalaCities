@@ -12,10 +12,10 @@ class CitiesRepository {
     private var allCities: [City] = []
     private let runner: AsyncRunner
     
-    enum State {
+    enum DataState {
         case idle
         case loading
-        case loaded([City])
+        case loaded
         case failed
     }
     
@@ -32,7 +32,8 @@ class CitiesRepository {
         refreshList()
     }
     
-    @Published var state: State = .idle
+    @Published var state: DataState = .idle
+    @Published var cities: [City]? = nil
 
     func load() {
         self.state = .loading
@@ -43,6 +44,7 @@ class CitiesRepository {
             switch result {
             case .success(let cities):
                 self.allCities = cities.sorted { $0.name < $1.name }
+                self.state = .loaded
                 self.refreshList()
             case .failure:
                 // TODO: log
@@ -60,7 +62,7 @@ class CitiesRepository {
                     .filter { $0.name.lowercased().hasPrefix(self.query.lowercased()) }
             }
         }) {
-            self.state = .loaded($0)
+            self.cities = $0
         }
     }
 }

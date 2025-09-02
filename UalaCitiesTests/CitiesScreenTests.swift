@@ -55,6 +55,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertEqual(CitiesAPI.citiesGistUrl, request.urlString)
         XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode([TestData.Cities.hurzuf])))))
         
+        
         XCTAssertFalse(screen.isShowingSpinner)
         XCTAssertTrue(screen.isShowingList)
         XCTAssertEqual("Hurzuf, UA", screen.citiesListItems.first?.headingText)

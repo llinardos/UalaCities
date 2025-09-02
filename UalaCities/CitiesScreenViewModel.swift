@@ -39,9 +39,8 @@ class CitiesScreenViewModel: ObservableObject {
                 self.isShowingSpinner = true
                 self.isShowingList = false
                 self.isShowingError = false
-            case .loaded(let cities):
+            case .loaded:
                 self.isShowingSpinner = false
-                self.list.items = cities.map { CityRow(city: $0) }
                 self.isShowingList = true
                 self.isShowingError = false
             case .failed:
@@ -49,6 +48,10 @@ class CitiesScreenViewModel: ObservableObject {
                 self.isShowingList = false
                 self.isShowingError = true
             }
+        }.store(in: &subscriptions)
+        citiesRepo.$cities.sink { [weak self] cities in
+            guard let self, let cities else { return }
+            self.list.items = cities.map { CityRow(city: $0) }
         }.store(in: &subscriptions)
 
         $searchBarText.sink { [weak self] query in
