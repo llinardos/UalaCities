@@ -8,6 +8,7 @@
 import Foundation
 
 struct HTTPRequest {
+    var id = UUID()
     var urlString: String
 }
 struct HTTPResponse {

@@ -31,6 +31,6 @@ class CitiesScreenViewModel: ObservableObject {
     }
 }
 
-struct City: Decodable {
+struct City: Codable {
     var name: String
 }
