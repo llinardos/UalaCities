@@ -60,6 +60,6 @@ class CityRow: ObservableObject, Identifiable {
     
     init(city: City) {
         self.city = city
-        self.headingText = "\(city.name)"
+        self.headingText = "\(city.name), \(city.country)"
     }
 }

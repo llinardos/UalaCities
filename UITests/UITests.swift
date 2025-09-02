@@ -15,7 +15,7 @@ final class UITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
         
-        let firstRowTitle = app.staticTexts["Hurzuf"]
+        let firstRowTitle = app.staticTexts["'t Hoeksken, BE"]
         XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
     }
     
@@ -29,7 +29,7 @@ final class UITests: XCTestCase {
         
         errorHeading.tap()
         
-        let firstRowTitle = app.staticTexts["City"]
+        let firstRowTitle = app.staticTexts["City, AA"]
         XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
     }
 }

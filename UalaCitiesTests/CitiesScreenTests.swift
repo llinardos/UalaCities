@@ -36,7 +36,7 @@ class CitiesScreenTests: XCTestCase {
         
         XCTAssertFalse(screen.isShowingSpinner)
         XCTAssertTrue(screen.isShowingList)
-        XCTAssertEqual("Hurzuf", screen.citiesListItems.first?.headingText)
+        XCTAssertEqual("Hurzuf, UA", screen.citiesListItems.first?.headingText)
     }
     
     func testLoadCitiesFailsAndRetry() throws {
@@ -67,7 +67,7 @@ class CitiesScreenTests: XCTestCase {
         
         XCTAssertFalse(screen.isShowingSpinner)
         XCTAssertTrue(screen.isShowingList)
-        XCTAssertEqual("City 1", screen.citiesListItems.first?.headingText)
+        XCTAssertEqual("City 1, AA", screen.citiesListItems.first?.headingText)
     }
     
     func testSorted() throws {
@@ -82,7 +82,7 @@ class CitiesScreenTests: XCTestCase {
         
         XCTAssertFalse(screen.isShowingSpinner)
         XCTAssertTrue(screen.isShowingList)
-        XCTAssertEqual("Denver", screen.citiesListItems[safe: 0]?.headingText)
-        XCTAssertEqual("Sidney", screen.citiesListItems[safe: 1]?.headingText)
+        XCTAssertEqual("Denver, US", screen.citiesListItems[safe: 0]?.headingText)
+        XCTAssertEqual("Sidney, AU", screen.citiesListItems[safe: 1]?.headingText)
     }
 }
