@@ -10,6 +10,7 @@ import Foundation
 class CitiesScreenViewModel: ObservableObject {
     @Published var isShowingList: Bool = false
     @Published var isShowingSpinner: Bool = false
+    @Published var spinnerText = "Loading Cities..."
     @Published var citiesListItems: [City] = []
     let httpClient: HTTPClient
     
