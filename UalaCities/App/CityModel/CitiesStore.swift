@@ -62,7 +62,10 @@ class CitiesStore {
     }
 
     func setup() {
-        guard case .idle = state else { return }
+        switch state {
+        case .failed, .idle: break
+        case .loading, .ready: return
+        }
         
         self.state = .loading
         
