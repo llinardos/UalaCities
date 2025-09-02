@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct PaginatedListView<T: Identifiable, RowContent: View>: View {
-    @ObservedObject private var viewModel: PaginatedListViewModel<T>
-    private let rowContent: (T) -> RowContent
+struct PaginatedListView<T, RowT: Identifiable, RowContent: View>: View {
+    @ObservedObject private var viewModel: PaginatedListViewModel<T, RowT>
+    private let rowContent: (RowT) -> RowContent
     
-    init(_ viewModel: PaginatedListViewModel<T>, rowContent: @escaping (T) -> RowContent) {
+    init(_ viewModel: PaginatedListViewModel<T, RowT>, rowContent: @escaping (RowT) -> RowContent) {
         self.viewModel = viewModel
         self.rowContent = rowContent
     }

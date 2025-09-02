@@ -23,7 +23,14 @@ class CitiesScreenViewModel: ObservableObject {
     @Published var emptySubheadText = "Try adjusting your search"
     
     @Published var isShowingList: Bool = false
-    let list = PaginatedListViewModel<CityRowViewModel>(items: [], pageSize: 100, prefetchOffset: 10)
+    lazy var list = PaginatedListViewModel<City, CityRowViewModel>(items: [], pageSize: 100, prefetchOffset: 10) { city in
+        CityRowViewModel(
+            city: city,
+            isFavorite: self.citiesStore.isFavorite(city),
+            onFavoriteTap: { [weak self] in self?.citiesStore.toogleFavorite(for: city) },
+            onRowTap: { [weak self] in self?.onCitySelected(city) }
+        )
+    }
     var citiesListItems: [CityRowViewModel] { list.visibleItems } // TODO: clean, adapted for tests after viewmodel API change
     
     let searchBar = SearchBarViewModel(placeholderText: "Filter")
@@ -63,14 +70,7 @@ class CitiesScreenViewModel: ObservableObject {
                 self.isShowingSpinner = false
                 self.isShowingError = false
                 self.isShowingList = true
-                
-                self.list.items = cities.map { city in
-                    CityRowViewModel(
-                        city: city,
-                        isFavorite: self.citiesStore.isFavorite(city),
-                        onFavoriteTap: { [weak self] in self?.citiesStore.toogleFavorite(for: city) },
-                        onRowTap: { [weak self] in self?.onCitySelected(city) }
-                ) }
+                self.list.items = cities
                 self.isShowingEmptyView = cities.isEmpty
             case .failed:
                 self.isShowingSpinner = false
