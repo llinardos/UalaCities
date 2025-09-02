@@ -102,11 +102,3 @@ class CitiesStore {
         })
     }
 }
-
-extension CitiesStore {
-    static func stubbed(state: CitiesStore.CitiesState) -> CitiesStore {
-        let store = CitiesStore(citiesAPI: CitiesAPI(httpClient: DummyHTTPClient()), runner: GlobalRunner(), userDefaults: InRamAppleUserDefaults())
-//        store.state = state
-        return store
-    }
-}
