@@ -10,7 +10,7 @@ import XCTest
 
 class CitiesScreenTests: XCTestCase {
     func testLoadCitiesOk() {
-        let screen = CitiesScreenViewModel()
+        let screen = CitiesScreenViewModel(httpClient: URLSessionHTTPClient())
         screen.onAppear()
         
         let listShown = expectation(description: "list of cities shown")

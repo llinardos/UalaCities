@@ -16,8 +16,9 @@ extension Lala: iOSAppScreen {}
 
 public class iOSAppViewModel: ObservableObject {
     @Published var mainScreen: iOSAppScreen
+    private let httpClient = URLSessionHTTPClient()
     
     public init() {
-        mainScreen = CitiesScreenViewModel()
+        mainScreen = CitiesScreenViewModel(httpClient: httpClient)
     }
 }

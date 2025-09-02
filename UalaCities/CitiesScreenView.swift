@@ -28,5 +28,5 @@ struct CitiesScreenView: View {
 }
 
 #Preview {
-    CitiesScreenView(viewModel: .init())
+    CitiesScreenView(viewModel: .init(httpClient: URLSessionHTTPClient()))
 }
