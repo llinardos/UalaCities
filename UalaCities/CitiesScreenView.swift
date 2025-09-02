@@ -16,7 +16,9 @@ struct CitiesScreenView: View {
     
     var body: some View {
         VStack {
-            if viewModel.isShowingList {
+            if viewModel.isShowingSpinner {
+                ProgressView()
+            } else if viewModel.isShowingList {
                 List(viewModel.citiesListItems, id: \.name) { city in
                     Text(city.name)
                 }
