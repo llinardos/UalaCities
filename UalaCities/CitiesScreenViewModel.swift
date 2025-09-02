@@ -73,64 +73,6 @@ class CitiesScreenViewModel: ObservableObject {
     }
 }
 
-class CitiesRepository {
-    private let citiesAPI: CitiesAPI
-    private var allCities: [City] = []
-    private let runner: AsyncRunner
-    
-    enum State {
-        case idle
-        case loading
-        case loaded([City])
-        case failed
-    }
-    
-    init(citiesAPI: CitiesAPI, runner: AsyncRunner) {
-        self.citiesAPI = citiesAPI
-        self.runner = runner
-    }
-    
-    private var query: String = ""
-    func filter(by query: String) {
-        self.query = query
-        
-        guard case .loaded = state else { return }
-        refreshList()
-    }
-    
-    @Published var state: State = .idle
-
-    func load() {
-        self.state = .loading
-        
-        citiesAPI.fetchCities { [weak self] result in
-            guard let self else { return }    
-            
-            switch result {
-            case .success(let cities):
-                self.allCities = cities.sorted { $0.name < $1.name }
-                self.refreshList()
-            case .failure:
-                // TODO: log
-                self.state = .failed
-            }
-        }
-    }
-    
-    private func refreshList() {
-        runner.run(bgWork: {
-            if self.query.count == 0 {
-                return self.allCities
-            } else {
-                return self.allCities
-                    .filter { $0.name.lowercased().hasPrefix(self.query.lowercased()) }
-            }
-        }) {
-            self.state = .loaded($0)
-        }
-    }
-}
-
 class CityRow: ObservableObject, Identifiable {
     @Published var headingText: String = ""
     private var city: City
@@ -140,51 +82,5 @@ class CityRow: ObservableObject, Identifiable {
     init(city: City) {
         self.city = city
         self.headingText = "\(city.name), \(city.country)"
-    }
-}
-
-class PaginatedListViewModel<T>: ObservableObject {
-    @Published var visibleItems: [T]
-    
-    var items: [T] {
-        didSet {
-            visibleItems = Array(items[0..<min(pageSize, items.count)])
-        }
-    }
-    private let pageSize: Int
-    private let prefetchOffset: Int
-    
-    init(items: [T], pageSize: Int, prefetchOffset: Int) {
-        self.items = items
-        self.pageSize = pageSize
-        self.prefetchOffset = prefetchOffset
-        visibleItems = Array(items[0..<min(pageSize, items.count)])
-    }
-    
-    func onDidDisplayItemAtIndex(_ index: Int) {
-        if visibleItems.count - index <= prefetchOffset {
-            visibleItems += items[visibleItems.count..<min(visibleItems.count + pageSize, items.count)]
-        }
-    }
-}
-
-protocol AsyncRunner {
-    func run<T>(bgWork: @escaping () -> T, mainWork: @escaping (T) -> Void)
-}
-struct GlobalRunner: AsyncRunner {
-    func run<T>(bgWork: @escaping () -> T, mainWork: @escaping (T) -> Void) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            let result = bgWork()
-            DispatchQueue.main.async {
-                mainWork(result)
-            }
-        }
-    }
-}
-    
-struct ImmediateRunner: AsyncRunner { // para tests
-    func run<T>(bgWork: @escaping () -> T, mainWork: @escaping (T) -> Void) {
-        let result = bgWork()
-        mainWork(result)
     }
 }
