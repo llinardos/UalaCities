@@ -211,32 +211,30 @@ class CitiesScreenTests: XCTestCase {
         screen.searchBarType("X")
         
         XCTAssertTrue(screen.isShowingList)
-        XCTAssertTrue(screen.isShowingEmptyView)
-        XCTAssertEqual("No cities found", screen.emptyHeadingText)
-        XCTAssertEqual("Try adjusting your search", screen.emptySubheadText)
+        XCTAssertTrue(screen.emptyViewModel.isShowing)
+        XCTAssertEqual("No cities found", screen.emptyViewModel.headingText)
+        XCTAssertEqual("Try adjusting your search", screen.emptyViewModel.subheadText)
         
         screen.searchBarTypeDelete()
         
         XCTAssertTrue(screen.isShowingList)
-        XCTAssertFalse(screen.isShowingEmptyView)
+        XCTAssertFalse(screen.emptyViewModel.isShowing)
         XCTAssertEqual("Arizona, US", screen.list.visibleItems.first?.headingText)
         
         screen.searchBarType("A")
         
         XCTAssertTrue(screen.isShowingList)
-        XCTAssertFalse(screen.isShowingEmptyView)
+        XCTAssertFalse(screen.emptyViewModel.isShowing)
         XCTAssertEqual("Arizona, US", screen.list.visibleItems.first?.headingText)
         
         screen.searchBarType("X")
         
-        XCTAssertTrue(screen.isShowingEmptyView)
-        XCTAssertEqual("No cities found", screen.emptyHeadingText)
-        XCTAssertEqual("Try adjusting your search", screen.emptySubheadText)
+        XCTAssertTrue(screen.emptyViewModel.isShowing)
         
         screen.searchBarTypeDelete()
         
         XCTAssertTrue(screen.isShowingList)
-        XCTAssertFalse(screen.isShowingEmptyView)
+        XCTAssertFalse(screen.emptyViewModel.isShowing)
         XCTAssertEqual("Arizona, US", screen.list.visibleItems.first?.headingText)
     }
     
@@ -280,7 +278,7 @@ class CitiesScreenTests: XCTestCase {
         // unfavorite
         favoriteRow.tapOnFavoriteButtton()
         XCTAssertNil(screen.list.visibleItems.first)
-        XCTAssertTrue(screen.isShowingEmptyView)
+        XCTAssertTrue(screen.emptyViewModel.isShowing)
     }
     
     func test_favoritesPersistence() throws {

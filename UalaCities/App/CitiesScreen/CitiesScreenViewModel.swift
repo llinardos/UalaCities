@@ -37,10 +37,7 @@ class CitiesScreenViewModel: ObservableObject {
     @Published var spinnerText = "Loading Cities..."
     
     lazy var errorViewModel = InfoMessageViewModel(iconSystemName: "exclamationmark.triangle", headingText: "Something went wrong", subheadText: "Tap to try again", onTap: { [weak self] in self?.tapOnErrorMessage() })
-    
-    @Published var isShowingEmptyView: Bool = false
-    @Published var emptyHeadingText = "No cities found"
-    @Published var emptySubheadText = "Try adjusting your search"
+    lazy var emptyViewModel = InfoMessageViewModel(iconSystemName: "magnifyingglass", headingText: "No cities found", subheadText: "Try adjusting your search")
     
     @Published var isShowingList: Bool = false
     lazy var list = PaginatedListViewModel<City, CityRowViewModel>(items: [], pageSize: 100, prefetchOffset: 10) { city in
@@ -88,17 +85,18 @@ class CitiesScreenViewModel: ObservableObject {
                 self.isShowingSpinner = true
                 self.isShowingList = false
                 self.errorViewModel.isShowing = false
-                self.isShowingEmptyView = false
+                self.emptyViewModel.isShowing = false
             case .ready(let cities):
                 self.isShowingSpinner = false
                 self.errorViewModel.isShowing = false
                 self.isShowingList = true
                 self.list.items = cities
-                self.isShowingEmptyView = cities.isEmpty
+                self.emptyViewModel.isShowing = cities.isEmpty
             case .failed:
                 self.isShowingSpinner = false
                 self.isShowingList = false
                 self.errorViewModel.isShowing = true
+                self.emptyViewModel.isShowing = false
             }
         }.store(in: &subscriptions)
 

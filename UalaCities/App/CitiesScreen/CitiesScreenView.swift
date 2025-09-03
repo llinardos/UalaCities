@@ -51,26 +51,20 @@ struct CitiesScreenView: View {
                             }.accessibilityIdentifier("FavoriteFilterButton")
                         }
                         .padding(.horizontal)
+                        
                         PaginatedListView(viewModel.list) { rowViewModel in
                             CityRowView(viewModel: rowViewModel)
                         }
                         .safeAreaInset(edge: .bottom) {
-                            if viewModel.isShowingEmptyView { // TODO: extract
-                                VStack(spacing: 16) {
-                                    Image(systemName: "magnifyingglass")
-                                        .font(.title)
-                                    VStack {
-                                        Text(viewModel.emptyHeadingText).font(.headline)
-                                        Text(viewModel.emptySubheadText).font(.subheadline)
-                                    }
-                                }
-                                .frame(maxHeight: .infinity)
+                            if viewModel.emptyViewModel.isShowing {
+                                InfoMessageView(viewModel: viewModel.emptyViewModel)
+                                    .frame(maxHeight: .infinity)
                             }
                         }
                     }
                 }
             }
-            .frame(maxWidth: .infinity)
+            
             if viewModel.isShowingMap {
                 VStack {
                     if let mapViewModel = viewModel.mapViewModel {
