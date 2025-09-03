@@ -24,14 +24,14 @@ struct CitiesScreenView: View {
                         Text(viewModel.errorHeading).font(.headline)
                         Text(viewModel.errorSubhead).font(.subheadline)
                     }
-                    .onTapGesture { viewModel.onErrorTap() }
+                    .onTapGesture { viewModel.tapOnErrorMessage() }
                 } else if viewModel.isShowingList {
                     VStack {
                         HStack(spacing: 8) {
                             SearchBarView(viewModel: viewModel.searchBar)
                                 .padding(.vertical)
                             FavoriteButton(isSelected: $viewModel.favoriteFilterButtonIsSelected) { // TODO: extract VM
-                                viewModel.onTapFavoriteFilterButton()
+                                viewModel.tapOnFavoriteFilterButton()
                             }.accessibilityIdentifier("FavoriteFilterButton")
                         }
                         .padding(.horizontal)

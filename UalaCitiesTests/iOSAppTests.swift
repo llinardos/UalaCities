@@ -42,7 +42,7 @@ final class iOSAppTests: XCTestCase {
         
         httpClient.respond(to: try XCTUnwrap(httpClient.pendingRequests.unique()), with: .success(.init(statusCode: 200, data: try? JSONEncoder().encode([TestData.Cities.alabama]))))
         
-        citiesScreen.citiesListItems.first?.onRowTap()
+        citiesScreen.citiesListItems.first?.tapOnRow()
         
         guard case let .cityMap(_, mapScreenViewModel) = app.path.last else { return XCTFail() }
         XCTAssertEqual("Alabama, US", mapScreenViewModel.titleText)
@@ -57,7 +57,7 @@ final class iOSAppTests: XCTestCase {
         
         httpClient.respond(to: try XCTUnwrap(httpClient.pendingRequests.unique()), with: .success(.init(statusCode: 200, data: try? JSONEncoder().encode([TestData.Cities.alabama]))))
         
-        citiesScreen.citiesListItems.first?.onInfoTap()
+        citiesScreen.citiesListItems.first?.tapOnInfoButton()
         
         guard case let .cityInformation(_, infoScreenViewModel) = app.path.last else { return XCTFail() }
         XCTAssertEqual("City Information", infoScreenViewModel.titleText)

@@ -21,7 +21,7 @@ struct SearchBarView: View {
                     .textFieldStyle(.plain)
                     .focused($isFocused)
                     .onTapGesture {
-                        viewModel.onTextFieldTap()
+                        viewModel.tapOnTextField()
                     }
                     .onChange(of: isFocused) { _, isFocused in
                         self.viewModel.isFocused = isFocused
@@ -29,7 +29,7 @@ struct SearchBarView: View {
                     .accessibilityAddTraits(.isSearchField)
                 if viewModel.showClearButton {
                     Button(action: {
-                        self.viewModel.onClearTap()
+                        self.viewModel.tapOnClearButton()
                     }, label: { Image(systemName: "xmark.circle.fill")})
                         .tint(.secondary)
                 }

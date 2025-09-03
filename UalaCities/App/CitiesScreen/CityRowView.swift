@@ -26,7 +26,7 @@ struct CityRowView: View {
             }
             Spacer()
             
-            Button(action: { viewModel.onInfoButtonTap() }, label: {
+            Button(action: { viewModel.tapOnInfoButton() }, label: {
                 Image(systemName: "info.circle")
                     .foregroundColor(.blue)
             })
@@ -34,12 +34,12 @@ struct CityRowView: View {
             .accessibilityIdentifier("InfoButton")
             
             FavoriteButton(isSelected: $viewModel.favoriteButtonIsSelected) {
-                viewModel.onFavoriteButtonTap()
+                viewModel.tapOnFavoriteButtton()
             }.accessibilityIdentifier("FavoriteButton")
         }
         .contentShape(Rectangle())
         .onTapGesture {
-            viewModel.onRowTap()
+            viewModel.tapOnRow()
         }
         .listRowBackground(viewModel.isSelected ? Color.blue.opacity(0.2) : Color.clear)
     }

@@ -31,11 +31,11 @@ class SearchBarViewModel: ObservableObject {
         }.store(in: &subscriptions)
     }
     
-    func onTextFieldTap() {
+    func tapOnTextField() {
         self.isFocused = true
     }
     
-    func onClearTap() {
+    func tapOnClearButton() {
         self.text = ""
     }
 }

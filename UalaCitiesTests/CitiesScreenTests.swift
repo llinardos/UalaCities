@@ -89,7 +89,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertEqual("Tap to try again", screen.errorSubhead)
         
         // tap on error to retry
-        screen.onErrorTap()
+        screen.tapOnErrorMessage()
         
         XCTAssertFalse(screen.isShowingError)
         XCTAssertTrue(screen.isShowingSpinner)
@@ -130,7 +130,7 @@ class CitiesScreenTests: XCTestCase {
         screen.searchBarType("")
         XCTAssertTrue(screen.isShowingSpinner)
         
-        screen.onTapFavoriteFilterButton()
+        screen.tapOnFavoriteFilterButton()
         XCTAssertTrue(screen.isShowingSpinner)
     }
     
@@ -255,30 +255,30 @@ class CitiesScreenTests: XCTestCase {
         
         XCTAssertFalse(screen.favoriteFilterButtonIsSelected)
         
-        screen.onTapFavoriteFilterButton()
+        screen.tapOnFavoriteFilterButton()
         XCTAssertTrue(screen.favoriteFilterButtonIsSelected)
         
         XCTAssertNil(screen.citiesListItems.first)
         
-        screen.onTapFavoriteFilterButton()
+        screen.tapOnFavoriteFilterButton()
         XCTAssertFalse(screen.favoriteFilterButtonIsSelected)
         
         // add favorite
         let sidneyRow = try XCTUnwrap(screen.citiesListItems.last)
         XCTAssertEqual("Sidney, AU", sidneyRow.headingText)
         XCTAssertFalse(sidneyRow.favoriteButtonIsSelected)
-        sidneyRow.onFavoriteButtonTap()
+        sidneyRow.tapOnFavoriteButtton()
         XCTAssertTrue(sidneyRow.favoriteButtonIsSelected)
         
         // filter favorites
-        screen.onTapFavoriteFilterButton()
+        screen.tapOnFavoriteFilterButton()
         XCTAssertTrue(screen.favoriteFilterButtonIsSelected)
         let favoriteRow = try XCTUnwrap(screen.citiesListItems.unique())
         XCTAssertEqual("Sidney, AU", favoriteRow.headingText)
         XCTAssertTrue(favoriteRow.favoriteButtonIsSelected)
         
         // unfavorite
-        favoriteRow.onFavoriteButtonTap()
+        favoriteRow.tapOnFavoriteButtton()
         XCTAssertNil(screen.citiesListItems.first)
         XCTAssertTrue(screen.isShowingEmptyView)
     }
@@ -297,11 +297,11 @@ class CitiesScreenTests: XCTestCase {
         let sidneyRow = try XCTUnwrap(screen.citiesListItems.last)
         XCTAssertEqual("Sidney, AU", sidneyRow.headingText)
         XCTAssertFalse(sidneyRow.favoriteButtonIsSelected)
-        sidneyRow.onFavoriteButtonTap()
+        sidneyRow.tapOnFavoriteButtton()
         XCTAssertTrue(sidneyRow.favoriteButtonIsSelected)
         
         // filter favorites
-        screen.onTapFavoriteFilterButton()
+        screen.tapOnFavoriteFilterButton()
         var favoriteRow = try XCTUnwrap(screen.citiesListItems.unique())
         XCTAssertEqual("Sidney, AU", favoriteRow.headingText)
         XCTAssertTrue(favoriteRow.favoriteButtonIsSelected)
@@ -317,7 +317,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertEqual(CitiesAPI.citiesGistUrl, request.urlString)
         XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode(TestData.Cities.filterExample)))))
         
-        screen.onTapFavoriteFilterButton()
+        screen.tapOnFavoriteFilterButton()
         favoriteRow = try XCTUnwrap(screen.citiesListItems.unique())
         XCTAssertEqual("Sidney, AU", favoriteRow.headingText)
     }
@@ -344,19 +344,19 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertEqual("No City Selected", screen.mapEmptyHeadingText)
         XCTAssertEqual("Select a City on the List", screen.mapEmptySubheadText)
         
-        sidneyRow.onRowTap()
+        sidneyRow.tapOnRow()
         
         let sidney = City.from(TestData.Cities.sidney)
         XCTAssertFalse(screen.isShowingMapEmptyView)
         XCTAssertEqual("Sidney", screen.mapViewModel?.pinTitleText)
         try XCTAssertEqualCoordinates(sidney.coordinates, XCTUnwrap(screen.mapViewModel?.pinCoordinates))
         
-        sidneyRow.onRowTap()
+        sidneyRow.tapOnRow()
         
         XCTAssertTrue(screen.isShowingMapEmptyView)
         XCTAssertNil(screen.mapViewModel)
         
-        sidneyRow.onRowTap()
+        sidneyRow.tapOnRow()
         XCTAssertFalse(screen.isShowingMapEmptyView)
         XCTAssertEqual("Sidney", screen.mapViewModel?.pinTitleText)
         
@@ -369,7 +369,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertTrue(screen.isShowingMapEmptyView)
         XCTAssertNil(screen.mapViewModel)
         
-        sidneyRow.onRowTap()
+        sidneyRow.tapOnRow()
         XCTAssertTrue(sidneyRow.isSelected)
         XCTAssertFalse(screen.isShowingMapEmptyView)
         XCTAssertEqual("Sidney", screen.mapViewModel?.pinTitleText)

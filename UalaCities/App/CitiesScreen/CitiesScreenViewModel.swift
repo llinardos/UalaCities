@@ -28,7 +28,7 @@ class CitiesScreenViewModel: ObservableObject {
             city: city,
             isFavorite: self.citiesStore.isFavorite(city),
             onFavoriteTap: { [weak self] in self?.citiesStore.toogleFavorite(for: city) },
-            onRowTap: { [weak self] in self?.onCitySelected(city) },
+            onRowTap: { [weak self] in self?.handleCitySelection(city) },
             onInfoButtonTap: { [weak self] in self?.onCityInfoButtonTapped?(city) }
         )
     }
@@ -39,7 +39,7 @@ class CitiesScreenViewModel: ObservableObject {
     var searchBarPlaceholder: String { searchBar.placeholderText } // TODO: clean, adapted for tests after viewmodel API change
     
     @Published var favoriteFilterButtonIsSelected = false
-    func onTapFavoriteFilterButton() {
+    func tapOnFavoriteFilterButton() {
         favoriteFilterButtonIsSelected.toggle()
     }
     
@@ -120,7 +120,7 @@ class CitiesScreenViewModel: ObservableObject {
         citiesStore.setup()
     }
     
-    func onErrorTap() {
+    func tapOnErrorMessage() {
         citiesStore.setup()
     }
     
@@ -132,7 +132,7 @@ class CitiesScreenViewModel: ObservableObject {
         self.searchBar.text.removeLast()
     }
     
-    private func onCitySelected(_ city: City) {
+    private func handleCitySelection(_ city: City) {
         if self.deviceOrientation.value == .landscape {
             if selectedCity?.id == city.id {
                 selectedCity = nil
