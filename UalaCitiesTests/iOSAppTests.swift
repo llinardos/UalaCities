@@ -13,18 +13,22 @@ final class iOSAppTests: XCTestCase {
         let httpClient: ControlledHTTPClient
         let runner: AsyncRunner
         let userDefaults: AppleUserDefaults
+        let logger: SpiedLogger
         
         init(
             httpClient: ControlledHTTPClient = ControlledHTTPClient(),
             runner: AsyncRunner = ImmediateRunner(),
-            userDefaults: AppleUserDefaults = InRamAppleUserDefaults()
+            userDefaults: AppleUserDefaults = InRamAppleUserDefaults(),
+            logger: SpiedLogger = SpiedLogger()
         ) {
             self.httpClient = httpClient
             self.runner = runner
             self.userDefaults = userDefaults
+            self.logger = logger
         }
+        
         func sut() -> iOSAppViewModel{
-            return .init(httpClient: httpClient, runner: runner, userDefaults: userDefaults)
+            return .init(httpClient: httpClient, runner: runner, userDefaults: userDefaults, logger: logger)
         }
     }
     

@@ -10,7 +10,7 @@ import XCTest
 
 final class IntegrationTests: XCTestCase {
     func test_fetch() {
-        let citiesApi = CitiesAPI(httpClient: URLSessionHTTPClient())
+        let citiesApi = CitiesAPI(httpClient: URLSessionHTTPClient(), logger: ConsoleLogger())
         let citiesLoaded = expectation(description: "fetched")
         citiesApi.fetchCities() { result in
             switch result {

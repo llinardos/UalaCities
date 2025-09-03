@@ -11,7 +11,7 @@ class CitiesAPITests: XCTestCase {
             line: UInt = #line
         ) throws {
             let http = ControlledHTTPClient()
-            let api = CitiesAPI(httpClient: http)
+            let api = CitiesAPI(httpClient: http, logger: NoLogger())
             
             let fetched = expectation(description: "fetched")
             
@@ -69,4 +69,90 @@ class CitiesAPITests: XCTestCase {
             expectedResult: .failure(.networkingError)
         )
     }
+    
+    func test_decodingErrorIsLogged() throws {
+        let logger = SpiedLogger()
+        let http = ControlledHTTPClient()
+        let api = CitiesAPI(httpClient: http, logger: logger)
+        
+        let fetched = expectation(description: "fetched")
+        
+        var result: Result<[CityDTO], CitiesAPI.Error>?
+        api.fetchCities {
+            result = $0
+            fetched.fulfill()
+        }
+        
+        let request = try XCTUnwrap(http.pendingRequests.unique())
+        try http.respond(to: request, with: .success(.init(statusCode: 200, data: JSONSerialization.data(withJSONObject: ["foo": "bar"]))))
+        
+        wait(for: [fetched])
+        
+        switch try XCTUnwrap(result) {
+        case .failure(.networkingError):
+            let logEntry = try XCTUnwrap(logger.entries.unique())
+            XCTAssertEqual(logEntry.level, .error)
+            XCTAssertTrue(logEntry.message.contains("decodingError"))
+        default: XCTFail("got \(String(describing: result))")
+        }
+    }
+    
+    func test_httpErrorIsLogged() throws {
+        let logger = SpiedLogger()
+        let http = ControlledHTTPClient()
+        let api = CitiesAPI(httpClient: http, logger: logger)
+        
+        let fetched = expectation(description: "fetched")
+        
+        var result: Result<[CityDTO], CitiesAPI.Error>?
+        api.fetchCities {
+            result = $0
+            fetched.fulfill()
+        }
+        
+        let request = try XCTUnwrap(http.pendingRequests.unique())
+        http.respond(to: request, with: .failure(.noHttpResponse))
+        
+        wait(for: [fetched])
+        
+        switch try XCTUnwrap(result) {
+        case .failure(.networkingError):
+            let logEntry = try XCTUnwrap(logger.entries.unique())
+            XCTAssertEqual(logEntry.level, .error)
+            XCTAssertTrue(logEntry.message.contains("httpError"))
+            XCTAssertTrue(logEntry.message.contains("noHttpResponse"))
+        default: XCTFail("got \(String(describing: result))")
+        }
+    }
+    
+    func test_logs500() throws {
+        let logger = SpiedLogger()
+        let http = ControlledHTTPClient()
+        let api = CitiesAPI(httpClient: http, logger: logger)
+        
+        let fetched = expectation(description: "fetched")
+        
+        var result: Result<[CityDTO], CitiesAPI.Error>?
+        api.fetchCities {
+            result = $0
+            fetched.fulfill()
+        }
+        
+        let request = try XCTUnwrap(http.pendingRequests.unique())
+        http.respond(to: request, with: .success(.init(statusCode: 500, data: nil)))
+        
+        wait(for: [fetched])
+        
+        switch try XCTUnwrap(result) {
+        case .failure(.networkingError):
+            let logEntry = try XCTUnwrap(logger.entries.unique())
+            XCTAssertEqual(logEntry.level, .error)
+            XCTAssertTrue(logEntry.fileId.contains("CitiesAPI"))
+            XCTAssertEqual(logEntry.function, "fetchCities(_:)")
+            XCTAssertTrue(logEntry.message.contains("unexpected response"))
+            XCTAssertTrue(logEntry.message.contains("statusCode: 500"))
+        default: XCTFail("got \(String(describing: result))")
+        }
+    }
+
 }

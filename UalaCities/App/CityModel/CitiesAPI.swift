@@ -15,8 +15,10 @@ class CitiesAPI {
     }
     
     private let httpClient: HTTPClient
-    init(httpClient: HTTPClient) {
+    private let logger: Logger
+    init(httpClient: HTTPClient, logger: Logger) {
         self.httpClient = httpClient
+        self.logger = logger
     }
     
     func fetchCities(_ completion: @escaping (Result<[CityDTO], Error>) -> Void) {
@@ -24,15 +26,19 @@ class CitiesAPI {
         httpClient.send(request) { result in
             switch result {
             case .success(let response):
+                guard response.statusCode == 200 else {
+                    self.logger.log(.error, "unexpected response \(response)")
+                    return completion(.failure(.networkingError))
+                }
                 do {
                     let cities = try JSONDecoder().decode([CityDTO].self, from: response.data ?? .init())
                     completion(.success(cities))
                 } catch {
-                    // TODO: log decoding error
+                    self.logger.log(.error, "decodingError: \(error)")
                     completion(.failure(.networkingError))
                 }
-            case .failure:
-                // TODO: log http error
+            case .failure(let error):
+                self.logger.log(.error, "httpError: \(error)")
                 completion(.failure(.networkingError))
             }
 

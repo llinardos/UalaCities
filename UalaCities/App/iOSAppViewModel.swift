@@ -34,7 +34,7 @@ public class iOSAppViewModel: ObservableObject {
     @Published var path: [Route] = []
     
     public static func prod() -> iOSAppViewModel {
-        return .init(httpClient: URLSessionHTTPClient(), runner: GlobalRunner(), userDefaults: RealAppleUserDefaults())
+        return .init(httpClient: URLSessionHTTPClient(), runner: GlobalRunner(), userDefaults: RealAppleUserDefaults(), logger: NoLogger())
     }
     
     public static func uiTests() -> iOSAppViewModel {
@@ -50,15 +50,16 @@ public class iOSAppViewModel: ObservableObject {
             httpClient = URLSessionHTTPClient()
         }
         
-        return .init(httpClient: httpClient, runner: GlobalRunner(), userDefaults: userDefaults)
+        return .init(httpClient: httpClient, runner: GlobalRunner(), userDefaults: userDefaults, logger: ConsoleLogger())
     }
     
     init(
         httpClient: HTTPClient,
         runner: AsyncRunner,
-        userDefaults: AppleUserDefaults
+        userDefaults: AppleUserDefaults,
+        logger: Logger
     ) {
-        let citiesAPI = CitiesAPI(httpClient: httpClient)
+        let citiesAPI = CitiesAPI(httpClient: httpClient, logger: logger)
         let citiesStore = CitiesStore(citiesAPI: citiesAPI, runner: runner, userDefaults: userDefaults)
         let citiesScreen = CitiesScreenViewModel(citiesStore: citiesStore, deviceOrientation: UIKitDeviceOrientation())
         self.rootScreen = citiesScreen

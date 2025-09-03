@@ -14,21 +14,24 @@ class CitiesScreenTests: XCTestCase {
         let runner: AsyncRunner
         let userDefaults: AppleUserDefaults
         let deviceOrientation: DeviceOrientation
+        let logger: SpiedLogger
         
         init(
             httpClient: ControlledHTTPClient = ControlledHTTPClient(),
             runner: AsyncRunner = ImmediateRunner(),
             userDefaults: AppleUserDefaults = InRamAppleUserDefaults(),
-            deviceOrientation: DeviceOrientation = DeviceOrientation(.portrait)
+            deviceOrientation: DeviceOrientation = DeviceOrientation(.portrait),
+            logger: SpiedLogger = SpiedLogger()
         ) {
             self.httpClient = httpClient
             self.runner = runner
             self.userDefaults = userDefaults
             self.deviceOrientation = deviceOrientation
+            self.logger = logger
         }
         
         func sut() -> CitiesScreenViewModel {
-            let citiesAPI = CitiesAPI(httpClient: httpClient)
+            let citiesAPI = CitiesAPI(httpClient: httpClient, logger: logger)
             let citiesStore = CitiesStore(citiesAPI: citiesAPI, runner: runner, userDefaults: userDefaults)
             return .init(citiesStore: citiesStore, deviceOrientation: deviceOrientation)
         }

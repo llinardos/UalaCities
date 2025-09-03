@@ -43,6 +43,7 @@ struct CitiesScreenView: View {
                     }
                 }
             }
+            .frame(maxHeight: .infinity)
             
             if viewModel.isShowingMap {
                 VStack {
