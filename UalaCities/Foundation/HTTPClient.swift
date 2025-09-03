@@ -70,6 +70,10 @@ class StubbedHTTPClient: HTTPClient {
         self.responses = responses
     }
     
+    func setup(_ responses: [HTTPResponse]) {
+        self.responses = responses
+    }
+    
     func send(_ request: HTTPRequest, _ completion: @escaping (Result<HTTPResponse, HTTPError>) -> Void) {
         guard let response = responses.first else { fatalError() }
         responses = Array(responses.dropFirst())

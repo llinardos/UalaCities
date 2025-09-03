@@ -29,7 +29,8 @@ public class iOSAppViewModel: ObservableObject {
             }
         }
     }
-    var rootScreen: CitiesScreenViewModel
+    
+    let rootScreen: CitiesScreenViewModel
     @Published var path: [Route] = []
     
     public static func prod() -> iOSAppViewModel {
@@ -42,16 +43,9 @@ public class iOSAppViewModel: ObservableObject {
         
         let httpClient: HTTPClient
         if let string = ProcessInfo.processInfo.environment["UITestScenario"], let scenario = UITestScenarios(rawValue: string) {
-            switch scenario {
-            case .loadCitiesErrorAndRetry:
-                let stubbedHttpClient = StubbedHTTPClient([
-                    HTTPResponse(statusCode: 500),
-                    HTTPResponse(statusCode: 200, data: try! JSONEncoder().encode([
-                        CityDTO(_id: 1, name: "City", country: "AA", coord: .init(lat: 1, lon: 1))
-                    ])),
-                ])
-                httpClient = stubbedHttpClient
-            }
+            let stubbedHttpClient = StubbedHTTPClient([])
+            scenario.setup(stubbedHttpClient)
+            httpClient = stubbedHttpClient
         } else {
             httpClient = URLSessionHTTPClient()
         }
