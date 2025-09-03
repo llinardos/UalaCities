@@ -11,10 +11,6 @@ import SwiftUI
 struct CityRowView: View {
     @ObservedObject var viewModel: CityRowViewModel
     
-    init(viewModel: CityRowViewModel) {
-        self.viewModel = viewModel
-    }
-    
     var body: some View {
         HStack {
             VStack(alignment: .leading) {

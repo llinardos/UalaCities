@@ -10,10 +10,6 @@ import SwiftUI
 struct CitiesScreenView: View {
     @ObservedObject var viewModel: CitiesScreenViewModel
     
-    init(viewModel: CitiesScreenViewModel) {
-        self.viewModel = viewModel
-    }
-    
     var body: some View {
         HStack {
             VStack {

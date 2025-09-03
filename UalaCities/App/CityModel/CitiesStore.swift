@@ -77,7 +77,7 @@ class CitiesStore {
             
             switch result {
             case .success(let cities):
-                // precompute and store lowercased
+                // precompute and store prefix
                 cities.forEach { self.prefixByCityId[$0._id] = $0.name.lowercased() }
                 
                 self.allCities = cities
