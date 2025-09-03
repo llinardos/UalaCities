@@ -38,6 +38,8 @@ class CitiesScreenViewModel: ObservableObject {
     
     lazy var errorViewModel = InfoMessageViewModel(iconSystemName: "exclamationmark.triangle", headingText: "Something went wrong", subheadText: "Tap to try again", onTap: { [weak self] in self?.tapOnErrorMessage() })
     lazy var emptyViewModel = InfoMessageViewModel(iconSystemName: "magnifyingglass", headingText: "No cities found", subheadText: "Try adjusting your search")
+    lazy var emptyMapViewModel = InfoMessageViewModel(iconSystemName: "hand.tap", headingText: "No city selected", subheadText: "Select a city on the List")
+    
     
     @Published var isShowingList: Bool = false
     lazy var list = PaginatedListViewModel<City, CityRowViewModel>(items: [], pageSize: 100, prefetchOffset: 10) { city in
@@ -62,9 +64,6 @@ class CitiesScreenViewModel: ObservableObject {
     private let deviceOrientation: DeviceOrientation
     @Published var isShowingMap: Bool = false
     @Published var mapViewModel: CityMapViewModel?
-    @Published var isShowingMapEmptyView = false
-    @Published var mapEmptyHeadingText = "No City Selected"
-    @Published var mapEmptySubheadText = "Select a City on the List"
     
     @Published private var selectedCity: City?
     private var selectedRowVM: CityRowViewModel?
@@ -122,10 +121,10 @@ class CitiesScreenViewModel: ObservableObject {
             selectedRowVM?.isSelected = true
             
             if let selectedCity {
-                self.isShowingMapEmptyView = false
+                self.emptyMapViewModel.isShowing = false
                 self.mapViewModel = .init(city: selectedCity)
             } else {
-                self.isShowingMapEmptyView = true
+                self.emptyMapViewModel.isShowing = true
                 self.mapViewModel = nil
             }
         }.store(in: &subscriptions)

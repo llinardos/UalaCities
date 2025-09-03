@@ -70,11 +70,8 @@ struct CitiesScreenView: View {
                     if let mapViewModel = viewModel.mapViewModel {
                         CityMapView(viewModel: mapViewModel, hideNavBar: true)
                     }
-                    if viewModel.isShowingMapEmptyView {
-                        VStack { // TODO: extract
-                            Text(viewModel.mapEmptyHeadingText).font(.headline)
-                            Text(viewModel.mapEmptySubheadText).font(.subheadline)
-                        }
+                    if viewModel.emptyMapViewModel.isShowing {
+                        InfoMessageView(viewModel: viewModel.emptyMapViewModel)
                     }
                 }
                 .frame(maxWidth: .infinity)

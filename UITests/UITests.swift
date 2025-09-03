@@ -110,7 +110,7 @@ final class UITests: XCTestCase {
         
         // orientation
         XCUIDevice.shared.orientation = .landscapeRight
-        let emptyMapTitle = app.staticTexts["No City Selected"]
+        let emptyMapTitle = app.staticTexts["No city selected"]
         assertExistence(of: emptyMapTitle)
         
         XCUIDevice.shared.orientation = .portrait

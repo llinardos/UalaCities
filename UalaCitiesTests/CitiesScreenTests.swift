@@ -338,24 +338,24 @@ class CitiesScreenTests: XCTestCase {
         deviceOrientation.value = .landscape
         
         XCTAssertTrue(screen.isShowingMap)
-        XCTAssertTrue(screen.isShowingMapEmptyView)
-        XCTAssertEqual("No City Selected", screen.mapEmptyHeadingText)
-        XCTAssertEqual("Select a City on the List", screen.mapEmptySubheadText)
+        XCTAssertTrue(screen.emptyMapViewModel.isShowing)
+        XCTAssertEqual("No city selected", screen.emptyMapViewModel.headingText)
+        XCTAssertEqual("Select a city on the list", screen.emptyMapViewModel.subheadText)
         
         sidneyRow.tapOnRow()
         
         let sidney = City.from(TestData.Cities.sidney)
-        XCTAssertFalse(screen.isShowingMapEmptyView)
+        XCTAssertFalse(screen.emptyMapViewModel.isShowing)
         XCTAssertEqual("Sidney", screen.mapViewModel?.pinTitleText)
         try XCTAssertEqualCoordinates(sidney.coordinates, XCTUnwrap(screen.mapViewModel?.pinCoordinates))
         
         sidneyRow.tapOnRow()
         
-        XCTAssertTrue(screen.isShowingMapEmptyView)
+        XCTAssertTrue(screen.emptyMapViewModel.isShowing)
         XCTAssertNil(screen.mapViewModel)
         
         sidneyRow.tapOnRow()
-        XCTAssertFalse(screen.isShowingMapEmptyView)
+        XCTAssertFalse(screen.emptyMapViewModel.isShowing)
         XCTAssertEqual("Sidney", screen.mapViewModel?.pinTitleText)
         
         // going portrait and landscape, selected is lost
@@ -364,12 +364,12 @@ class CitiesScreenTests: XCTestCase {
         
         deviceOrientation.value = .landscape
         
-        XCTAssertTrue(screen.isShowingMapEmptyView)
+        XCTAssertTrue(screen.emptyMapViewModel.isShowing)
         XCTAssertNil(screen.mapViewModel)
         
         sidneyRow.tapOnRow()
         XCTAssertTrue(sidneyRow.isSelected)
-        XCTAssertFalse(screen.isShowingMapEmptyView)
+        XCTAssertFalse(screen.emptyMapViewModel.isShowing)
         XCTAssertEqual("Sidney", screen.mapViewModel?.pinTitleText)
     }
 }
