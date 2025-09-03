@@ -11,13 +11,13 @@ import CoreLocation
 class City: Identifiable, Hashable {
     let id: Int
     let name: String
-    let country: String
+    let countryCode: String
     let coordinates: CLLocationCoordinate2D
     
     init(id: Int, name: String, country: String, coordinates: CLLocationCoordinate2D) {
         self.id = id
         self.name = name
-        self.country = country
+        self.countryCode = country
         self.coordinates = coordinates
     }
     

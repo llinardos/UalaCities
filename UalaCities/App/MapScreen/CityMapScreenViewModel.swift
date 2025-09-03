@@ -14,7 +14,7 @@ class CityMapScreenViewModel: ObservableObject {
     let cityMapViewModel: CityMapViewModel
     
     init(city: City, span: CGFloat = 0.05) {
-        self.titleText = "\(city.name), \(city.country)"
+        self.titleText = "\(city.name), \(city.countryCode)"
         self.cityMapViewModel = .init(city: city)
     }
 }

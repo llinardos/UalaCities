@@ -42,7 +42,7 @@ class CityDetailScreenViewModel: ObservableObject {
         
         rows = [
             .init(title: "Name", value: city.name),
-            .init(title: "Country Code", value: city.country),
+            .init(title: "Country Code", value: city.countryCode),
             .init(title: "Coordinates", value: "\(city.coordinates.latitude), \(city.coordinates.longitude)", action: { [weak self] in self?.onCoordinatesTap?() })
         ]
     }

@@ -22,7 +22,7 @@ class CityRowViewModel: ObservableObject, Identifiable {
         
     init(city: City, isFavorite: Bool, onFavoriteTap: @escaping () -> Void, onRowTap: @escaping () -> Void, onDetailTap: @escaping () -> Void) {
         self.city = city
-        self.headingText = "\(city.name), \(city.country)"
+        self.headingText = "\(city.name), \(city.countryCode)"
         self.subheadText = "\(city.coordinates.latitude), \(city.coordinates.longitude)"
         self.favoriteButtonIsSelected = isFavorite
         self.onFavoriteTapCallback = onFavoriteTap
