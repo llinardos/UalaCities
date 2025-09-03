@@ -68,21 +68,21 @@ final class UITests: XCTestCase {
         XCTAssertTrue(favoriteFilterButton.isSelected)
         XCTAssertTrue(filteredRowTitle.waitForExistence(timeout: 10.0))
         
-        // go to detail
+        // go to info
         let filteredRowInfoButton = app.buttons["InfoButton"]
         XCTAssertTrue(filteredRowInfoButton.waitForExistence(timeout: 10.0))
         filteredRowInfoButton.tap()
         
-        let detailScreenTitle = app.navigationBars["City Information"]
-        XCTAssertTrue(detailScreenTitle.waitForExistence(timeout: 10.0))
+        let infoScreenTitle = app.navigationBars["City Information"]
+        XCTAssertTrue(infoScreenTitle.waitForExistence(timeout: 10.0))
         XCTAssertTrue(app.staticTexts.firstMatch.waitForExistence(timeout: 10.0))
         
-        let coordinatesRowInDetailScreen = app.staticTexts["Coordinates"]
-        XCTAssertTrue(coordinatesRowInDetailScreen.waitForExistence(timeout: 10.0))
-        coordinatesRowInDetailScreen.tap()
+        let coordinatesRowInInfoScreen = app.staticTexts["Coordinates"]
+        XCTAssertTrue(coordinatesRowInInfoScreen.waitForExistence(timeout: 10.0))
+        coordinatesRowInInfoScreen.tap()
         
-        let mapScreenFromDetailTitle = app.navigationBars["Tandil, AR"]
-        XCTAssertTrue(mapScreenFromDetailTitle.waitForExistence(timeout: 10.0))
+        let mapScreenTitleFromInfoScreen = app.navigationBars["Tandil, AR"]
+        XCTAssertTrue(mapScreenTitleFromInfoScreen.waitForExistence(timeout: 10.0))
         XCTAssertTrue(app.maps.firstMatch.waitForExistence(timeout: 10.0))
         
         // favorites persistence

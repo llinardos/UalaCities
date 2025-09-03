@@ -11,21 +11,21 @@ import Combine
 public class iOSAppViewModel: ObservableObject {
     enum Route: Hashable {
         case cityMap(City, CityMapScreenViewModel)
-        case cityDetail(City, CityDetailScreenViewModel)
+        case cityInformation(City, CityInformationScreenViewModel)
         
         static func == (lhs: iOSAppViewModel.Route, rhs: iOSAppViewModel.Route) -> Bool {
             switch (lhs, rhs) {
             case let (.cityMap(lCity, _), .cityMap(rCity, _)): return lCity.id == rCity.id
             case (.cityMap, _): return false
-            case let (.cityDetail(lCity, _), .cityDetail(rCity, _)): return lCity.id == rCity.id
-            case (.cityDetail, _): return false
+            case let (.cityInformation(lCity, _), .cityInformation(rCity, _)): return lCity.id == rCity.id
+            case (.cityInformation, _): return false
             }
         }
         
         func hash(into hasher: inout Hasher) {
             switch self {
             case .cityMap(let city, _): hasher.combine(city.id)
-            case .cityDetail(let city, _): hasher.combine(city.id)
+            case .cityInformation(let city, _): hasher.combine(city.id)
             }
         }
     }
@@ -64,13 +64,13 @@ public class iOSAppViewModel: ObservableObject {
         self.rootScreen = citiesScreen
         
         citiesScreen.onCitySelected = { [weak self] city in self?.pushMap(for: city) }
-        citiesScreen.onCityDetailTapped = { [weak self] city in self?.pushDetail(for: city) }
+        citiesScreen.onCityInfoButtonTapped = { [weak self] city in self?.pushInfo(for: city) }
     }
     
-    private func pushDetail(for city: City) {
-        let detailScreen = CityDetailScreenViewModel(city: city)
-        detailScreen.onCoordinatesTap = { [weak self] in self?.pushMap(for: city) }
-        self.path.append(.cityDetail(city, detailScreen))
+    private func pushInfo(for city: City) {
+        let infoScreen = CityInformationScreenViewModel(city: city)
+        infoScreen.onCoordinatesTap = { [weak self] in self?.pushMap(for: city) }
+        self.path.append(.cityInformation(city, infoScreen))
     }
     
     private func pushMap(for city: City) {

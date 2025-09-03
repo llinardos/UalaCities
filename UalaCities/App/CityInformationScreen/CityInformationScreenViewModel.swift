@@ -1,5 +1,5 @@
 //
-//  CityDetailScreenViewModel.swift
+//  CityInformationScreenViewModel.swift
 //  UalaCities
 //
 //  Created by Leandro Linardos on 03/09/2025.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CityDetailScreenViewModel: ObservableObject {
+class CityInformationScreenViewModel: ObservableObject {
     class TitleAndValueRowViewModel: ObservableObject, Identifiable {
         @Published var titleText: String
         @Published var valueText: String

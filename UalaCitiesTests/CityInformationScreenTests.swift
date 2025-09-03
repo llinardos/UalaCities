@@ -1,5 +1,5 @@
 //
-//  CityDetailScreenTests.swift
+//  CityInformationScreenTests.swift
 //  UalaCitiesTests
 //
 //  Created by Leandro Linardos on 03/09/2025.
@@ -8,10 +8,10 @@
 import XCTest
 @testable import UalaCities
 
-class CityDetailScreenTests: XCTestCase {
+class CityInformationScreenTests: XCTestCase {
     func test_showsCityContent() throws {
         let city = City.from(TestData.Cities.sidney)
-        let screen = CityDetailScreenViewModel(city: city)
+        let screen = CityInformationScreenViewModel(city: city)
         XCTAssertEqual("City Information", screen.titleText)
         
         let row0 = screen.rows[safe: 0]

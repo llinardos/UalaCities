@@ -1,5 +1,5 @@
 //
-//  CityDetailScreenView.swift
+//  CityInformationScreenView.swift
 //  UalaCities
 //
 //  Created by Leandro Linardos on 03/09/2025.
@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct CityDetailScreenView: View {
-    @ObservedObject var viewModel: CityDetailScreenViewModel
+struct CityInformationScreenView: View {
+    @ObservedObject var viewModel: CityInformationScreenViewModel
     
-    init(viewModel: CityDetailScreenViewModel) {
+    init(viewModel: CityInformationScreenViewModel) {
         self.viewModel = viewModel
     }
     
@@ -28,10 +28,10 @@ struct CityDetailScreenView: View {
     }
 }
 
-extension CityDetailScreenView {
+extension CityInformationScreenView {
     struct TitleAndValueRowView: View {
-        let viewModel: CityDetailScreenViewModel.TitleAndValueRowViewModel
-        init(viewModel: CityDetailScreenViewModel.TitleAndValueRowViewModel) {
+        let viewModel: CityInformationScreenViewModel.TitleAndValueRowViewModel
+        init(viewModel: CityInformationScreenViewModel.TitleAndValueRowViewModel) {
             self.viewModel = viewModel
         }
         var body: some View {

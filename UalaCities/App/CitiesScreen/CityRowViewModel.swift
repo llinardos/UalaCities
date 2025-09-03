@@ -18,16 +18,16 @@ class CityRowViewModel: ObservableObject, Identifiable {
     
     private let onFavoriteTapCallback: (() -> Void)
     private let onRowTapCallback: (() -> Void)
-    private let onDetailTapCallback: (() -> Void)
+    private let onInfoTapCallback: (() -> Void)
         
-    init(city: City, isFavorite: Bool, onFavoriteTap: @escaping () -> Void, onRowTap: @escaping () -> Void, onDetailTap: @escaping () -> Void) {
+    init(city: City, isFavorite: Bool, onFavoriteTap: @escaping () -> Void, onRowTap: @escaping () -> Void, onInfoButtonTap: @escaping () -> Void) {
         self.city = city
         self.headingText = "\(city.name), \(city.countryCode)"
         self.subheadText = "\(city.coordinates.latitude), \(city.coordinates.longitude)"
         self.favoriteButtonIsSelected = isFavorite
         self.onFavoriteTapCallback = onFavoriteTap
         self.onRowTapCallback = onRowTap
-        self.onDetailTapCallback = onDetailTap
+        self.onInfoTapCallback = onInfoButtonTap
     }
     
     func onFavoriteButtonTap() {
@@ -39,11 +39,11 @@ class CityRowViewModel: ObservableObject, Identifiable {
         self.onRowTapCallback()
     }
     
-    func onDetailTap() {
-        self.onDetailTapCallback()
+    func onInfoTap() {
+        self.onInfoTapCallback()
     }
     
     func onInfoButtonTap() {
-        self.onDetailTapCallback()
+        self.onInfoTapCallback()
     }
 }

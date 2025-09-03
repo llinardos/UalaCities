@@ -21,7 +21,7 @@ public struct iOSAppScene: Scene {
                     .navigationDestination(for: iOSAppViewModel.Route.self) { item in
                         switch item {
                         case .cityMap(_, let screenViewModel): CityMapScreenView(viewModel: screenViewModel)
-                        case .cityDetail(_, let screenViewModel): CityDetailScreenView(viewModel: screenViewModel)
+                        case .cityInformation(_, let screenViewModel): CityInformationScreenView(viewModel: screenViewModel)
                         }
                     }
             }
