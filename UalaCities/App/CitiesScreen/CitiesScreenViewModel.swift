@@ -16,7 +16,7 @@ class CitiesScreenViewModel: ObservableObject {
     
     lazy var errorViewModel = InfoMessageViewModel(iconSystemName: "exclamationmark.triangle", headingText: "Something went wrong", subheadText: "Tap to try again", onTap: { [weak self] in self?.tapOnErrorMessage() })
     lazy var emptyViewModel = InfoMessageViewModel(iconSystemName: "magnifyingglass", headingText: "No cities found", subheadText: "Try adjusting your search")
-    lazy var emptyMapViewModel = InfoMessageViewModel(iconSystemName: "hand.tap", headingText: "No city selected", subheadText: "Select a city on the List")
+    lazy var emptyMapViewModel = InfoMessageViewModel(iconSystemName: "hand.tap", headingText: "No city selected", subheadText: "Select a city on the list")
     
     
     @Published var isShowingList: Bool = false
