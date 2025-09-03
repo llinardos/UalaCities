@@ -12,6 +12,7 @@ class CitiesStore {
     private var allCities: [City] = []
     private let runner: AsyncRunner
     private let userDefaults: AppleUserDefaults
+    private let logger: Logger
     private let favoritesIdsInUserDefaultsKey = "favoritesCityIds"
     
     enum CitiesState {
@@ -23,10 +24,11 @@ class CitiesStore {
     
     @Published var state: CitiesState = .idle
 
-    init(citiesAPI: CitiesAPI, runner: AsyncRunner, userDefaults: AppleUserDefaults) {
+    init(citiesAPI: CitiesAPI, runner: AsyncRunner, userDefaults: AppleUserDefaults, logger: Logger) {
         self.citiesAPI = citiesAPI
         self.runner = runner
         self.userDefaults = userDefaults
+        self.logger = logger
     }
     
     private var query: String = ""
@@ -81,8 +83,8 @@ class CitiesStore {
                     self.favoriteCities = self.allCities.filter { favoritesIds.contains($0.id) }
                 }
                 self.refreshList()
-            case .failure:
-                // TODO: log
+            case .failure(let error):
+                logger.log(.error, "Error during setup of \(Self.self) due to \(citiesAPI.self) | error: \(error)")
                 self.state = .failed
             }
         }

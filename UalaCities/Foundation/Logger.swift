@@ -12,7 +12,7 @@ class Logger {
     // e.g. I prefer Logger.Level instead of LoggerLevel
     
     enum Level {
-        case debug, info, warning, error
+        case debug, info, warning, error, fatal
     }
     struct Entry {
         var level: Level

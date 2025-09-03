@@ -60,7 +60,7 @@ public class iOSAppViewModel: ObservableObject {
         logger: Logger
     ) {
         let citiesAPI = CitiesAPI(httpClient: httpClient, logger: logger)
-        let citiesStore = CitiesStore(citiesAPI: citiesAPI, runner: runner, userDefaults: userDefaults)
+        let citiesStore = CitiesStore(citiesAPI: citiesAPI, runner: runner, userDefaults: userDefaults, logger: logger)
         let citiesScreen = CitiesScreenViewModel(citiesStore: citiesStore, deviceOrientation: UIKitDeviceOrientation())
         self.rootScreen = citiesScreen
         

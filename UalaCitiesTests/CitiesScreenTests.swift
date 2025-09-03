@@ -32,7 +32,7 @@ class CitiesScreenTests: XCTestCase {
         
         func sut() -> CitiesScreenViewModel {
             let citiesAPI = CitiesAPI(httpClient: httpClient, logger: logger)
-            let citiesStore = CitiesStore(citiesAPI: citiesAPI, runner: runner, userDefaults: userDefaults)
+            let citiesStore = CitiesStore(citiesAPI: citiesAPI, runner: runner, userDefaults: userDefaults, logger: logger)
             return .init(citiesStore: citiesStore, deviceOrientation: deviceOrientation)
         }
     }

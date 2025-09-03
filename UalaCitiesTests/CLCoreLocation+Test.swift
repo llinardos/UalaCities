@@ -8,7 +8,7 @@
 import XCTest
 import CoreLocation
 
-func XCTAssertEqualCoordinates(  // TODO: move
+func XCTAssertEqualCoordinates(
     _ lhs: CLLocationCoordinate2D,
     _ rhs: CLLocationCoordinate2D,
     accuracy: CLLocationDegrees = 0.000001,
