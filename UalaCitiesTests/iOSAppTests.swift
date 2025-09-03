@@ -56,11 +56,10 @@ final class iOSAppTests: XCTestCase {
         citiesScreen.onAppear()
         
         httpClient.respond(to: try XCTUnwrap(httpClient.pendingRequests.unique()), with: .success(.init(statusCode: 200, data: try? JSONEncoder().encode([TestData.Cities.alabama]))))
-//        let alabamaCity = City.from(TestData.Cities.alabama)
         
         citiesScreen.citiesListItems.first?.onDetailTap()
         
         guard case let .cityDetail(_, detailScreenViewModel) = app.path.last else { return XCTFail() }
-        XCTAssertEqual("Alabama, US", detailScreenViewModel.titleText)
+        XCTAssertEqual("City Information", detailScreenViewModel.titleText)
     }
 }

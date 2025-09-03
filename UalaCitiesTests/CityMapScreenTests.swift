@@ -22,7 +22,7 @@ class CityMapScreenViewTests: XCTestCase {
 
 import CoreLocation
 
-func XCTAssertEqualCoordinates(
+func XCTAssertEqualCoordinates(  // TODO: move
     _ lhs: CLLocationCoordinate2D,
     _ rhs: CLLocationCoordinate2D,
     accuracy: CLLocationDegrees = 0.000001,

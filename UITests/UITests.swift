@@ -73,7 +73,7 @@ final class UITests: XCTestCase {
         XCTAssertTrue(filteredRowInfoButton.waitForExistence(timeout: 10.0))
         filteredRowInfoButton.tap()
         
-        let detailScreenTitle = app.navigationBars["Tandil, AR"]
+        let detailScreenTitle = app.navigationBars["City Information"]
         XCTAssertTrue(detailScreenTitle.waitForExistence(timeout: 10.0))
         XCTAssertTrue(app.staticTexts.firstMatch.waitForExistence(timeout: 10.0))
         
