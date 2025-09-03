@@ -12,6 +12,7 @@ class CityRowViewModel: ObservableObject, Identifiable {
     @Published var subheadText: String = ""
     @Published var favoriteButtonIsSelected: Bool = false
     private var city: City
+    @Published var isSelected: Bool = false
     
     var id: Int { city.id }
     

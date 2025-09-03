@@ -343,5 +343,35 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertTrue(screen.isShowingMapEmptyView)
         XCTAssertEqual("No City Selected", screen.mapEmptyHeadingText)
         XCTAssertEqual("Select a City on the List", screen.mapEmptySubheadText)
+        
+        sidneyRow.onRowTap()
+        
+        let sidney = City.from(TestData.Cities.sidney)
+        XCTAssertFalse(screen.isShowingMapEmptyView)
+        XCTAssertEqual("Sidney", screen.mapViewModel?.pinTitleText)
+        try XCTAssertEqualCoordinates(sidney.coordinates, XCTUnwrap(screen.mapViewModel?.pinCoordinates))
+        
+        sidneyRow.onRowTap()
+        
+        XCTAssertTrue(screen.isShowingMapEmptyView)
+        XCTAssertNil(screen.mapViewModel)
+        
+        sidneyRow.onRowTap()
+        XCTAssertFalse(screen.isShowingMapEmptyView)
+        XCTAssertEqual("Sidney", screen.mapViewModel?.pinTitleText)
+        
+        // going portrait and landscape, selected is lost
+        deviceOrientation.value = .portrait
+        XCTAssertFalse(sidneyRow.isSelected)
+        
+        deviceOrientation.value = .landscape
+        
+        XCTAssertTrue(screen.isShowingMapEmptyView)
+        XCTAssertNil(screen.mapViewModel)
+        
+        sidneyRow.onRowTap()
+        XCTAssertTrue(sidneyRow.isSelected)
+        XCTAssertFalse(screen.isShowingMapEmptyView)
+        XCTAssertEqual("Sidney", screen.mapViewModel?.pinTitleText)
     }
 }

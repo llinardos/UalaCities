@@ -30,7 +30,7 @@ struct CitiesScreenView: View {
                         HStack(spacing: 8) {
                             SearchBarView(viewModel: viewModel.searchBar)
                                 .padding(.vertical)
-                            FavoriteButton(isSelected: $viewModel.favoriteFilterButtonIsSelected) {
+                            FavoriteButton(isSelected: $viewModel.favoriteFilterButtonIsSelected) { // TODO: extract VM
                                 viewModel.onTapFavoriteFilterButton()
                             }.accessibilityIdentifier("FavoriteFilterButton")
                         }
@@ -39,7 +39,7 @@ struct CitiesScreenView: View {
                             CityRowView(viewModel: rowViewModel)
                         }
                         .safeAreaInset(edge: .bottom) {
-                            if viewModel.isShowingEmptyView {
+                            if viewModel.isShowingEmptyView { // TODO: extract
                                 VStack(spacing: 16) {
                                     Image(systemName: "magnifyingglass")
                                         .font(.title)
@@ -58,10 +58,10 @@ struct CitiesScreenView: View {
             if viewModel.isShowingMap {
                 VStack {
                     if let mapViewModel = viewModel.mapViewModel {
-                        CityMapScreenView(viewModel: mapViewModel)
+                        CityMapView(viewModel: mapViewModel, hideNavBar: true)
                     }
                     if viewModel.isShowingMapEmptyView {
-                        VStack {
+                        VStack { // TODO: extract
                             Text(viewModel.mapEmptyHeadingText).font(.headline)
                             Text(viewModel.mapEmptySubheadText).font(.subheadline)
                         }

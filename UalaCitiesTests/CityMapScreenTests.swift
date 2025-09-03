@@ -13,9 +13,9 @@ class CityMapScreenViewTests: XCTestCase {
         let city = City.from(TestData.Cities.sidney)
         let screen = CityMapScreenViewModel(city: city)
         XCTAssertEqual("Sidney, AU", screen.titleText)
-        XCTAssertEqual("Sidney", screen.pinTitleText)
-        XCTAssertEqualCoordinates(city.coordinates, try XCTUnwrap(screen.cameraPosition.region?.center))
-        XCTAssertEqualCoordinates(city.coordinates, screen.pinCoordinates)
+        XCTAssertEqual("Sidney", screen.cityMapViewModel.pinTitleText)
+        XCTAssertEqualCoordinates(city.coordinates, try XCTUnwrap(screen.cityMapViewModel.cameraPosition.region?.center))
+        XCTAssertEqualCoordinates(city.coordinates, screen.cityMapViewModel.pinCoordinates)
     }
 }
 

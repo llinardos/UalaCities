@@ -33,5 +33,6 @@ struct CityRowView: View {
         .onTapGesture {
             viewModel.onRowTap()
         }
+        .listRowBackground(viewModel.isSelected ? Color.blue.opacity(0.2) : Color.clear)
     }
 }

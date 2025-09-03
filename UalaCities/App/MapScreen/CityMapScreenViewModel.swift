@@ -11,6 +11,15 @@ import SwiftUI
 
 class CityMapScreenViewModel: ObservableObject {
     @Published var titleText: String
+    let cityMapViewModel: CityMapViewModel
+    
+    init(city: City, span: CGFloat = 0.05) {
+        self.titleText = "\(city.name), \(city.country)"
+        self.cityMapViewModel = .init(city: city)
+    }
+}
+
+class CityMapViewModel: ObservableObject {
     @Published var cameraPosition: MapCameraPosition
     @Published var pinTitleText: String
     @Published var pinCoordinates: CLLocationCoordinate2D
@@ -19,7 +28,6 @@ class CityMapScreenViewModel: ObservableObject {
     init(city: City, span: CGFloat = 0.05) {
         self.city = city
         
-        self.titleText = "\(city.name), \(city.country)"
         self.pinTitleText = city.name
         self.pinCoordinates = city.coordinates
         self.cameraPosition =  .region(MKCoordinateRegion(

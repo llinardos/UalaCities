@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PaginatedListView<T, RowT: Identifiable, RowContent: View>: View {
+struct PaginatedListView<T: Identifiable & Hashable, RowT: Identifiable, RowContent: View>: View {
     @ObservedObject private var viewModel: PaginatedListViewModel<T, RowT>
     private let rowContent: (RowT) -> RowContent
     

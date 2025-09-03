@@ -8,7 +8,7 @@
 import Foundation
 import CoreLocation
 
-class City: Identifiable {
+class City: Identifiable, Hashable {
     let id: Int
     let name: String
     let country: String
@@ -19,6 +19,14 @@ class City: Identifiable {
         self.name = name
         self.country = country
         self.coordinates = coordinates
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: City, rhs: City) -> Bool {
+        lhs.id == rhs.id
     }
 }
 

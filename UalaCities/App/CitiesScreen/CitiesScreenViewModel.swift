@@ -47,10 +47,13 @@ class CitiesScreenViewModel: ObservableObject {
     var onCitySelected: ((City) -> Void)?
     private let deviceOrientation: DeviceOrientation
     @Published var isShowingMap: Bool = false
-    var mapViewModel: CityMapScreenViewModel?
-    var isShowingMapEmptyView = false
-    var mapEmptyHeadingText = "No City Selected"
-    var mapEmptySubheadText = "Select a City on the List"
+    @Published var mapViewModel: CityMapViewModel?
+    @Published var isShowingMapEmptyView = false
+    @Published var mapEmptyHeadingText = "No City Selected"
+    @Published var mapEmptySubheadText = "Select a City on the List"
+    
+    @Published private var selectedCity: City?
+    private var selectedRowVM: CityRowViewModel?
     
     init(citiesStore: CitiesStore, deviceOrientation: DeviceOrientation) {
         self.citiesStore = citiesStore
@@ -90,7 +93,23 @@ class CitiesScreenViewModel: ObservableObject {
         deviceOrientation.$value.sink { [weak self] value in
             guard let self else { return }
             self.isShowingMap = value == .landscape
-            self.isShowingMapEmptyView = true
+            self.selectedCity = nil
+        }.store(in: &subscriptions)
+        
+        $selectedCity.sink { [weak self] selectedCity in
+            guard let self else { return }
+            
+            selectedRowVM?.isSelected = false
+            selectedRowVM = self.list.visibleItems.first(where: { $0.id == selectedCity?.id })
+            selectedRowVM?.isSelected = true
+            
+            if let selectedCity {
+                self.isShowingMapEmptyView = false
+                self.mapViewModel = .init(city: selectedCity)
+            } else {
+                self.isShowingMapEmptyView = true
+                self.mapViewModel = nil
+            }
         }.store(in: &subscriptions)
     }
     
@@ -111,14 +130,22 @@ class CitiesScreenViewModel: ObservableObject {
     }
     
     private func onCitySelected(_ city: City) {
-        onCitySelected?(city)
+        if self.deviceOrientation.value == .landscape {
+            if selectedCity?.id == city.id {
+                selectedCity = nil
+            } else {
+                selectedCity = city
+            }
+        } else {
+            onCitySelected?(city)
+        }
     }
 }
 
 
 import UIKit
 
-class DeviceOrientation {
+class DeviceOrientation { // TODO: move
     enum Value { case landscape, portrait }
     @Published var value: Value
     
