@@ -77,6 +77,14 @@ final class UITests: XCTestCase {
         XCTAssertTrue(detailScreenTitle.waitForExistence(timeout: 10.0))
         XCTAssertTrue(app.staticTexts.firstMatch.waitForExistence(timeout: 10.0))
         
+        let coordinatesRowInDetailScreen = app.staticTexts["Coordinates"]
+        XCTAssertTrue(coordinatesRowInDetailScreen.waitForExistence(timeout: 10.0))
+        coordinatesRowInDetailScreen.tap()
+        
+        let mapScreenFromDetailTitle = app.navigationBars["Tandil, AR"]
+        XCTAssertTrue(mapScreenFromDetailTitle.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(app.maps.firstMatch.waitForExistence(timeout: 10.0))
+        
         // favorites persistence
         app.terminate()
         

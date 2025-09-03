@@ -81,6 +81,13 @@ public class iOSAppViewModel: ObservableObject {
             
             let detailScreen = CityDetailScreenViewModel(city: city)
             self.path.append(.cityDetail(city, detailScreen))
+            
+            detailScreen.onCoordinatesTap = { [weak self] in
+                guard let self else { return }
+                
+                let mapScreen = CityMapScreenViewModel(city: city)
+                self.path.append(.cityMap(city, mapScreen))
+            }
         }
     }
 }

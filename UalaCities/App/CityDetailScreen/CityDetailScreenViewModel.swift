@@ -11,10 +11,19 @@ class CityDetailScreenViewModel: ObservableObject {
     class TitleAndValueRowViewModel: ObservableObject, Identifiable {
         @Published var titleText: String
         @Published var valueText: String
+        @Published var isShowingArrow: Bool
         
-        init(title: String, value: String) {
+        private var action: (() -> Void)?
+        
+        init(title: String, value: String, action: (() -> Void)? = nil) {
             self.titleText = title
             self.valueText = value
+            self.action = action
+            self.isShowingArrow = action != nil
+        }
+        
+        func tap() {
+            action?()
         }
     }
     
@@ -22,16 +31,19 @@ class CityDetailScreenViewModel: ObservableObject {
     
     @Published var titleText: String
     
-    @Published var rows: [TitleAndValueRowViewModel]
+    @Published var rows: [TitleAndValueRowViewModel] = []
+    
+    var onCoordinatesTap: (() -> Void)?
     
     init(city: City) {
         self.city = city
         
         self.titleText = "City Information"
+        
         rows = [
             .init(title: "Name", value: city.name),
             .init(title: "Country Code", value: city.country),
-            .init(title: "Coordinates", value: "\(city.coordinates.latitude), \(city.coordinates.longitude)")
+            .init(title: "Coordinates", value: "\(city.coordinates.latitude), \(city.coordinates.longitude)", action: { [weak self] in self?.onCoordinatesTap?() })
         ]
     }
 }

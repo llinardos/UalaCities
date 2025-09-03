@@ -61,5 +61,8 @@ final class iOSAppTests: XCTestCase {
         
         guard case let .cityDetail(_, detailScreenViewModel) = app.path.last else { return XCTFail() }
         XCTAssertEqual("City Information", detailScreenViewModel.titleText)
+        
+        detailScreenViewModel.rows.first(where: { $0.titleText == "Coordinates" })?.tap()
+        guard case .cityMap = app.path.last else { return XCTFail() }
     }
 }
