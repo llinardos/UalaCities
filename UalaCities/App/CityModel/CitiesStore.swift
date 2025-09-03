@@ -14,6 +14,7 @@ class CitiesStore {
     private let userDefaults: AppleUserDefaults
     private let logger: Logger
     private let favoritesIdsInUserDefaultsKey = "favoritesCityIds"
+    private var prefixByCityId: [Int: String] = [:]
     
     enum CitiesState {
         case idle
@@ -76,6 +77,9 @@ class CitiesStore {
             
             switch result {
             case .success(let cities):
+                // precompute and store lowercased
+                cities.forEach { self.prefixByCityId[$0._id] = $0.name.lowercased() }
+                
                 self.allCities = cities
                     .map { .from($0) }
                     .sorted { $0.name < $1.name }
@@ -96,8 +100,7 @@ class CitiesStore {
             if self.query.count == 0 {
                 return cities
             } else {
-                return cities
-                    .filter { $0.name.lowercased().hasPrefix(self.query.lowercased()) }
+                return cities.filter { (self.prefixByCityId[$0.id] ?? "").hasPrefix(self.query.lowercased()) }
             }
         }, mainWork: {
             self.state = .ready($0)
