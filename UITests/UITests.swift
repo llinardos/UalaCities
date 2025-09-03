@@ -80,7 +80,7 @@ final class UITests: XCTestCase {
         assertExistence(of: coordinatesRowInInfoScreen)
         coordinatesRowInInfoScreen.tap()
         
-        let mapScreenTitleFromInfoScreen = app.navigationBars["Tandil, AR"]
+        let mapScreenTitleFromInfoScreen = app.navigationBars["City Map"]
         assertExistence(of: mapScreenTitleFromInfoScreen)
         assertExistence(of: app.maps.firstMatch)
         
@@ -99,7 +99,7 @@ final class UITests: XCTestCase {
         // map
         filteredRowTitle.tap()
         
-        let mapScreenTitle = app.navigationBars["Tandil, AR"]
+        let mapScreenTitle = app.navigationBars["City Map"]
         assertExistence(of: mapScreenTitle)
         assertExistence(of: app.maps.firstMatch)
         

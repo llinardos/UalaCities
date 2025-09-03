@@ -349,7 +349,7 @@ class CitiesScreenTests: XCTestCase {
         
         let sidney = City.from(TestData.Cities.sidney)
         XCTAssertFalse(screen.emptyMapViewModel.isShowing)
-        XCTAssertEqual("Sidney", screen.mapViewModel?.pinTitleText)
+        XCTAssertEqual("Sidney, AU", screen.mapViewModel?.pinTitleText)
         try XCTAssertEqualCoordinates(sidney.coordinates, XCTUnwrap(screen.mapViewModel?.pinCoordinates))
         
         sidneyRow.tapOnRow()
@@ -359,7 +359,7 @@ class CitiesScreenTests: XCTestCase {
         
         sidneyRow.tapOnRow()
         XCTAssertFalse(screen.emptyMapViewModel.isShowing)
-        XCTAssertEqual("Sidney", screen.mapViewModel?.pinTitleText)
+        XCTAssertEqual("Sidney, AU", screen.mapViewModel?.pinTitleText)
         
         // going portrait and landscape, selected is lost
         deviceOrientation.value = .portrait
@@ -373,6 +373,6 @@ class CitiesScreenTests: XCTestCase {
         sidneyRow.tapOnRow()
         XCTAssertTrue(sidneyRow.isSelected)
         XCTAssertFalse(screen.emptyMapViewModel.isShowing)
-        XCTAssertEqual("Sidney", screen.mapViewModel?.pinTitleText)
+        XCTAssertEqual("Sidney, AU", screen.mapViewModel?.pinTitleText)
     }
 }

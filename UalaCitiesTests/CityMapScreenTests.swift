@@ -12,8 +12,8 @@ class CityMapScreenViewTests: XCTestCase {
     func test_showsPinAndContent() throws {
         let city = City.from(TestData.Cities.sidney)
         let screen = CityMapScreenViewModel(city: city)
-        XCTAssertEqual("Sidney, AU", screen.titleText)
-        XCTAssertEqual("Sidney", screen.cityMapViewModel.pinTitleText)
+        XCTAssertEqual("City Map", screen.titleText)
+        XCTAssertEqual("Sidney, AU", screen.cityMapViewModel.pinTitleText)
         XCTAssertEqualCoordinates(city.coordinates, try XCTUnwrap(screen.cityMapViewModel.cameraPosition.region?.center))
         XCTAssertEqualCoordinates(city.coordinates, screen.cityMapViewModel.pinCoordinates)
     }

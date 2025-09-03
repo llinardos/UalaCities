@@ -14,7 +14,7 @@ class CityMapScreenViewModel: ObservableObject {
     let cityMapViewModel: CityMapViewModel
     
     init(city: City, span: CGFloat = 0.05) {
-        self.titleText = "\(city.name), \(city.countryCode)"
+        self.titleText = "City Map"
         self.cityMapViewModel = .init(city: city)
     }
 }
@@ -28,7 +28,7 @@ class CityMapViewModel: ObservableObject {
     init(city: City, span: CGFloat = 0.05) {
         self.city = city
         
-        self.pinTitleText = city.name
+        self.pinTitleText = "\(city.name), \(city.countryCode)"
         self.pinCoordinates = city.coordinates
         self.cameraPosition =  .region(MKCoordinateRegion(
             center: city.coordinates,

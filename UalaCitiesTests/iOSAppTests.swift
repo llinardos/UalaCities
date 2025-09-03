@@ -49,7 +49,7 @@ final class iOSAppTests: XCTestCase {
         citiesScreen.list.visibleItems.first?.tapOnRow()
         
         guard case let .cityMap(_, mapScreenViewModel) = app.path.last else { return XCTFail() }
-        XCTAssertEqual("Alabama, US", mapScreenViewModel.titleText)
+        XCTAssertEqual("City Map", mapScreenViewModel.titleText)
     }
     
     func test_goesToInfoFromCitiesScreen() throws {
