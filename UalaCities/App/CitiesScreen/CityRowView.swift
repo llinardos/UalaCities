@@ -25,6 +25,14 @@ struct CityRowView: View {
                 }
             }
             Spacer()
+            
+            Button(action: { viewModel.onInfoButtonTap() }, label: {
+                Image(systemName: "info.circle")
+                    .foregroundColor(.blue)
+            })
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("InfoButton")
+            
             FavoriteButton(isSelected: $viewModel.favoriteButtonIsSelected) {
                 viewModel.onFavoriteButtonTap()
             }.accessibilityIdentifier("FavoriteButton")

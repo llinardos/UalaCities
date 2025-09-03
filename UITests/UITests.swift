@@ -68,6 +68,15 @@ final class UITests: XCTestCase {
         XCTAssertTrue(favoriteFilterButton.isSelected)
         XCTAssertTrue(filteredRowTitle.waitForExistence(timeout: 10.0))
         
+        // go to detail
+        let filteredRowInfoButton = app.buttons["InfoButton"]
+        XCTAssertTrue(filteredRowInfoButton.waitForExistence(timeout: 10.0))
+        filteredRowInfoButton.tap()
+        
+        let detailScreenTitle = app.navigationBars["Tandil, AR"]
+        XCTAssertTrue(detailScreenTitle.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(app.staticTexts.firstMatch.waitForExistence(timeout: 10.0))
+        
         // favorites persistence
         app.terminate()
         
@@ -85,6 +94,7 @@ final class UITests: XCTestCase {
         
         let mapScreenTitle = app.navigationBars["Tandil, AR"]
         XCTAssertTrue(mapScreenTitle.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(app.maps.firstMatch.waitForExistence(timeout: 10.0))
         
         app.navigationBars.buttons["Back"].tap()
         
@@ -95,7 +105,6 @@ final class UITests: XCTestCase {
         XCUIDevice.shared.orientation = .landscapeRight
         let emptyMapTitle = app.staticTexts["No City Selected"]
         XCTAssertTrue(emptyMapTitle.waitForExistence(timeout: 10.0))
-        
         
         XCUIDevice.shared.orientation = .portrait
     }

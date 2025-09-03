@@ -16,24 +16,34 @@ class CityRowViewModel: ObservableObject, Identifiable {
     
     var id: Int { city.id }
     
-    var onFavoriteTap: (() -> Void)
-    var onTap: (() -> Void)
+    private let onFavoriteTapCallback: (() -> Void)
+    private let onRowTapCallback: (() -> Void)
+    private let onDetailTapCallback: (() -> Void)
         
-    init(city: City, isFavorite: Bool, onFavoriteTap: @escaping () -> Void, onRowTap: @escaping () -> Void) {
+    init(city: City, isFavorite: Bool, onFavoriteTap: @escaping () -> Void, onRowTap: @escaping () -> Void, onDetailTap: @escaping () -> Void) {
         self.city = city
         self.headingText = "\(city.name), \(city.country)"
         self.subheadText = "\(city.coordinates.latitude), \(city.coordinates.longitude)"
         self.favoriteButtonIsSelected = isFavorite
-        self.onFavoriteTap = onFavoriteTap
-        self.onTap = onRowTap
+        self.onFavoriteTapCallback = onFavoriteTap
+        self.onRowTapCallback = onRowTap
+        self.onDetailTapCallback = onDetailTap
     }
     
     func onFavoriteButtonTap() {
-        onFavoriteTap()
+        onFavoriteTapCallback()
         self.favoriteButtonIsSelected.toggle()
     }
     
     func onRowTap() {
-        self.onTap()
+        self.onRowTapCallback()
+    }
+    
+    func onDetailTap() {
+        self.onDetailTapCallback()
+    }
+    
+    func onInfoButtonTap() {
+        self.onDetailTapCallback()
     }
 }

@@ -11,18 +11,21 @@ import Combine
 public class iOSAppViewModel: ObservableObject {
     enum Route: Hashable {
         case cityMap(City, CityMapScreenViewModel)
+        case cityDetail(City, CityDetailScreenViewModel)
         
         static func == (lhs: iOSAppViewModel.Route, rhs: iOSAppViewModel.Route) -> Bool {
             switch (lhs, rhs) {
-            case let (.cityMap(lCity, lScreen), .cityMap(rCity, rScreen)):
-                return lCity.id == rCity.id
+            case let (.cityMap(lCity, _), .cityMap(rCity, _)): return lCity.id == rCity.id
+            case (.cityMap, _): return false
+            case let (.cityDetail(lCity, _), .cityDetail(rCity, _)): return lCity.id == rCity.id
+            case (.cityDetail, _): return false
             }
         }
         
         func hash(into hasher: inout Hasher) {
             switch self {
-            case .cityMap(let city, _):
-                hasher.combine(city.id)
+            case .cityMap(let city, _): hasher.combine(city.id)
+            case .cityDetail(let city, _): hasher.combine(city.id)
             }
         }
     }
@@ -71,6 +74,13 @@ public class iOSAppViewModel: ObservableObject {
             
             let mapScreen = CityMapScreenViewModel(city: city)
             self.path.append(.cityMap(city, mapScreen))
+        }
+        
+        citiesScreen.onCityDetailTapped = { [weak self] city in
+            guard let self else { return }
+            
+            let detailScreen = CityDetailScreenViewModel(city: city)
+            self.path.append(.cityDetail(city, detailScreen))
         }
     }
 }

@@ -40,10 +40,27 @@ final class iOSAppTests: XCTestCase {
         let citiesScreen = app.rootScreen
         citiesScreen.onAppear()
         
-        httpClient.respond(to: try XCTUnwrap(httpClient.pendingRequests.unique()), with: .success(.init(statusCode: 200, data: try? JSONEncoder().encode(TestData.Cities.filterExample))))
+        httpClient.respond(to: try XCTUnwrap(httpClient.pendingRequests.unique()), with: .success(.init(statusCode: 200, data: try? JSONEncoder().encode([TestData.Cities.alabama]))))
         
         citiesScreen.citiesListItems.first?.onRowTap()
         
         guard case let .cityMap(_, mapScreenViewModel) = app.path.last else { return XCTFail() }
+        XCTAssertEqual("Alabama, US", mapScreenViewModel.titleText)
+    }
+    
+    func test_goesToDetailFromCitiesScreen() throws {
+        let make = Make()
+        let (app, httpClient) = (make.sut(), make.httpClient)
+        
+        let citiesScreen = app.rootScreen
+        citiesScreen.onAppear()
+        
+        httpClient.respond(to: try XCTUnwrap(httpClient.pendingRequests.unique()), with: .success(.init(statusCode: 200, data: try? JSONEncoder().encode([TestData.Cities.alabama]))))
+//        let alabamaCity = City.from(TestData.Cities.alabama)
+        
+        citiesScreen.citiesListItems.first?.onDetailTap()
+        
+        guard case let .cityDetail(_, detailScreenViewModel) = app.path.last else { return XCTFail() }
+        XCTAssertEqual("Alabama, US", detailScreenViewModel.titleText)
     }
 }

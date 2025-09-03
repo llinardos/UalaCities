@@ -28,7 +28,8 @@ class CitiesScreenViewModel: ObservableObject {
             city: city,
             isFavorite: self.citiesStore.isFavorite(city),
             onFavoriteTap: { [weak self] in self?.citiesStore.toogleFavorite(for: city) },
-            onRowTap: { [weak self] in self?.onCitySelected(city) }
+            onRowTap: { [weak self] in self?.onCitySelected(city) },
+            onDetailTap: { [weak self] in self?.onCityDetailTapped?(city) }
         )
     }
     var citiesListItems: [CityRowViewModel] { list.visibleItems } // TODO: clean, adapted for tests after viewmodel API change
@@ -44,7 +45,6 @@ class CitiesScreenViewModel: ObservableObject {
     
     private let citiesStore: CitiesStore
     
-    var onCitySelected: ((City) -> Void)?
     private let deviceOrientation: DeviceOrientation
     @Published var isShowingMap: Bool = false
     @Published var mapViewModel: CityMapViewModel?
@@ -54,6 +54,9 @@ class CitiesScreenViewModel: ObservableObject {
     
     @Published private var selectedCity: City?
     private var selectedRowVM: CityRowViewModel?
+    
+    var onCitySelected: ((City) -> Void)?
+    var onCityDetailTapped: ((City) -> Void)?
     
     init(citiesStore: CitiesStore, deviceOrientation: DeviceOrientation) {
         self.citiesStore = citiesStore
