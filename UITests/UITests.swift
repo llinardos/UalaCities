@@ -11,7 +11,7 @@ import XCTest
 final class UITests: XCTestCase {
     @MainActor
     
-    func test_smoke_citiesLoadedAndShown_filter() throws {
+    func test_smoke() throws {
         XCUIDevice.shared.orientation = .portrait
         
         var app = XCUIApplication()

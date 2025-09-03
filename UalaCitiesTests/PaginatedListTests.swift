@@ -2,7 +2,7 @@ import XCTest
 @testable import UalaCities
 
 class PaginatedListTests: XCTestCase {
-    func testPaginatedList() {
+    func test_loadIsProgressive() {
         var makeRowCount = 0
         let list = PaginatedListViewModel(items: Array(1...25), pageSize: 10, prefetchOffset: 3, makeRow: { makeRowCount += 1; return $0 })
         XCTAssertEqual(Array(1...10), list.visibleItems)
@@ -32,12 +32,12 @@ class PaginatedListTests: XCTestCase {
         XCTAssertEqual(Array(1...12), list.visibleItems)
     }
     
-    func testPaginatedListEmpty() {
+    func test_empty() {
         let list = PaginatedListViewModel(items: [Int](), pageSize: 10, prefetchOffset: 3, makeRow: { $0 })
         XCTAssertEqual([], list.visibleItems)
     }
     
-    func testPaginatedPageSizeBiggerThanItemsCount() {
+    func test_pageSizeIsBiggerThanItemsCount() {
         let list = PaginatedListViewModel(items: [1,2,3], pageSize: 10, prefetchOffset: 3, makeRow: { $0 })
         XCTAssertEqual([1,2,3], list.visibleItems)
         list.onDidDisplayItemAtIndex(1)

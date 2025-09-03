@@ -9,7 +9,7 @@ import XCTest
 @testable import UalaCities
 
 final class IntegrationTests: XCTestCase {
-    func testFetchCities() {
+    func test_fetch() {
         let citiesApi = CitiesAPI(httpClient: URLSessionHTTPClient())
         let citiesLoaded = expectation(description: "fetched")
         citiesApi.fetchCities() { result in

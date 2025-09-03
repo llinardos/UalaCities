@@ -34,7 +34,7 @@ class CitiesScreenTests: XCTestCase {
         }
     }
     
-    func testLoadCitiesOk() throws {
+    func test_loadCitiesOk() throws {
         let make = Make()
         let (screen, httpClient) = (make.sut(), make.httpClient)
         
@@ -72,7 +72,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertTrue(httpClient.pendingRequests.isEmpty)
     }
     
-    func testLoadCitiesFailsAndRetry() throws {
+    func test_loadCitiesFailsAndRetry() throws {
         let make = Make()
         let (screen, httpClient) = (make.sut(), make.httpClient)
 
@@ -103,7 +103,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertEqual("City 1, AA", screen.citiesListItems.first?.headingText)
     }
     
-    func testSorted() throws {
+    func test_sorted() throws {
         let make = Make()
         let (screen, httpClient) = (make.sut(), make.httpClient)
         
@@ -119,7 +119,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertEqual("Sidney, AU", screen.citiesListItems[safe: 1]?.headingText)
     }
     
-    func testFilterOnlyWhenCitiesAreLoaded() throws {
+    func test_filterOnlyWhenCitiesAreLoaded() throws {
         let make = Make()
         let (screen, httpClient) = (make.sut(), make.httpClient)
         
@@ -134,7 +134,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertTrue(screen.isShowingSpinner)
     }
     
-    func testFilter() throws {
+    func test_filter() throws {
         let make = Make()
         let (screen, httpClient) = (make.sut(), make.httpClient)
         
@@ -193,7 +193,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertNil(screen.citiesListItems[safe: 1])
     }
     
-    func testFilterNoResults() throws {
+    func test_filterNoResults() throws {
         let make = Make()
         let (screen, httpClient) = (make.sut(), make.httpClient)
         

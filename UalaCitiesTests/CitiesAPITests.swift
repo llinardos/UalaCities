@@ -3,7 +3,7 @@ import Foundation
 import XCTest
 
 class CitiesAPITests: XCTestCase {
-    func test() throws {
+    func test_httpResponsesHandling() throws {
         func send(
             httpResult: Result<HTTPResponse, HTTPError>,
             expectedResult: Result<[CityDTO], CitiesAPI.Error>,
