@@ -35,8 +35,6 @@ class CitiesScreenViewModel: ObservableObject {
     var citiesListItems: [CityRowViewModel] { list.visibleItems } // TODO: clean, adapted for tests after viewmodel API change
     
     let searchBar = SearchBarViewModel(placeholderText: "Filter")
-    var searchBarText: String { searchBar.text }
-    var searchBarPlaceholder: String { searchBar.placeholderText } // TODO: clean, adapted for tests after viewmodel API change
     
     @Published var favoriteFilterButtonIsSelected = false
     func tapOnFavoriteFilterButton() {
