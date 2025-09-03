@@ -69,25 +69,18 @@ public class iOSAppViewModel: ObservableObject {
         let citiesScreen = CitiesScreenViewModel(citiesStore: citiesStore, deviceOrientation: UIKitDeviceOrientation())
         self.rootScreen = citiesScreen
         
-        citiesScreen.onCitySelected = { [weak self] city in
-            guard let self else { return }
-            
-            let mapScreen = CityMapScreenViewModel(city: city)
-            self.path.append(.cityMap(city, mapScreen))
-        }
-        
-        citiesScreen.onCityDetailTapped = { [weak self] city in
-            guard let self else { return }
-            
-            let detailScreen = CityDetailScreenViewModel(city: city)
-            self.path.append(.cityDetail(city, detailScreen))
-            
-            detailScreen.onCoordinatesTap = { [weak self] in
-                guard let self else { return }
-                
-                let mapScreen = CityMapScreenViewModel(city: city)
-                self.path.append(.cityMap(city, mapScreen))
-            }
-        }
+        citiesScreen.onCitySelected = { [weak self] city in self?.pushMap(for: city) }
+        citiesScreen.onCityDetailTapped = { [weak self] city in self?.pushDetail(for: city) }
+    }
+    
+    private func pushDetail(for city: City) {
+        let detailScreen = CityDetailScreenViewModel(city: city)
+        detailScreen.onCoordinatesTap = { [weak self] in self?.pushMap(for: city) }
+        self.path.append(.cityDetail(city, detailScreen))
+    }
+    
+    private func pushMap(for city: City) {
+        let mapScreen = CityMapScreenViewModel(city: city)
+        self.path.append(.cityMap(city, mapScreen))
     }
 }
