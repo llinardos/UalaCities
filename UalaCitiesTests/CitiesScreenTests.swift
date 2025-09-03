@@ -78,20 +78,20 @@ class CitiesScreenTests: XCTestCase {
 
         screen.onAppear()
         
-        XCTAssertFalse(screen.isShowingError)
+        XCTAssertFalse(screen.errorViewModel.isShowing)
         
         let request = try XCTUnwrap(httpClient.pendingRequests.unique())
         XCTAssertTrue(httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 500))))
         
         XCTAssertFalse(screen.isShowingSpinner)
-        XCTAssertTrue(screen.isShowingError)
-        XCTAssertEqual("Something went wrong", screen.errorHeading)
-        XCTAssertEqual("Tap to try again", screen.errorSubhead)
+        XCTAssertTrue(screen.errorViewModel.isShowing)
+        XCTAssertEqual("Something went wrong", screen.errorViewModel.headingText)
+        XCTAssertEqual("Tap to try again", screen.errorViewModel.subheadText)
         
         // tap on error to retry
         screen.tapOnErrorMessage()
         
-        XCTAssertFalse(screen.isShowingError)
+        XCTAssertFalse(screen.errorViewModel.isShowing)
         XCTAssertTrue(screen.isShowingSpinner)
         
         let newRequest = try XCTUnwrap(httpClient.pendingRequests.unique())

@@ -7,6 +7,26 @@
 
 import SwiftUI
 
+struct InfoMessageView: View {
+    @ObservedObject var viewModel: InfoMessageViewModel
+    
+    var body: some View {
+        if viewModel.isShowing {
+            VStack(spacing: 16) {
+                if let imageName = viewModel.iconSystemName {
+                    Image(systemName: imageName)
+                        .font(.title)
+                }
+                VStack {
+                    Text(viewModel.headingText).font(.headline)
+                    Text(viewModel.subheadText).font(.subheadline)
+                }
+            }
+            .onTapGesture { viewModel.tap() }
+        }
+    }
+}
+
 struct CitiesScreenView: View {
     @ObservedObject var viewModel: CitiesScreenViewModel
     
@@ -19,12 +39,8 @@ struct CitiesScreenView: View {
             VStack {
                 if viewModel.isShowingSpinner {
                     ProgressView(viewModel.spinnerText)
-                } else if viewModel.isShowingError {
-                    VStack {
-                        Text(viewModel.errorHeading).font(.headline)
-                        Text(viewModel.errorSubhead).font(.subheadline)
-                    }
-                    .onTapGesture { viewModel.tapOnErrorMessage() }
+                } else if viewModel.errorViewModel.isShowing {
+                    InfoMessageView(viewModel: viewModel.errorViewModel)
                 } else if viewModel.isShowingList {
                     VStack {
                         HStack(spacing: 8) {

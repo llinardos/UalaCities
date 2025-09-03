@@ -8,15 +8,35 @@
 import Foundation
 import Combine
 
+class InfoMessageViewModel: ObservableObject {
+    @Published var isShowing: Bool = false
+    @Published var iconSystemName: String?
+    @Published var headingText: String
+    @Published var subheadText: String
+    
+    private var onTap: (() -> Void)?
+    
+    init(iconSystemName: String? = nil, headingText: String, subheadText: String, onTap: (() -> Void)? = nil) {
+        self.iconSystemName = iconSystemName
+        self.headingText = headingText
+        self.subheadText = subheadText
+        self.onTap = onTap
+    }
+    
+    func tap() {
+        onTap?()
+    }
+}
+
+
+
 class CitiesScreenViewModel: ObservableObject {
     private var subscriptions = Set<AnyCancellable>()
     
     @Published var isShowingSpinner: Bool = false
     @Published var spinnerText = "Loading Cities..."
     
-    @Published var isShowingError: Bool = false
-    @Published var errorHeading = "Something went wrong"
-    @Published var errorSubhead = "Tap to try again"
+    lazy var errorViewModel = InfoMessageViewModel(iconSystemName: "exclamationmark.triangle", headingText: "Something went wrong", subheadText: "Tap to try again", onTap: { [weak self] in self?.tapOnErrorMessage() })
     
     @Published var isShowingEmptyView: Bool = false
     @Published var emptyHeadingText = "No cities found"
@@ -67,18 +87,18 @@ class CitiesScreenViewModel: ObservableObject {
             case .loading:
                 self.isShowingSpinner = true
                 self.isShowingList = false
-                self.isShowingError = false
+                self.errorViewModel.isShowing = false
                 self.isShowingEmptyView = false
             case .ready(let cities):
                 self.isShowingSpinner = false
-                self.isShowingError = false
+                self.errorViewModel.isShowing = false
                 self.isShowingList = true
                 self.list.items = cities
                 self.isShowingEmptyView = cities.isEmpty
             case .failed:
                 self.isShowingSpinner = false
                 self.isShowingList = false
-                self.isShowingError = true
+                self.errorViewModel.isShowing = true
             }
         }.store(in: &subscriptions)
 
