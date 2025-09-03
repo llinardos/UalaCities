@@ -52,8 +52,8 @@ class CitiesScreenTests: XCTestCase {
         
         XCTAssertFalse(screen.isShowingSpinner)
         XCTAssertTrue(screen.isShowingList)
-        XCTAssertEqual("Hurzuf, UA", screen.citiesListItems.first?.headingText)
-        XCTAssertEqual("34.283333, 44.549999", screen.citiesListItems.first?.subheadText)
+        XCTAssertEqual("Hurzuf, UA", screen.list.visibleItems.first?.headingText)
+        XCTAssertEqual("34.283333, 44.549999", screen.list.visibleItems.first?.subheadText)
     }
     
     func test_onlyLoadsContentOnce() throws {
@@ -100,7 +100,7 @@ class CitiesScreenTests: XCTestCase {
         
         XCTAssertFalse(screen.isShowingSpinner)
         XCTAssertTrue(screen.isShowingList)
-        XCTAssertEqual("City 1, AA", screen.citiesListItems.first?.headingText)
+        XCTAssertEqual("City 1, AA", screen.list.visibleItems.first?.headingText)
     }
     
     func test_sorted() throws {
@@ -115,8 +115,8 @@ class CitiesScreenTests: XCTestCase {
         
         XCTAssertFalse(screen.isShowingSpinner)
         XCTAssertTrue(screen.isShowingList)
-        XCTAssertEqual("Denver, US", screen.citiesListItems[safe: 0]?.headingText)
-        XCTAssertEqual("Sidney, AU", screen.citiesListItems[safe: 1]?.headingText)
+        XCTAssertEqual("Denver, US", screen.list.visibleItems[safe: 0]?.headingText)
+        XCTAssertEqual("Sidney, AU", screen.list.visibleItems[safe: 1]?.headingText)
     }
     
     func test_filterOnlyWhenCitiesAreLoaded() throws {
@@ -146,34 +146,34 @@ class CitiesScreenTests: XCTestCase {
         
         XCTAssertFalse(screen.isShowingSpinner)
         XCTAssertTrue(screen.isShowingList)
-        XCTAssertEqual("Alabama, US", screen.citiesListItems[safe: 0]?.headingText)
-        XCTAssertEqual("Albuquerque, US", screen.citiesListItems[safe: 1]?.headingText)
-        XCTAssertEqual("Anaheim, US", screen.citiesListItems[safe: 2]?.headingText)
-        XCTAssertEqual("Arizona, US", screen.citiesListItems[safe: 3]?.headingText)
-        XCTAssertEqual("Sidney, AU", screen.citiesListItems[safe: 4]?.headingText)
+        XCTAssertEqual("Alabama, US", screen.list.visibleItems[safe: 0]?.headingText)
+        XCTAssertEqual("Albuquerque, US", screen.list.visibleItems[safe: 1]?.headingText)
+        XCTAssertEqual("Anaheim, US", screen.list.visibleItems[safe: 2]?.headingText)
+        XCTAssertEqual("Arizona, US", screen.list.visibleItems[safe: 3]?.headingText)
+        XCTAssertEqual("Sidney, AU", screen.list.visibleItems[safe: 4]?.headingText)
         
         XCTAssertEqual("Filter", screen.searchBar.placeholderText)
         screen.searchBarType("A")
         XCTAssertEqual("A", screen.searchBar.text)
         
-        XCTAssertEqual("Alabama, US", screen.citiesListItems[safe: 0]?.headingText)
-        XCTAssertEqual("Albuquerque, US", screen.citiesListItems[safe: 1]?.headingText)
-        XCTAssertEqual("Anaheim, US", screen.citiesListItems[safe: 2]?.headingText)
-        XCTAssertEqual("Arizona, US", screen.citiesListItems[safe: 3]?.headingText)
-        XCTAssertNil(screen.citiesListItems[safe: 4])
+        XCTAssertEqual("Alabama, US", screen.list.visibleItems[safe: 0]?.headingText)
+        XCTAssertEqual("Albuquerque, US", screen.list.visibleItems[safe: 1]?.headingText)
+        XCTAssertEqual("Anaheim, US", screen.list.visibleItems[safe: 2]?.headingText)
+        XCTAssertEqual("Arizona, US", screen.list.visibleItems[safe: 3]?.headingText)
+        XCTAssertNil(screen.list.visibleItems[safe: 4])
         
         screen.searchBarType("l")
         XCTAssertEqual("Al", screen.searchBar.text)
         
-        XCTAssertEqual("Alabama, US", screen.citiesListItems[safe: 0]?.headingText)
-        XCTAssertEqual("Albuquerque, US", screen.citiesListItems[safe: 1]?.headingText)
-        XCTAssertNil(screen.citiesListItems[safe: 2])
+        XCTAssertEqual("Alabama, US", screen.list.visibleItems[safe: 0]?.headingText)
+        XCTAssertEqual("Albuquerque, US", screen.list.visibleItems[safe: 1]?.headingText)
+        XCTAssertNil(screen.list.visibleItems[safe: 2])
         
         screen.searchBarType("b")
         XCTAssertEqual("Alb", screen.searchBar.text)
         
-        XCTAssertEqual("Albuquerque, US", screen.citiesListItems[safe: 0]?.headingText)
-        XCTAssertNil(screen.citiesListItems[safe: 1])
+        XCTAssertEqual("Albuquerque, US", screen.list.visibleItems[safe: 0]?.headingText)
+        XCTAssertNil(screen.list.visibleItems[safe: 1])
         
         screen.searchBarTypeDelete()
         XCTAssertEqual("Al", screen.searchBar.text)
@@ -181,16 +181,16 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertEqual("A", screen.searchBar.text)
         screen.searchBarTypeDelete()
         XCTAssertEqual("", screen.searchBar.text)
-        XCTAssertEqual("Alabama, US", screen.citiesListItems[safe: 0]?.headingText)
-        XCTAssertEqual("Albuquerque, US", screen.citiesListItems[safe: 1]?.headingText)
-        XCTAssertEqual("Anaheim, US", screen.citiesListItems[safe: 2]?.headingText)
-        XCTAssertEqual("Arizona, US", screen.citiesListItems[safe: 3]?.headingText)
-        XCTAssertEqual("Sidney, AU", screen.citiesListItems[safe: 4]?.headingText)
+        XCTAssertEqual("Alabama, US", screen.list.visibleItems[safe: 0]?.headingText)
+        XCTAssertEqual("Albuquerque, US", screen.list.visibleItems[safe: 1]?.headingText)
+        XCTAssertEqual("Anaheim, US", screen.list.visibleItems[safe: 2]?.headingText)
+        XCTAssertEqual("Arizona, US", screen.list.visibleItems[safe: 3]?.headingText)
+        XCTAssertEqual("Sidney, AU", screen.list.visibleItems[safe: 4]?.headingText)
         
         screen.searchBarType("s")
         XCTAssertEqual("s", screen.searchBar.text)
-        XCTAssertEqual("Sidney, AU", screen.citiesListItems[safe: 0]?.headingText)
-        XCTAssertNil(screen.citiesListItems[safe: 1])
+        XCTAssertEqual("Sidney, AU", screen.list.visibleItems[safe: 0]?.headingText)
+        XCTAssertNil(screen.list.visibleItems[safe: 1])
     }
     
     func test_filterNoResults() throws {
@@ -206,7 +206,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode([TestData.Cities.arizona])))))
         
         XCTAssertTrue(screen.isShowingList)
-        XCTAssertEqual("Arizona, US", screen.citiesListItems.first?.headingText)
+        XCTAssertEqual("Arizona, US", screen.list.visibleItems.first?.headingText)
         
         screen.searchBarType("X")
         
@@ -219,13 +219,13 @@ class CitiesScreenTests: XCTestCase {
         
         XCTAssertTrue(screen.isShowingList)
         XCTAssertFalse(screen.isShowingEmptyView)
-        XCTAssertEqual("Arizona, US", screen.citiesListItems.first?.headingText)
+        XCTAssertEqual("Arizona, US", screen.list.visibleItems.first?.headingText)
         
         screen.searchBarType("A")
         
         XCTAssertTrue(screen.isShowingList)
         XCTAssertFalse(screen.isShowingEmptyView)
-        XCTAssertEqual("Arizona, US", screen.citiesListItems.first?.headingText)
+        XCTAssertEqual("Arizona, US", screen.list.visibleItems.first?.headingText)
         
         screen.searchBarType("X")
         
@@ -237,7 +237,7 @@ class CitiesScreenTests: XCTestCase {
         
         XCTAssertTrue(screen.isShowingList)
         XCTAssertFalse(screen.isShowingEmptyView)
-        XCTAssertEqual("Arizona, US", screen.citiesListItems.first?.headingText)
+        XCTAssertEqual("Arizona, US", screen.list.visibleItems.first?.headingText)
     }
     
     func test_filterByFavorites() throws {
@@ -251,20 +251,20 @@ class CitiesScreenTests: XCTestCase {
         let request = try XCTUnwrap(httpClient.pendingRequests.unique())
         XCTAssertEqual(CitiesAPI.citiesGistUrl, request.urlString)
         XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode(TestData.Cities.filterExample)))))
-        XCTAssertEqual("Alabama, US", screen.citiesListItems.first?.headingText)
+        XCTAssertEqual("Alabama, US", screen.list.visibleItems.first?.headingText)
         
         XCTAssertFalse(screen.favoriteFilterButtonIsSelected)
         
         screen.tapOnFavoriteFilterButton()
         XCTAssertTrue(screen.favoriteFilterButtonIsSelected)
         
-        XCTAssertNil(screen.citiesListItems.first)
+        XCTAssertNil(screen.list.visibleItems.first)
         
         screen.tapOnFavoriteFilterButton()
         XCTAssertFalse(screen.favoriteFilterButtonIsSelected)
         
         // add favorite
-        let sidneyRow = try XCTUnwrap(screen.citiesListItems.last)
+        let sidneyRow = try XCTUnwrap(screen.list.visibleItems.last)
         XCTAssertEqual("Sidney, AU", sidneyRow.headingText)
         XCTAssertFalse(sidneyRow.favoriteButtonIsSelected)
         sidneyRow.tapOnFavoriteButtton()
@@ -273,13 +273,13 @@ class CitiesScreenTests: XCTestCase {
         // filter favorites
         screen.tapOnFavoriteFilterButton()
         XCTAssertTrue(screen.favoriteFilterButtonIsSelected)
-        let favoriteRow = try XCTUnwrap(screen.citiesListItems.unique())
+        let favoriteRow = try XCTUnwrap(screen.list.visibleItems.unique())
         XCTAssertEqual("Sidney, AU", favoriteRow.headingText)
         XCTAssertTrue(favoriteRow.favoriteButtonIsSelected)
         
         // unfavorite
         favoriteRow.tapOnFavoriteButtton()
-        XCTAssertNil(screen.citiesListItems.first)
+        XCTAssertNil(screen.list.visibleItems.first)
         XCTAssertTrue(screen.isShowingEmptyView)
     }
     
@@ -294,7 +294,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode(TestData.Cities.filterExample)))))
         
         // add favorite
-        let sidneyRow = try XCTUnwrap(screen.citiesListItems.last)
+        let sidneyRow = try XCTUnwrap(screen.list.visibleItems.last)
         XCTAssertEqual("Sidney, AU", sidneyRow.headingText)
         XCTAssertFalse(sidneyRow.favoriteButtonIsSelected)
         sidneyRow.tapOnFavoriteButtton()
@@ -302,7 +302,7 @@ class CitiesScreenTests: XCTestCase {
         
         // filter favorites
         screen.tapOnFavoriteFilterButton()
-        var favoriteRow = try XCTUnwrap(screen.citiesListItems.unique())
+        var favoriteRow = try XCTUnwrap(screen.list.visibleItems.unique())
         XCTAssertEqual("Sidney, AU", favoriteRow.headingText)
         XCTAssertTrue(favoriteRow.favoriteButtonIsSelected)
 
@@ -318,7 +318,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode(TestData.Cities.filterExample)))))
         
         screen.tapOnFavoriteFilterButton()
-        favoriteRow = try XCTUnwrap(screen.citiesListItems.unique())
+        favoriteRow = try XCTUnwrap(screen.list.visibleItems.unique())
         XCTAssertEqual("Sidney, AU", favoriteRow.headingText)
     }
     
@@ -334,7 +334,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertEqual(CitiesAPI.citiesGistUrl, request.urlString)
         XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode(TestData.Cities.filterExample)))))
         
-        let sidneyRow = try XCTUnwrap(screen.citiesListItems.last)
+        let sidneyRow = try XCTUnwrap(screen.list.visibleItems.last)
         XCTAssertEqual("Sidney, AU", sidneyRow.headingText)
         
         deviceOrientation.value = .landscape

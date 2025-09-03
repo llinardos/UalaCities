@@ -32,7 +32,6 @@ class CitiesScreenViewModel: ObservableObject {
             onInfoButtonTap: { [weak self] in self?.onCityInfoButtonTapped?(city) }
         )
     }
-    var citiesListItems: [CityRowViewModel] { list.visibleItems } // TODO: clean, adapted for tests after viewmodel API change
     
     let searchBar = SearchBarViewModel(placeholderText: "Filter")
     
