@@ -31,11 +31,8 @@ class CitiesScreenViewModel: ObservableObject {
     }
     
     let searchBar = SearchBarViewModel(placeholderText: "Filter")
-    
-    @Published var favoriteFilterButtonIsSelected = false
-    func tapOnFavoriteFilterButton() {
-        favoriteFilterButtonIsSelected.toggle()
-    }
+
+    lazy var favoriteFilterButton = FavoriteButtonViewModel { [weak self] in self?.citiesStore.enableFavoritesFilter($0) }
     
     private let citiesStore: CitiesStore
     
@@ -80,11 +77,7 @@ class CitiesScreenViewModel: ObservableObject {
         searchBar.$text.sink { [weak self] query in
             self?.citiesStore.filter(by: query)
         }.store(in: &subscriptions)
-        
-        $favoriteFilterButtonIsSelected.sink { [weak self] isOn in
-            self?.citiesStore.enableFavoritesFilter(isOn)
-        }.store(in: &subscriptions)
-        
+                
         deviceOrientation.$value.sink { [weak self] value in
             guard let self else { return }
             self.isShowingMap = value == .landscape

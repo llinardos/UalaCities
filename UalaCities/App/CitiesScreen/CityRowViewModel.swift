@@ -6,11 +6,14 @@
 //
 
 import Foundation
+import Combine
 
 class CityRowViewModel: ObservableObject, Identifiable {
+    private var subscriptions = Set<AnyCancellable>()
+    
     @Published var headingText: String = ""
     @Published var subheadText: String = ""
-    @Published var favoriteButtonIsSelected: Bool = false
+    lazy var favoriteButton = FavoriteButtonViewModel { [weak self] _ in self?.onFavoriteButtonTap() }
     private var city: City
     @Published var isSelected: Bool = false
     
@@ -24,17 +27,12 @@ class CityRowViewModel: ObservableObject, Identifiable {
         self.city = city
         self.headingText = "\(city.name), \(city.countryCode)"
         self.subheadText = "\(city.coordinates.latitude), \(city.coordinates.longitude)"
-        self.favoriteButtonIsSelected = isFavorite
         self.onFavoriteButtonTap = onFavoriteTap
         self.onRowTap = onRowTap
         self.onInfoButtonTap = onInfoButtonTap
+        self.favoriteButton.isSelected = isFavorite
     }
-    
-    func tapOnFavoriteButtton() {
-        onFavoriteButtonTap()
-        self.favoriteButtonIsSelected.toggle()
-    }
-    
+        
     func tapOnRow() {
         self.onRowTap()
     }

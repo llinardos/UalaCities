@@ -130,7 +130,7 @@ class CitiesScreenTests: XCTestCase {
         screen.searchBarType("")
         XCTAssertTrue(screen.isShowingSpinner)
         
-        screen.tapOnFavoriteFilterButton()
+        screen.favoriteFilterButton.tap()
         XCTAssertTrue(screen.isShowingSpinner)
     }
     
@@ -251,32 +251,32 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode(TestData.Cities.filterExample)))))
         XCTAssertEqual("Alabama, US", screen.list.visibleItems.first?.headingText)
         
-        XCTAssertFalse(screen.favoriteFilterButtonIsSelected)
+        XCTAssertFalse(screen.favoriteFilterButton.isSelected)
         
-        screen.tapOnFavoriteFilterButton()
-        XCTAssertTrue(screen.favoriteFilterButtonIsSelected)
+        screen.favoriteFilterButton.tap()
+        XCTAssertTrue(screen.favoriteFilterButton.isSelected)
         
         XCTAssertNil(screen.list.visibleItems.first)
         
-        screen.tapOnFavoriteFilterButton()
-        XCTAssertFalse(screen.favoriteFilterButtonIsSelected)
+        screen.favoriteFilterButton.tap()
+        XCTAssertFalse(screen.favoriteFilterButton.isSelected)
         
         // add favorite
         let sidneyRow = try XCTUnwrap(screen.list.visibleItems.last)
         XCTAssertEqual("Sidney, AU", sidneyRow.headingText)
-        XCTAssertFalse(sidneyRow.favoriteButtonIsSelected)
-        sidneyRow.tapOnFavoriteButtton()
-        XCTAssertTrue(sidneyRow.favoriteButtonIsSelected)
+        XCTAssertFalse(sidneyRow.favoriteButton.isSelected)
+        sidneyRow.favoriteButton.tap()
+        XCTAssertTrue(sidneyRow.favoriteButton.isSelected)
         
         // filter favorites
-        screen.tapOnFavoriteFilterButton()
-        XCTAssertTrue(screen.favoriteFilterButtonIsSelected)
+        screen.favoriteFilterButton.tap()
+        XCTAssertTrue(screen.favoriteFilterButton.isSelected)
         let favoriteRow = try XCTUnwrap(screen.list.visibleItems.unique())
         XCTAssertEqual("Sidney, AU", favoriteRow.headingText)
-        XCTAssertTrue(favoriteRow.favoriteButtonIsSelected)
+        XCTAssertTrue(favoriteRow.favoriteButton.isSelected)
         
         // unfavorite
-        favoriteRow.tapOnFavoriteButtton()
+        sidneyRow.favoriteButton.tap()
         XCTAssertNil(screen.list.visibleItems.first)
         XCTAssertTrue(screen.emptyViewModel.isShowing)
     }
@@ -294,15 +294,15 @@ class CitiesScreenTests: XCTestCase {
         // add favorite
         let sidneyRow = try XCTUnwrap(screen.list.visibleItems.last)
         XCTAssertEqual("Sidney, AU", sidneyRow.headingText)
-        XCTAssertFalse(sidneyRow.favoriteButtonIsSelected)
-        sidneyRow.tapOnFavoriteButtton()
-        XCTAssertTrue(sidneyRow.favoriteButtonIsSelected)
+        XCTAssertFalse(sidneyRow.favoriteButton.isSelected)
+        sidneyRow.favoriteButton.tap()
+        XCTAssertTrue(sidneyRow.favoriteButton.isSelected)
         
         // filter favorites
-        screen.tapOnFavoriteFilterButton()
+        screen.favoriteFilterButton.tap()
         var favoriteRow = try XCTUnwrap(screen.list.visibleItems.unique())
         XCTAssertEqual("Sidney, AU", favoriteRow.headingText)
-        XCTAssertTrue(favoriteRow.favoriteButtonIsSelected)
+        XCTAssertTrue(favoriteRow.favoriteButton.isSelected)
 
         // new run
         
@@ -315,7 +315,7 @@ class CitiesScreenTests: XCTestCase {
         XCTAssertEqual(CitiesAPI.citiesGistUrl, request.urlString)
         XCTAssertTrue(try httpClient.respond(to: request, with: .success(HTTPResponse(statusCode: 200, data: JSONEncoder().encode(TestData.Cities.filterExample)))))
         
-        screen.tapOnFavoriteFilterButton()
+        screen.favoriteFilterButton.tap()
         favoriteRow = try XCTUnwrap(screen.list.visibleItems.unique())
         XCTAssertEqual("Sidney, AU", favoriteRow.headingText)
     }

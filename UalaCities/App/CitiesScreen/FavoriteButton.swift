@@ -8,22 +8,17 @@
 import SwiftUI
 
 struct FavoriteButton: View {
-    @Binding var isSelected: Bool
-    let onTap: () -> Void
-    init(isSelected: Binding<Bool>, onTap: @escaping () -> Void) {
-        self.onTap = onTap
-        self._isSelected = isSelected
-    }
+    @ObservedObject var viewModel: FavoriteButtonViewModel
     
     var body: some View {
         Button {
-            onTap()
+            viewModel.tap()
         } label: {
-            Image(systemName: isSelected ? "star.fill" : "star")
-                .foregroundColor(isSelected ? .yellow : .primary)
+            Image(systemName: viewModel.isSelected ? "star.fill" : "star")
+                .foregroundColor(viewModel.isSelected ? .yellow : .primary)
                 .font(.body)
         }
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .accessibilityAddTraits(viewModel.isSelected ? .isSelected : [])
         .buttonStyle(.plain)
     }
 }

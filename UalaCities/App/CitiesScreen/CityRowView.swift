@@ -33,9 +33,8 @@ struct CityRowView: View {
             .buttonStyle(.plain)
             .accessibilityIdentifier("InfoButton")
             
-            FavoriteButton(isSelected: $viewModel.favoriteButtonIsSelected) {
-                viewModel.tapOnFavoriteButtton()
-            }.accessibilityIdentifier("FavoriteButton")
+            FavoriteButton(viewModel: viewModel.favoriteButton)
+                .accessibilityIdentifier("FavoriteButton")
         }
         .contentShape(Rectangle())
         .onTapGesture {

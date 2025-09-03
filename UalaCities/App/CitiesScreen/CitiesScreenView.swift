@@ -26,9 +26,8 @@ struct CitiesScreenView: View {
                         HStack(spacing: 8) {
                             SearchBarView(viewModel: viewModel.searchBar)
                                 .padding(.vertical)
-                            FavoriteButton(isSelected: $viewModel.favoriteFilterButtonIsSelected) { // TODO: extract VM
-                                viewModel.tapOnFavoriteFilterButton()
-                            }.accessibilityIdentifier("FavoriteFilterButton")
+                            FavoriteButton(viewModel: viewModel.favoriteFilterButton)
+                                .accessibilityIdentifier("FavoriteFilterButton")
                         }
                         .padding(.horizontal)
                         
