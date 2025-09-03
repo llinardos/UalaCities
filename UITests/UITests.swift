@@ -10,7 +10,6 @@ import XCTest
 
 final class UITests: XCTestCase {
     @MainActor
-    
     func test_smoke() throws {
         XCUIDevice.shared.orientation = .portrait
         
@@ -19,37 +18,37 @@ final class UITests: XCTestCase {
         app.launch()
         
         let loadingView = app.staticTexts["Loading Cities..."]
-        XCTAssertTrue(loadingView.waitForExistence(timeout: 10.0))
+        assertExistence(of: loadingView)
         
         let firstRowTitle = app.staticTexts["'t Hoeksken, BE"]
-        XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
+        assertExistence(of: firstRowTitle)
         
         // favorite filter (empty)
         let favoriteFilterButton = app.buttons["FavoriteFilterButton"]
-        XCTAssertTrue(favoriteFilterButton.waitForExistence(timeout: 10.0))
+        assertExistence(of: favoriteFilterButton)
         favoriteFilterButton.tap()
         XCTAssertTrue(favoriteFilterButton.isSelected)
         
         let noResultsTitle = app.staticTexts["No cities found"]
-        XCTAssertTrue(noResultsTitle.waitForExistence(timeout: 10.0))
+        assertExistence(of: noResultsTitle)
         
         favoriteFilterButton.tap()
         XCTAssertFalse(favoriteFilterButton.isSelected)
         
-        XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
+        assertExistence(of: firstRowTitle)
         
         // query filter
         let searchBar = app.searchFields["Filter"]
-        XCTAssertTrue(searchBar.waitForExistence(timeout: 10.0))
+        assertExistence(of: searchBar)
         searchBar.tap()
         searchBar.typeText("Tandil")
         
         let filteredRowTitle = app.staticTexts["Tandil, AR"]
-        XCTAssertTrue(filteredRowTitle.waitForExistence(timeout: 10.0))
+        assertExistence(of: filteredRowTitle)
         
         // Add to favorites
         let filteredRowFavoriteButton = app.buttons["FavoriteButton"]
-        XCTAssertTrue(filteredRowFavoriteButton.waitForExistence(timeout: 10.0))
+        assertExistence(of: filteredRowFavoriteButton)
         XCTAssertFalse(filteredRowFavoriteButton.isSelected)
         filteredRowFavoriteButton.tap()
         XCTAssertTrue(filteredRowFavoriteButton.isSelected)
@@ -61,29 +60,29 @@ final class UITests: XCTestCase {
         searchBar.typeText("\u{8}")
         searchBar.typeText("\u{8}")
         searchBar.typeText("\u{8}")
-        XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
+        assertExistence(of: firstRowTitle)
         
         // filter again with favorites
         favoriteFilterButton.tap()
         XCTAssertTrue(favoriteFilterButton.isSelected)
-        XCTAssertTrue(filteredRowTitle.waitForExistence(timeout: 10.0))
+        assertExistence(of: filteredRowTitle)
         
         // go to info
         let filteredRowInfoButton = app.buttons["InfoButton"]
-        XCTAssertTrue(filteredRowInfoButton.waitForExistence(timeout: 10.0))
+        assertExistence(of: filteredRowInfoButton)
         filteredRowInfoButton.tap()
         
         let infoScreenTitle = app.navigationBars["City Information"]
-        XCTAssertTrue(infoScreenTitle.waitForExistence(timeout: 10.0))
-        XCTAssertTrue(app.staticTexts.firstMatch.waitForExistence(timeout: 10.0))
+        assertExistence(of: infoScreenTitle)
+        assertExistence(of: app.staticTexts.firstMatch)
         
         let coordinatesRowInInfoScreen = app.staticTexts["Coordinates"]
-        XCTAssertTrue(coordinatesRowInInfoScreen.waitForExistence(timeout: 10.0))
+        assertExistence(of: coordinatesRowInInfoScreen)
         coordinatesRowInInfoScreen.tap()
         
         let mapScreenTitleFromInfoScreen = app.navigationBars["Tandil, AR"]
-        XCTAssertTrue(mapScreenTitleFromInfoScreen.waitForExistence(timeout: 10.0))
-        XCTAssertTrue(app.maps.firstMatch.waitForExistence(timeout: 10.0))
+        assertExistence(of: mapScreenTitleFromInfoScreen)
+        assertExistence(of: app.maps.firstMatch)
         
         // favorites persistence
         app.terminate()
@@ -91,28 +90,28 @@ final class UITests: XCTestCase {
         app = XCUIApplication()
         app.launch()
 
-        XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
-        XCTAssertTrue(favoriteFilterButton.waitForExistence(timeout: 10.0))
+        assertExistence(of: firstRowTitle)
+        assertExistence(of: favoriteFilterButton)
         favoriteFilterButton.tap()
         
-        XCTAssertTrue(filteredRowTitle.waitForExistence(timeout: 10.0))
+        assertExistence(of: filteredRowTitle)
         
         // map
         filteredRowTitle.tap()
         
         let mapScreenTitle = app.navigationBars["Tandil, AR"]
-        XCTAssertTrue(mapScreenTitle.waitForExistence(timeout: 10.0))
-        XCTAssertTrue(app.maps.firstMatch.waitForExistence(timeout: 10.0))
+        assertExistence(of: mapScreenTitle)
+        assertExistence(of: app.maps.firstMatch)
         
         app.navigationBars.buttons["Back"].tap()
         
         // back to list
-        XCTAssertTrue(filteredRowTitle.waitForExistence(timeout: 10.0))
+        assertExistence(of: filteredRowTitle)
         
         // orientation
         XCUIDevice.shared.orientation = .landscapeRight
         let emptyMapTitle = app.staticTexts["No City Selected"]
-        XCTAssertTrue(emptyMapTitle.waitForExistence(timeout: 10.0))
+        assertExistence(of: emptyMapTitle)
         
         XCUIDevice.shared.orientation = .portrait
     }
@@ -124,11 +123,19 @@ final class UITests: XCTestCase {
         app.launch()
         
         let errorHeading = app.staticTexts["Something went wrong"]
-        XCTAssertTrue(errorHeading.waitForExistence(timeout: 20.0))
+        assertExistence(of: errorHeading)
         
         errorHeading.tap()
         
         let firstRowTitle = app.staticTexts["City, AA"]
-        XCTAssertTrue(firstRowTitle.waitForExistence(timeout: 10.0))
+        assertExistence(of: firstRowTitle)
+    }
+}
+
+extension XCTestCase {
+    @discardableResult
+    func assertExistence(of element: XCUIElement, timeout: TimeInterval = 10.0, file: StaticString = #file, line: UInt = #line) -> XCUIElement {
+        XCTAssertTrue(element.waitForExistence(timeout: timeout), file: file, line: line)
+        return element
     }
 }
